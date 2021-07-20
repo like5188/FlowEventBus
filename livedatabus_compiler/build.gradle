@@ -1,0 +1,15 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+    id 'com.github.dcendents.android-maven'// 上传jitPack
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    compileOnly 'com.squareup:javapoet:1.13.0'// 自动生成源码的库
+    implementation project(':livedatabus_annotations')
+}
