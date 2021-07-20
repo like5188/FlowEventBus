@@ -1,3 +1,3 @@
 package com.like.livedatabus
 
-const val TAG = "LiveDataBus"
+const val TAG = "FlowEventBus"

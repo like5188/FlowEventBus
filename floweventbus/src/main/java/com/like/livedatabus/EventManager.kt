@@ -4,6 +4,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 object EventManager {
     private val mEventList = mutableListOf<Event<*>>()
@@ -15,14 +16,13 @@ object EventManager {
         if (tag.isEmpty()) {
             return
         }
-        // LiveData由tag、requestCode组合决定
-        val liveData = getLiveDataIfNullCreate<T>(tag, requestCode)
-        // 设置mSetValue标记为isSticky。即当isSticky为true时。则会在注册的时候就收到之前发送的最新一条消息。当为false时，则不会收到消息。
-        liveData.mSetValue = isSticky
+        val event = getCachedEvent(tag, requestCode) ?: Event(
+            host, owner, tag, requestCode, observer, MutableSharedFlow(
+                replay = if (isSticky) 1 else 0,
+                extraBufferCapacity = Int.MAX_VALUE //避免挂起导致数据发送失败
+            )
+        )
 
-        val busObserverWrapper = BusObserverWrapper(host, tag, requestCode, observer, liveData)
-        // 创建 Event 对象，会自动订阅（liveData.observe 或者 liveData.observeForever）。
-        val event = Event(host, owner, tag, requestCode, busObserverWrapper, liveData)
         // event由host、tag、requestCode组合决定
         if (mEventList.contains(event)) {
             Log.e(TAG, "已经订阅过事件：$event")
@@ -35,8 +35,9 @@ object EventManager {
 
     fun <T> post(tag: String, requestCode: String, t: T) {
         val requestCodeLogMessage = if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""
-        val liveData = getLiveData<T>(tag, requestCode)
-        if (liveData != null) {
+        val flow = getCachedFlow<T>(tag, requestCode)
+        if (flow != null) {
+            flow.emit(t)
             if (Looper.getMainLooper() == Looper.myLooper()) {
                 Log.v(TAG, "在主线程发送消息 --> tag=$tag$requestCodeLogMessage，内容=$t")
                 liveData.setValue(t)
@@ -68,24 +69,12 @@ object EventManager {
     }
 
     /**
-     * 获取缓存的LiveData对象，如果没有缓存，则创建。用于注册时
+     * 获取缓存的[Event]对象。
      */
-    private fun <T> getLiveDataIfNullCreate(tag: String, requestCode: String): BusLiveData<T> {
-        return getLiveData(tag, requestCode) ?: BusLiveData()
-    }
-
-    /**
-     * 获取缓存的LiveData对象。用于发送消息时
-     */
-    private fun <T> getLiveData(tag: String, requestCode: String): BusLiveData<T>? {
-        val filter = mEventList.filter {
+    private fun <T> getCachedEvent(tag: String, requestCode: String): Event<T>? {
+        return mEventList.firstOrNull {
             it.tag == tag && it.requestCode == requestCode
-        }
-        return if (filter.isNotEmpty()) {
-            filter[0].liveData as BusLiveData<T>
-        } else {
-            null
-        }
+        } as Event<T>?
     }
 
     /**

@@ -1,8 +1,11 @@
 package com.like.livedatabus
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class Event<T>(
     val host: Any,// 宿主
@@ -10,19 +13,30 @@ class Event<T>(
     val tag: String,// 标签
     val requestCode: String,// 请求码。当标签相同时，可以使用请求码区分
     val observer: Observer<T>,// 数据改变监听器
-    val liveData: LiveData<T>
+    val flow: MutableSharedFlow<T>
 ) {
+    private var job: Job? = null
 
     init {
         if (owner == null) {
-            liveData.observeForever(observer)
+            job = GlobalScope.launch {
+                flow.collect {
+                    observer.onChanged(it)
+                }
+            }
         } else {
-            liveData.observe(owner, observer)
+            job = owner.lifecycleScope.launch {
+                owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    flow.collect {
+                        observer.onChanged(it)
+                    }
+                }
+            }
         }
     }
 
-    fun removeObserver() {
-        liveData.removeObserver(observer)
+    fun cancel() {
+        job?.cancel()
     }
 
     override fun equals(other: Any?): Boolean {
