@@ -106,7 +106,7 @@ class ClassCodeGenerator {
 
             val codeBlockBuilder = CodeBlock.builder()
             codeBlockBuilder.addStatement(
-                "\$L.register(host\n,owner\n,\$S\n,\$S\n,\$L\n,\$L)",
+                "\$L.register(\nhost\n,owner\n,\$S\n,\$S\n,\$L\n,\$L)",
                 EVENT_MANAGER,
                 it,
                 requestCode,
