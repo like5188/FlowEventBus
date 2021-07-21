@@ -18,7 +18,7 @@ object RegisterManager {
             // 查找并实例化由 javapoet 自动生成的宿主代理类，此类继承自 HostProxy 类。
             val hostProxy = Class.forName("${host::class.qualifiedName}_Proxy").newInstance() as HostProxy
             Log.v(TAG, "注册宿主：$host")
-            hostProxy.register(host, owner)
+            hostProxy.registerHost(host, owner)
         } catch (e: Exception) {
             Log.e(TAG, "注册宿主失败 --> ${host::class.qualifiedName} 不是宿主类，无需注册！")
         }

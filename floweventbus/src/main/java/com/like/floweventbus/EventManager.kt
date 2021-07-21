@@ -11,7 +11,7 @@ object EventManager {
     fun isRegistered(host: Any) = mEventList.any { it.host == host }
 
     @JvmStatic
-    fun <T> register(host: Any, owner: LifecycleOwner?, tag: String, requestCode: String, isSticky: Boolean, observer: Observer<T>) {
+    fun <T> subscribeEvent(hostClass: Class<*>, tag: String, requestCode: String, isSticky: Boolean) {
         if (tag.isEmpty()) {
             Log.e(TAG, "订阅事件失败 --> tag 不能为空")
             return
@@ -24,7 +24,7 @@ object EventManager {
             replay = if (isSticky) 1 else 0,
             extraBufferCapacity = Int.MAX_VALUE //避免挂起导致数据发送失败
         )
-        with(Event(host, owner, tag, requestCode, isSticky, observer, flow)) {
+        with(Event(hostClass, tag, requestCode, isSticky, flow)) {
             if (mEventList.contains(this)) {// event由host、tag、requestCode组合决定
                 Log.e(TAG, "已经订阅过事件 --> $this")
                 return
@@ -37,7 +37,20 @@ object EventManager {
                 logEvent()
             }
         }
-        logEvent()
+    }
+
+    @JvmStatic
+    fun <T> registerHost(host: Any, owner: LifecycleOwner?, observer: Observer<T>) {
+        val events = mEventList.filter {
+            host::class == it.hostClass
+        }
+        if (events.isEmpty()) {
+            Log.e(TAG, "注册宿主失败 --> ${host::class.qualifiedName} 不是宿主类，无需注册！")
+            return
+        }
+        events.forEach {
+            (it as Event<T>).bind(host, owner, observer)
+        }
     }
 
     fun <T> post(tag: String, requestCode: String, data: T) {
@@ -68,7 +81,7 @@ object EventManager {
         val hosts = mEventList.distinctBy { it.host }.map { it.host }
         Log.d(TAG, "宿主总数：${hosts.size}${if (hosts.isEmpty()) "" else "，包含：$hosts"}")
 
-        val owners = mEventList.distinctBy { it.owner }.map { if (it.owner != null) it.owner::class.java.name else "null" }
+        val owners = mEventList.distinctBy { it.owner }.map { if (it.owner != null) it.owner!!::class.java.name else "null" }
         Log.d(TAG, "生命周期类总数：${owners.size}${if (owners.isEmpty()) "" else "，包含：$owners"}")
     }
 

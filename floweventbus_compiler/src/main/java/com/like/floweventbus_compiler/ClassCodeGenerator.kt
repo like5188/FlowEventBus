@@ -10,16 +10,27 @@ import javax.lang.model.element.TypeElement
 
 /*
 public class MainViewModel_Proxy<T extends User> extends HostProxy {
-    @Override
-    protected void register(@NotNull Object host, @NotNull LifecycleOwner owner) {
-        com.like.floweventbus.EventManager.register(host, owner, tag, requestCode, isSticky, new Observer<T>() {
-            @Override
-            public void onChanged(@Nullable T s) {
-                // 调用@BusObserver注解的接收数据的方法
-                ((MainViewModel) host).method(s);
-            }
+  @Override
+  public void subscribeEvent(final Class hostClass, final String tag, final String requestCode, final boolean isSticky) {
+    com.like.floweventbus.EventManager.subscribeEvent(
+        hostClass
+        ,"like5"
+        ,""
+        ,false);
+  }
+
+  @Override
+  public void registerHost(final Object host, final LifecycleOwner owner) {
+    com.like.floweventbus.EventManager.registerHost(
+        host
+        ,owner
+        ,new Observer<Integer>() {
+          @Override
+          public void onChanged(Integer t) {
+            ((BaseActivity1) host).test1(t);;
+          }
         });
-    }
+  }
 }
  */
 /**
@@ -33,7 +44,8 @@ class ClassCodeGenerator {
         private val HOST_PROXY = ClassName.get("com.like.floweventbus", "HostProxy")
         private val OBSERVER = ClassName.get("androidx.lifecycle", "Observer")
         private val LIFECYCLE_OWNER = ClassName.get("androidx.lifecycle", "LifecycleOwner")
-        private val OBJECT = ClassName.get("java.lang", "Object")
+        private val CLASS = ClassName.get("java.lang", "Class")
+        private val STRING = ClassName.get("java.lang", "String")
         private val NO_ARGS = ClassName.get("com.like.floweventbus", "NoArgs")
         private val EVENT_MANAGER = ClassName.get("com.like.floweventbus", "EventManager")
     }
@@ -67,7 +79,8 @@ class ClassCodeGenerator {
         val builder = TypeSpec.classBuilder(ClassName.get(mHostClass).simpleName() + CLASS_UNIFORM_MARK)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
             .superclass(HOST_PROXY)
-            .addMethod(createMethod())
+            .addMethod(createSubscribeEventMethod())
+            .addMethod(createRegisterHostMethod())
         // 如果宿主类有泛型，也需要添加到代理类中。
         mHostClass?.typeParameters?.forEach {
             builder.addTypeVariable(TypeVariableName.get(it))
@@ -76,45 +89,82 @@ class ClassCodeGenerator {
     }
 
     /**
-     * 创建 register 方法
+     * 创建 subscribeEvent 方法
      *
      * @Override
-     * protected void register(@NotNull Object host, @NotNull LifecycleOwner owner) {}
+     * public void subscribeEvent(final Class hostClass, final String tag, final String requestCode, final boolean isSticky) {}
      */
-    private fun createMethod(): MethodSpec {
-        val builder = MethodSpec.methodBuilder("register")
+    private fun createSubscribeEventMethod(): MethodSpec {
+        val builder = MethodSpec.methodBuilder("subscribeEvent")
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(OBJECT, "host", Modifier.FINAL)
-            .addParameter(LIFECYCLE_OWNER, "owner", Modifier.FINAL)
+            .addParameter(CLASS, "hostClass", Modifier.FINAL)
+            .addParameter(STRING, "tag", Modifier.FINAL)
+            .addParameter(STRING, "requestCode", Modifier.FINAL)
+            .addParameter(TypeName.BOOLEAN, "isSticky", Modifier.FINAL)
             .addAnnotation(Override::class.java)
         for (binder in mMethodInfoList) {
-            builder.addCode(createMethodCodeBlock(binder))
+            builder.addCode(createSubscribeEventMethodCodeBlock(binder))
         }
         return builder.build()
     }
 
     /**
-     * 创建 register 方法中调用的方法
+     * 创建 registerHost 方法中调用的方法
      *
-     * com.like.floweventbus.EventManager.register(host, owner, tag, requestCode, isSticky, observer)
+     * com.like.floweventbus.EventManager.subscribeEvent(hostClass, tag, requestCode, isSticky)
      */
-    private fun createMethodCodeBlock(methodInfo: MethodInfo): CodeBlock {
+    private fun createSubscribeEventMethodCodeBlock(methodInfo: MethodInfo): CodeBlock {
         val builder = CodeBlock.builder()
-        methodInfo.tag?.forEach {
+        methodInfo.tags?.forEach {
             val requestCode = methodInfo.requestCode
             val isSticky = methodInfo.isSticky
 
             val codeBlockBuilder = CodeBlock.builder()
             codeBlockBuilder.addStatement(
-                "\$L.register(\nhost\n,owner\n,\$S\n,\$S\n,\$L\n,\$L)",
+                "\$L.subscribeEvent(\nhostClass\n,\$S\n,\$S\n,\$L)",
                 EVENT_MANAGER,
                 it,
                 requestCode,
-                isSticky,
-                createObserverParam(methodInfo)
+                isSticky
             )
             builder.add(codeBlockBuilder.build())
         }
+        return builder.build()
+    }
+
+    /**
+     * 创建 registerHost 方法
+     *
+     * @Override
+     * public void registerHost(final Object host, final LifecycleOwner owner) {}
+     */
+    private fun createRegisterHostMethod(): MethodSpec {
+        val builder = MethodSpec.methodBuilder("registerHost")
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(TypeName.OBJECT, "host", Modifier.FINAL)
+            .addParameter(LIFECYCLE_OWNER, "owner", Modifier.FINAL)
+            .addAnnotation(Override::class.java)
+        for (binder in mMethodInfoList) {
+            builder.addCode(createRegisterHostMethodCodeBlock(binder))
+        }
+        return builder.build()
+    }
+
+    /**
+     * 创建 registerHost 方法中调用的方法
+     *
+     * com.like.floweventbus.EventManager.register(host, owner, observer)
+     */
+    private fun createRegisterHostMethodCodeBlock(methodInfo: MethodInfo): CodeBlock {
+        val builder = CodeBlock.builder()
+
+        val codeBlockBuilder = CodeBlock.builder()
+        codeBlockBuilder.addStatement(
+            "\$L.registerHost(\nhost\n,owner\n,\$L)",
+            EVENT_MANAGER,
+            createObserverParam(methodInfo)
+        )
+        builder.add(codeBlockBuilder.build())
         return builder.build()
     }
 
@@ -179,14 +229,14 @@ class ClassCodeGenerator {
 
         val busObserverAnnotationClass = BusObserver::class.java
         val methodInfo = MethodInfo()
-        methodInfo.tag = element.getAnnotation(busObserverAnnotationClass).value
-        if (methodInfo.tag.isNullOrEmpty()) return
+        methodInfo.tags = element.getAnnotation(busObserverAnnotationClass).value
+        if (methodInfo.tags.isNullOrEmpty()) return
 
         methodInfo.requestCode = element.getAnnotation(busObserverAnnotationClass).requestCode
 
         // 判断是否有重复的tag + requestCode
         val isRepeat = mMethodInfoList.any {
-            it.tag?.intersect(methodInfo.tag!!.toList())?.isNotEmpty() ?: false &&
+            it.tags?.intersect(methodInfo.tags!!.toList())?.isNotEmpty() ?: false &&
                     it.requestCode == methodInfo.requestCode
         }
         if (isRepeat) return
