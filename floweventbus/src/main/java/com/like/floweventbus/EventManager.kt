@@ -16,7 +16,7 @@ object EventManager {
 
         val event = Event(owner, tag, requestCode, isSticky, observer)
         mEventList.add(event)
-        Log.i(TAG, "订阅事件成功 --> $event")
+        Log.i(TAG, "订阅事件 --> $event")
         logEvent()
     }
 
