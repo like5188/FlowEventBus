@@ -1,4 +1,4 @@
-package com.like.livedatabus_compiler
+package com.like.floweventbus_compiler
 
 import javax.lang.model.type.TypeMirror
 

@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
+import com.like.floweventbus_annotations.BusObserver
 import kotlin.concurrent.thread
 
 class MainActivity : BaseActivity1() {
@@ -18,10 +19,10 @@ class MainActivity : BaseActivity1() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding
-        val mainViewModel1 = MainViewModel()
-        FlowEventBus.register<Int>(this, "tag1", "", false) {
-            Log.e(TAG, "MainActivity tag=tag1，数据：$it")
-        }
+        val mainViewModel = MainViewModel()
+        FlowEventBus.register(mainViewModel, this)
+        val mainViewModel1 = MainViewModel1()
+        FlowEventBus.register(mainViewModel1, this)
         Log.w(TAG, "MainActivity onCreate")
     }
 
@@ -30,25 +31,37 @@ class MainActivity : BaseActivity1() {
         Log.w(TAG, "MainActivity onDestroy")
     }
 
+    @BusObserver(["like1", "like2"], requestCode = "1")
+    fun observer1() {
+        Log.e(TAG, "MainActivity observer1 tag=like1 requestCode=1")
+    }
+
+    @BusObserver(["like1", "like2"])
+    fun observer2(s: Int?) {
+        Log.e(TAG, "MainActivity observer2 tag=like1，数据：$s")
+    }
+
     fun changeData1(view: View) {
-        FlowEventBus.post("tag1", 1)
+        FlowEventBus.post("like1", null)
+        FlowEventBus.post("like2", 123)
     }
 
     fun changeData2(view: View) {
         thread {
-            FlowEventBus.post("tag2", 2)
+            FlowEventBus.post("like2", "1", 2)
         }
     }
 
     fun changeData3(view: View) {
-        FlowEventBus.post("tag2", "requestCode2", 22)
+        FlowEventBus.post("like3", 3)
     }
 
     fun changeData4(view: View) {
-        FlowEventBus.post("tag3", 3)
+        FlowEventBus.post("like4", 4)
     }
 
     fun changeData5(view: View) {
+        FlowEventBus.post("like5", 5)
     }
 
     fun startActivity2(view: View) {

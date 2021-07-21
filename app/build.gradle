@@ -8,7 +8,7 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        applicationId "com.like.livedatabus.sample"
+        applicationId "com.like.floweventbus.sample"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
@@ -57,6 +57,6 @@ dependencies {
     implementation project(':floweventbus_annotations')
     kapt project(':floweventbus_compiler')
 
-//    implementation 'com.github.like5188.LiveDataBus:livedatabus:版本号'
-//    kapt 'com.github.like5188.LiveDataBus:livedatabus_compiler:版本号'
+//    implementation 'com.github.like5188.FlowEventBus:floweventbus:版本号'
+//    kapt 'com.github.like5188.FlowEventBus:floweventbus_compiler:版本号'
 }

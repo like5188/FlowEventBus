@@ -1,6 +1,6 @@
-package com.like.livedatabus_compiler
+package com.like.floweventbus_compiler
 
-import com.like.livedatabus_annotations.BusObserver
+import com.like.floweventbus_annotations.BusObserver
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
 import javax.lang.model.element.Element
@@ -27,8 +27,7 @@ object ProcessUtils {
      * 判断使用[BusObserver]注解的方法所在的类（宿主）的有效性
      * <p>
      * 1、宿主型必须为类。
-     * 2、宿主必须被 public 修饰。
-     * 3、包名不能以 android.、androidx.、java.、javax. 开头，因为是系统的类，不可能有BusObserver注解。
+     * 2、宿主必须被 public 修饰。因为需要调用其中被[BusObserver]注解的方法。
      *
      * @param element
      * @return
@@ -43,15 +42,6 @@ object ProcessUtils {
             error(element, "宿主：%s 必须被 public 修饰", element.simpleName.toString())
             return false
         }
-        val qualifiedName = enclosingElement.qualifiedName.toString()
-        if (qualifiedName.startsWith("android.") ||
-            qualifiedName.startsWith("androidx.") ||
-            qualifiedName.startsWith("java.") ||
-            qualifiedName.startsWith("javax.")
-        ) {
-            error(element, "宿主：%s 的包名不能以`android.`、`androidx.`、`java.`、`javax.`开头", element.simpleName.toString())
-            return false
-        }
         return true
     }
 
@@ -61,7 +51,7 @@ object ProcessUtils {
      * 1、类型必须为 method。
      * 2、必须被 public 修饰。
      * 3、不能被 static 修饰。
-     * 4、方法的参数最多只能是1个。因为 LiveData 只能传递一个数据。
+     * 4、方法的参数最多只能是1个。
      *
      * @param element
      * @return

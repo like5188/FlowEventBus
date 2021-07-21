@@ -1,6 +1,6 @@
-package com.like.livedatabus_compiler
+package com.like.floweventbus_compiler
 
-import com.like.livedatabus_annotations.BusObserver
+import com.like.floweventbus_annotations.BusObserver
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
@@ -10,7 +10,7 @@ import javax.lang.model.element.TypeElement
  * RxBus 注解处理器。每一个注解处理器类都必须有一个空的构造函数，默认不写就行;
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-@SupportedAnnotationTypes("com.like.livedatabus_annotations.BusObserver")
+@SupportedAnnotationTypes("com.like.floweventbus_annotations.BusObserver")
 class BusProcessor : AbstractProcessor() {
     companion object {
         private val CODE_BUILDER_MAP = mutableMapOf<TypeElement, ClassCodeGenerator>()

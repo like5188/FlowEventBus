@@ -25,5 +25,5 @@
 -keep class * extends com.like.floweventbus.HostProxy
 #不混淆包含被BusObserver注解的方法的宿主类，因为注册时需要用到它的类名，然后根据此类名来获取其代理类。
 -keepclasseswithmembernames class **{
-     @com.like.livedatabus_annotations.BusObserver <methods>;
+     @com.like.floweventbus_annotations.BusObserver <methods>;
 }

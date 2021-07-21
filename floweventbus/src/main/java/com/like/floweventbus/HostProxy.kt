@@ -9,7 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 abstract class HostProxy {
 
     /**
-     * 对 host 中所有注册的 tag 进行 [EventManager.observe] 方法的调用
+     * 对 host 中所有注册的 tag 进行 [EventManager.register] 方法的调用
      */
     abstract fun register(host: Any, owner: LifecycleOwner?)
 

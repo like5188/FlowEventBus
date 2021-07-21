@@ -1,9 +1,6 @@
 package com.like.floweventbus
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -17,7 +14,7 @@ class Event<T>(
     val tag: String,// 标签
     val requestCode: String,// 请求码。当标签相同时，可以使用请求码区分
     private val isSticky: Boolean,
-    private val callback: (T) -> Unit,// 数据改变回调
+    private val observer: Observer<T>,// 数据改变回调
 ) {
     private val flow: MutableSharedFlow<T> = MutableSharedFlow(
         replay = if (isSticky) 1 else 0,
@@ -26,12 +23,12 @@ class Event<T>(
     private val job: Job = owner?.lifecycleScope?.launch {
         owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             flow.collect {
-                callback(it)
+                observer.onChanged(it)
             }
         }
     } ?: GlobalScope.launch {
         flow.collect {
-            callback(it)
+            observer.onChanged(it)
         }
     }
 

@@ -1,6 +1,6 @@
-package com.like.livedatabus_compiler
+package com.like.floweventbus_compiler
 
-import com.like.livedatabus_annotations.BusObserver
+import com.like.floweventbus_annotations.BusObserver
 import com.squareup.javapoet.*
 import java.io.IOException
 import javax.lang.model.element.Element
@@ -12,7 +12,7 @@ import javax.lang.model.element.TypeElement
 public class MainViewModel_Proxy<T extends User> extends HostProxy {
     @Override
     protected void register(@NotNull Object host, @NotNull LifecycleOwner owner) {
-        com.like.livedatabus.EventManager.observe(host, owner, tag, requestCode, isSticky, new Observer<T>() {
+        com.like.floweventbus.EventManager.register(owner, tag, requestCode, isSticky, new Observer<T>() {
             @Override
             public void onChanged(@Nullable T s) {
                 // 调用@BusObserver注解的接收数据的方法
@@ -30,15 +30,15 @@ class ClassCodeGenerator {
         private const val CLASS_UNIFORM_MARK = "_Proxy"
 
         // 因为java工程中没有下面这些类(Android中的类)，所以只能采用ClassName的方式。
-        private val HOST_PROXY = ClassName.get("com.like.livedatabus", "HostProxy")
+        private val HOST_PROXY = ClassName.get("com.like.floweventbus", "HostProxy")
         private val OBSERVER = ClassName.get("androidx.lifecycle", "Observer")
         private val LIFECYCLE_OWNER = ClassName.get("androidx.lifecycle", "LifecycleOwner")
         private val OBJECT = ClassName.get("java.lang", "Object")
-        private val NO_OBSERVER_PARAMS = ClassName.get("com.like.livedatabus", "NoObserverParams")
-        private val EVENT_MANAGER = ClassName.get("com.like.livedatabus", "EventManager")
+        private val UNIT_PARAMS = ClassName.get("kotlin", "Unit")
+        private val EVENT_MANAGER = ClassName.get("com.like.floweventbus", "EventManager")
     }
 
-    private var mHostClass: TypeElement? = null// 宿主类
+    private var mHostClass: TypeElement? = null// 宿主类，通过它的一些信息来创建代理类。
     private val mMethodInfoList = mutableSetOf<MethodInfo>()// 类中的所有方法
 
     fun create() {
@@ -47,7 +47,7 @@ class ClassCodeGenerator {
         }
         // 创建包名及类的注释
         val javaFile = JavaFile.builder(ClassName.get(mHostClass).packageName(), createClass())
-            .addFileComment(" This codes are generated automatically by LiveDataBus. Do not modify!")// 类的注释
+            .addFileComment(" This codes are generated automatically by FlowEventBus. Do not modify!")// 类的注释
             .build()
 
         try {
@@ -96,7 +96,7 @@ class ClassCodeGenerator {
     /**
      * 创建 register 方法中调用的方法
      *
-     * com.like.livedatabus.EventManager.observe(host, owner, tag, requestCode, isSticky, observer)
+     * com.like.floweventbus.EventManager.register(owner, tag, requestCode, isSticky, observer)
      */
     private fun createMethodCodeBlock(methodInfo: MethodInfo): CodeBlock {
         val builder = CodeBlock.builder()
@@ -106,7 +106,7 @@ class ClassCodeGenerator {
 
             val codeBlockBuilder = CodeBlock.builder()
             codeBlockBuilder.addStatement(
-                "\$L.observe(host\n,owner\n,\$S\n,\$S\n,\$L\n,\$L)",
+                "\$L.register(owner\n,\$S\n,\$S\n,\$L\n,\$L)",
                 EVENT_MANAGER,
                 it,
                 requestCode,
@@ -131,7 +131,7 @@ class ClassCodeGenerator {
      */
     private fun createObserverParam(methodInfo: MethodInfo): TypeSpec {
         // 获取onChanged方法的参数类型
-        var typeName: TypeName = NO_OBSERVER_PARAMS
+        var typeName: TypeName = UNIT_PARAMS
         methodInfo.paramType?.let {
             if (it.kind.isPrimitive) {
                 typeName = TypeName.get(it)
@@ -151,10 +151,10 @@ class ClassCodeGenerator {
         val callbackStatement =
             "((${
                 ClassName.get(mHostClass).simpleName()
-            }) host).${methodInfo.methodName}(${if (typeName == NO_OBSERVER_PARAMS) "" else "t"});"
+            }) host).${methodInfo.methodName}(${if (typeName == UNIT_PARAMS) "" else "t"});"
         methodBuilder.addStatement(
             // 当参数为NO_OBSERVER_PARAMS时，代表被@BusObserver注解的方法没有参数。
-            if (typeName == NO_OBSERVER_PARAMS) {
+            if (typeName == UNIT_PARAMS) {
                 // 为了和其它参数（可为null）区分开，需要判断null
                 "if (t != null) {$callbackStatement}"
             } else {
