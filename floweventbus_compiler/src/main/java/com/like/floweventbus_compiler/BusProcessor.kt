@@ -40,25 +40,25 @@ class BusProcessor : AbstractProcessor() {
      */
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
         // 返回使用给定注解类型的元素
-        val elements = roundEnv.getElementsAnnotatedWith(BusObserver::class.java) as Set<Element>
-        if (elements.isEmpty()) {
+        val methods = roundEnv.getElementsAnnotatedWith(BusObserver::class.java) as Set<Element>
+        if (methods.isEmpty()) {
             return false
         }
-        for (element in elements) {
+        for (method in methods) {
             try {
                 // 验证方法及其所在宿主类的有效性
-                if (!ProcessUtils.verifyEnclosingClass(element) || !ProcessUtils.verifyMethod(element))
+                if (!ProcessUtils.verifyEnclosingClass(method) || !ProcessUtils.verifyMethod(method))
                     continue
                 // 添加宿主类
-                val enclosingElement = element.enclosingElement as TypeElement
-                val classCodeGenerator = map[enclosingElement] ?: ClassCodeGenerator().apply {
-                    map[enclosingElement] = this
+                val hostClass = method.enclosingElement as TypeElement
+                val classCodeGenerator = map[hostClass] ?: ClassCodeGenerator().apply {
+                    map[hostClass] = this
                 }
                 // 添加被BusObserver注解的方法
-                classCodeGenerator.addElement(element)
+                classCodeGenerator.addElement(method)
             } catch (e: Exception) {
                 e.printStackTrace()
-                ProcessUtils.error(element, e.message ?: "")
+                ProcessUtils.error(method, e.message ?: "")
             }
         }
 
