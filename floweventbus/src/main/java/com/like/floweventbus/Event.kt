@@ -3,7 +3,6 @@ package com.like.floweventbus
 import androidx.lifecycle.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -20,15 +19,23 @@ class Event<T>(
         replay = if (isSticky) 1 else 0,
         extraBufferCapacity = Int.MAX_VALUE //避免挂起导致数据发送失败
     )
-    private val job: Job = owner?.lifecycleScope?.launch {
-        owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+    var onCancel: (() -> Unit)? = null
+
+    init {
+        (owner?.lifecycleScope?.launch {
+            owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                flow.collect {
+                    observer.onChanged(it)
+                }
+            }
+        } ?: GlobalScope.launch {
             flow.collect {
                 observer.onChanged(it)
             }
-        }
-    } ?: GlobalScope.launch {
-        flow.collect {
-            observer.onChanged(it)
+        }).apply {
+            invokeOnCompletion {
+                onCancel?.invoke()
+            }
         }
     }
 
@@ -37,10 +44,6 @@ class Event<T>(
         scope.launch {
             flow.emit(data)
         }
-    }
-
-    fun cancel() {
-        job.cancel()
     }
 
     override fun toString(): String {

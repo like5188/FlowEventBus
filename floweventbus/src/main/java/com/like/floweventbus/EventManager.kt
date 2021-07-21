@@ -14,9 +14,15 @@ object EventManager {
             return
         }
 
-        val event = Event(owner, tag, requestCode, isSticky, observer)
-        mEventList.add(event)
-        Log.i(TAG, "订阅事件 --> $event")
+        Event(owner, tag, requestCode, isSticky, observer).apply {
+            mEventList.add(this)
+            Log.i(TAG, "订阅事件 --> $this")
+            onCancel = {
+                Log.w(TAG, "取消订阅事件 --> $this")
+                mEventList.remove(this)
+                logEvent()
+            }
+        }
         logEvent()
     }
 
@@ -39,8 +45,7 @@ object EventManager {
      * 打印缓存的事件
      */
     private fun logEvent() {
-        val events = mEventList.toSet()
-        Log.d(TAG, "事件总数：${events.size}${if (events.isEmpty()) "" else "，包含：$events"}")
+        Log.d(TAG, "事件总数：${mEventList.size}${if (mEventList.isEmpty()) "" else "，包含：$mEventList"}")
 
         val owners = mEventList.distinctBy { it.owner }.map { if (it.owner != null) it.owner::class.java.name else "null" }
         Log.d(TAG, "生命周期类总数：${owners.size}${if (owners.isEmpty()) "" else "，包含：$owners"}")
