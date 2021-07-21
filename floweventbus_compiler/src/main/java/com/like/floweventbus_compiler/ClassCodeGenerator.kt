@@ -12,7 +12,7 @@ import javax.lang.model.element.TypeElement
 public class MainViewModel_Proxy<T extends User> extends HostProxy {
     @Override
     protected void register(@NotNull Object host, @NotNull LifecycleOwner owner) {
-        com.like.floweventbus.EventManager.register(owner, tag, requestCode, isSticky, new Observer<T>() {
+        com.like.floweventbus.EventManager.register(host, owner, tag, requestCode, isSticky, new Observer<T>() {
             @Override
             public void onChanged(@Nullable T s) {
                 // 调用@BusObserver注解的接收数据的方法
@@ -34,7 +34,7 @@ class ClassCodeGenerator {
         private val OBSERVER = ClassName.get("androidx.lifecycle", "Observer")
         private val LIFECYCLE_OWNER = ClassName.get("androidx.lifecycle", "LifecycleOwner")
         private val OBJECT = ClassName.get("java.lang", "Object")
-        private val UNIT_PARAMS = ClassName.get("kotlin", "Unit")
+        private val NO_ARGS = ClassName.get("com.like.floweventbus", "NoArgs")
         private val EVENT_MANAGER = ClassName.get("com.like.floweventbus", "EventManager")
     }
 
@@ -96,7 +96,7 @@ class ClassCodeGenerator {
     /**
      * 创建 register 方法中调用的方法
      *
-     * com.like.floweventbus.EventManager.register(owner, tag, requestCode, isSticky, observer)
+     * com.like.floweventbus.EventManager.register(host, owner, tag, requestCode, isSticky, observer)
      */
     private fun createMethodCodeBlock(methodInfo: MethodInfo): CodeBlock {
         val builder = CodeBlock.builder()
@@ -106,7 +106,7 @@ class ClassCodeGenerator {
 
             val codeBlockBuilder = CodeBlock.builder()
             codeBlockBuilder.addStatement(
-                "\$L.register(owner\n,\$S\n,\$S\n,\$L\n,\$L)",
+                "\$L.register(host\n,owner\n,\$S\n,\$S\n,\$L\n,\$L)",
                 EVENT_MANAGER,
                 it,
                 requestCode,
@@ -131,7 +131,7 @@ class ClassCodeGenerator {
      */
     private fun createObserverParam(methodInfo: MethodInfo): TypeSpec {
         // 获取onChanged方法的参数类型
-        var typeName: TypeName = UNIT_PARAMS
+        var typeName: TypeName = NO_ARGS
         methodInfo.paramType?.let {
             if (it.kind.isPrimitive) {
                 typeName = TypeName.get(it)
@@ -151,10 +151,10 @@ class ClassCodeGenerator {
         val callbackStatement =
             "((${
                 ClassName.get(mHostClass).simpleName()
-            }) host).${methodInfo.methodName}(${if (typeName == UNIT_PARAMS) "" else "t"});"
+            }) host).${methodInfo.methodName}(${if (typeName == NO_ARGS) "" else "t"});"
         methodBuilder.addStatement(
             // 当参数为NO_OBSERVER_PARAMS时，代表被@BusObserver注解的方法没有参数。
-            if (typeName == UNIT_PARAMS) {
+            if (typeName == NO_ARGS) {
                 // 为了和其它参数（可为null）区分开，需要判断null
                 "if (t != null) {$callbackStatement}"
             } else {
