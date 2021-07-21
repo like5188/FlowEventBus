@@ -21,22 +21,18 @@ object EventManager {
     }
 
     fun <T> post(tag: String, requestCode: String, data: T) {
-        val event = getCachedEvent<T>(tag, requestCode)
-        if (event == null) {
+        val events = mEventList.filter {
+            it.tag == tag && it.requestCode == requestCode
+        }
+        if (events.isEmpty()) {
             Log.e(TAG, "发送消息失败，没有订阅事件 --> tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}")
             return
         }
-        Log.v(TAG, "发送消息 --> $event，内容=$data")
-        event.post(data)
-    }
-
-    /**
-     * 获取缓存的[Event]对象。
-     */
-    private fun <T> getCachedEvent(tag: String, requestCode: String): Event<T>? {
-        return mEventList.firstOrNull {
-            it.tag == tag && it.requestCode == requestCode
-        } as Event<T>?
+        events.forEach {
+            val event = it as Event<T>
+            Log.v(TAG, "发送消息 --> $event，内容=$data")
+            event.post(data)
+        }
     }
 
     /**
