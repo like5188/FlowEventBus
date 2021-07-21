@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 object EventManager {
     private val mEventList = mutableListOf<Event<*>>()
 
-    fun isRegistered(host: Any) = mEventList.any { it.host == host }
-
     @JvmStatic
     fun <T> subscribeEvent(hostClass: Class<*>, tag: String, requestCode: String, isSticky: Boolean) {
         if (tag.isEmpty()) {
@@ -41,11 +39,16 @@ object EventManager {
 
     @JvmStatic
     fun <T> registerHost(host: Any, owner: LifecycleOwner?, observer: Observer<T>) {
+        val isRegistered = mEventList.any { it.host == host }
+        if (isRegistered) {
+            Log.e(TAG, "注册宿主失败 --> $host 已经注册过")
+            return
+        }
         val events = mEventList.filter {
             host::class == it.hostClass
         }
         if (events.isEmpty()) {
-            Log.e(TAG, "注册宿主失败 --> ${host::class.qualifiedName} 不是宿主类，无需注册！")
+            Log.e(TAG, "注册宿主失败 --> $host 不是宿主类，无需注册！")
             return
         }
         events.forEach {

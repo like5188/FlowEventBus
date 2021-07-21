@@ -14,7 +14,7 @@ abstract class HostProxy {
     abstract fun subscribeEvent(hostClass: Class<*>, tag: String, requestCode: String, isSticky: Boolean)
 
     /**
-     * 对 host 中所有注册的 tag 进行 [EventManager.register] 方法的调用
+     * 对 host 中所有注册的 tag 进行 [EventManager.registerHost] 方法的调用
      */
     abstract fun registerHost(host: Any, owner: LifecycleOwner?)
 
