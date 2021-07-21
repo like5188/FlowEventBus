@@ -54,8 +54,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation project(':floweventbus')
-    implementation project(':livedatabus_annotations')
-    kapt project(':livedatabus_compiler')
+    implementation project(':floweventbus_annotations')
+    kapt project(':floweventbus_compiler')
 
 //    implementation 'com.github.like5188.LiveDataBus:livedatabus:版本号'
 //    kapt 'com.github.like5188.LiveDataBus:livedatabus_compiler:版本号'

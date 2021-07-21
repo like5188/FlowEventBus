@@ -1,4 +1,4 @@
-package com.like.livedatabus
+package com.like.floweventbus
 
 import androidx.lifecycle.LifecycleOwner
 

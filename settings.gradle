@@ -1,1 +1,1 @@
-include ':app', ':floweventbus', ':livedatabus_annotations', ':livedatabus_compiler'
+include ':app', ':floweventbus', ':floweventbus_annotations', ':floweventbus_compiler'

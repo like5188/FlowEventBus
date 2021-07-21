@@ -11,5 +11,5 @@ java {
 
 dependencies {
     compileOnly 'com.squareup:javapoet:1.13.0'// 自动生成源码的库
-    implementation project(':livedatabus_annotations')
+    implementation project(':floweventbus_annotations')
 }
