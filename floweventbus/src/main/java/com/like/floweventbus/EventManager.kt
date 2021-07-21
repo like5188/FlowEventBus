@@ -14,25 +14,19 @@ object EventManager {
             return
         }
 
-        val requestCodeLogMessage = if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""
-        val cachedEvent = getCachedEvent<T>(tag, requestCode)
-        if (cachedEvent == null) {
-            mEventList.add(Event(owner, tag, requestCode, isSticky, observer))
-            Log.i(TAG, "订阅事件成功 --> tag=$tag$requestCodeLogMessage")
-        } else {
-            Log.e(TAG, "订阅事件失败 --> tag=$tag$requestCodeLogMessage 事件已经存在")
-        }
+        val event = Event(owner, tag, requestCode, isSticky, observer)
+        mEventList.add(event)
+        Log.i(TAG, "订阅事件成功 --> $event")
         logEvent()
     }
 
     fun <T> post(tag: String, requestCode: String, data: T) {
-        val requestCodeLogMessage = if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""
         val event = getCachedEvent<T>(tag, requestCode)
         if (event == null) {
-            Log.e(TAG, "发送消息失败，没有订阅事件 --> tag=$tag$requestCodeLogMessage")
+            Log.e(TAG, "发送消息失败，没有订阅事件 --> tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}")
             return
         }
-        Log.v(TAG, "发送消息 --> tag=$tag$requestCodeLogMessage，内容=$data")
+        Log.v(TAG, "发送消息 --> $event，内容=$data")
         event.post(data)
     }
 
