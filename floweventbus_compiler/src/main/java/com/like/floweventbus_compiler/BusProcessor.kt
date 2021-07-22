@@ -12,7 +12,7 @@ import javax.lang.model.element.TypeElement
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes("com.like.floweventbus_annotations.BusObserver")
 class BusProcessor : AbstractProcessor() {
-    private val map = mutableMapOf<TypeElement, ClassCodeGenerator>()
+    private val map = mutableMapOf<TypeElement, ClassGenerator>()
 
     /**
      * init()方法会被注解处理工具调用，并输入 ProcessingEnvironment 参数。
@@ -51,11 +51,11 @@ class BusProcessor : AbstractProcessor() {
                     continue
                 // 添加宿主类
                 val hostClass = method.enclosingElement as TypeElement
-                val classCodeGenerator = map[hostClass] ?: ClassCodeGenerator().apply {
+                val classGenerator = map[hostClass] ?: ClassGenerator().apply {
                     map[hostClass] = this
                 }
                 // 添加被BusObserver注解的方法
-                classCodeGenerator.addElement(method)
+                classGenerator.addMethod(method)
             } catch (e: Exception) {
                 e.printStackTrace()
                 ProcessUtils.error(method, e.message ?: "")
@@ -63,8 +63,8 @@ class BusProcessor : AbstractProcessor() {
         }
 
         // 生成宿主类对应的代理类的代码
-        map.forEach { (_, classCodeGenerator) ->
-            classCodeGenerator.create()
+        map.forEach { (_, classGenerator) ->
+            classGenerator.create()
         }
         return true
     }

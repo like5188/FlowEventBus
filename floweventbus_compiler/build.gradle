@@ -11,5 +11,6 @@ java {
 
 dependencies {
     compileOnly 'com.squareup:javapoet:1.13.0'// 自动生成源码的库
+    compileOnly 'com.google.code.gson:gson:2.8.7'
     implementation project(':floweventbus_annotations')
 }

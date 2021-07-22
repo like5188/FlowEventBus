@@ -46,4 +46,5 @@ dependencies {
     // Activity 或 Fragment 对协程的支持：lifecycleScope
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha02")
     implementation project(':floweventbus_annotations')
+    implementation project(':floweventbus_compiler')
 }
