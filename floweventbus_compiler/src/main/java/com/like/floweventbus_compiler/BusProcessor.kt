@@ -49,7 +49,7 @@ class BusProcessor : AbstractProcessor() {
                 // 验证方法及其所在宿主类的有效性
                 if (!ProcessUtils.verifyEnclosingClass(method) || !ProcessUtils.verifyMethod(method))
                     continue
-                // 添加宿主类
+                // 宿主类
                 val hostClass = method.enclosingElement as TypeElement
                 val classGenerator = map[hostClass] ?: ClassGenerator().apply {
                     map[hostClass] = this
