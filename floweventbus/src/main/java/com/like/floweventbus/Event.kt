@@ -1,6 +1,9 @@
 package com.like.floweventbus
 
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -10,7 +13,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 class Event<T>(
-    val hostClass: Class<*>,// 宿主类
+    val hostClass: String,// 宿主类
     val tag: String,// 标签
     val requestCode: String,// 请求码。当标签相同时，可以使用请求码区分
     val isSticky: Boolean,
@@ -18,23 +21,21 @@ class Event<T>(
 ) {
     var host: Any? = null// 宿主
     var owner: LifecycleOwner? = null// 宿主所属的生命周期类
-    private var observer: Observer<T>? = null// 数据改变回调
     private var job: Job? = null
     var onCancel: (() -> Unit)? = null
 
-    fun bind(host: Any, owner: LifecycleOwner?, observer: Observer<T>) {
+    fun bind(host: Any, owner: LifecycleOwner?, callback: (T) -> Unit) {
         this.host = host
         this.owner = owner
-        this.observer = observer
         job = (owner?.lifecycleScope?.launch {
             owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 flow.collect {
-                    observer.onChanged(it)
+                    callback(it)
                 }
             }
         } ?: GlobalScope.launch {
             flow.collect {
-                observer.onChanged(it)
+                callback(it)
             }
         }).apply {
             invokeOnCompletion {

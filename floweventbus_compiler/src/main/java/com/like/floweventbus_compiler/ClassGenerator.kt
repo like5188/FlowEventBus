@@ -18,9 +18,7 @@ internal class ClassGenerator {
         if (mMethodInfoList.isEmpty()) {
             return
         }
-        val hostClass = mMethodInfoList.first().hostClass
-//        HostProxyClassGenerator.create(hostClass, mMethodInfoList)
-        MethodsCacheClassGenerator.create(hostClass, mMethodInfoList)
+        MethodsCacheClassGenerator.create(mMethodInfoList)
     }
 
     /**
@@ -31,16 +29,16 @@ internal class ClassGenerator {
         hostClass ?: return
 
         val annotation = method.getAnnotation(BusObserver::class.java)
+
         val tags = annotation.value.toList()
         if (tags.isNullOrEmpty()) return
+        tags.forEach {
+            if (it.isEmpty()) {
+                return
+            }
+        }
 
         val requestCode = annotation.requestCode
-
-        // 判断是否有重复的tag + requestCode
-        val isRepeat = mMethodInfoList.any {
-            it.tags.intersect(tags).isNotEmpty() && it.requestCode == requestCode
-        }
-        if (isRepeat) return
 
         val methodName = method.simpleName.toString()
         if (methodName.isEmpty()) return
