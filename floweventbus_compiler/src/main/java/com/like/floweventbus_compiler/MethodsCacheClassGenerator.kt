@@ -2,15 +2,11 @@ package com.like.floweventbus_compiler
 
 import com.google.gson.*
 import com.like.floweventbus_annotations.BusObserver
-import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.FieldSpec
-import com.squareup.javapoet.JavaFile
-import com.squareup.javapoet.TypeSpec
+import com.squareup.javapoet.*
 import java.io.IOException
 import java.lang.reflect.Type
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
 
 /*
 public class MainViewModel_Methods {
@@ -24,7 +20,7 @@ object MethodsCacheClassGenerator {
     private const val CLASS_UNIFORM_MARK = "_Methods"
 
     // 因为java工程中没有下面这些类(Android中的类)，所以只能采用ClassName的方式。
-    private val STRING = ClassName.get("java.lang", "String")
+    private val STRING: ClassName = ClassName.get("java.lang", "String")
 
     fun create(hostClass: TypeElement, methodInfoList: List<MethodInfo>) {
         try {
@@ -62,8 +58,8 @@ object MethodsCacheClassGenerator {
                     return JsonPrimitive(src?.toString() ?: "")
                 }
             })
-            .registerTypeAdapter(TypeMirror::class.java, object : JsonSerializer<TypeMirror> {
-                override fun serialize(src: TypeMirror?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
+            .registerTypeAdapter(TypeName::class.java, object : JsonSerializer<TypeName> {
+                override fun serialize(src: TypeName?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
                     return JsonPrimitive(src?.toString() ?: "")
                 }
             })

@@ -28,7 +28,7 @@ object FlowEventBus {
             else -> null
         }
     ) {
-        RegisterManager.register(host, owner)
+        EventManager.registerHost(host, owner)
     }
 
     /**

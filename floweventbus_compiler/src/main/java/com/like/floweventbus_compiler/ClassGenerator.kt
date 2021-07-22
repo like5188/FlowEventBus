@@ -1,12 +1,17 @@
 package com.like.floweventbus_compiler
 
 import com.like.floweventbus_annotations.BusObserver
+import com.squareup.javapoet.ClassName
+import com.squareup.javapoet.TypeName
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
 
 internal class ClassGenerator {
+    companion object {
+        val NO_ARGS: ClassName = ClassName.get("com.like.floweventbus", "NoArgs")
+    }
+
     private val mMethodInfoList = mutableListOf<MethodInfo>()// 类中的所有方法
 
     fun create() {
@@ -42,13 +47,21 @@ internal class ClassGenerator {
 
         val isSticky = annotation.isSticky
 
-        var paramType: TypeMirror? = null
         val executableElement = method as ExecutableElement
-        if (executableElement.parameters.size == 1) {
-            paramType = executableElement.parameters[0].asType()
+        var typeName: TypeName = NO_ARGS
+        if (executableElement.parameters.size >= 1) {
+            val paramType = executableElement.parameters[0].asType()
+            if (paramType.kind.isPrimitive) {
+                typeName = TypeName.get(paramType)
+                if (!TypeName.get(paramType).isBoxedPrimitive) {// 如果不是装箱数据类型
+                    typeName = typeName.box()
+                }
+            } else {
+                typeName = ClassName.get(paramType)
+            }
         }
         mMethodInfoList.add(
-            MethodInfo(hostClass, methodName, tags, requestCode, isSticky, paramType)
+            MethodInfo(hostClass, methodName, tags, requestCode, isSticky, typeName)
         )
     }
 }

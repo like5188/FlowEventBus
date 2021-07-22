@@ -2,14 +2,21 @@ package com.like.floweventbus
 
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 object EventManager {
     private val mEventList = mutableListOf<Event<*>>()
+    private val mGson = Gson()
 
-    @JvmStatic
-    fun <T> subscribeEvent(hostClass: Class<*>, tag: String, requestCode: String, isSticky: Boolean) {
+    fun <T> subscribeEvent(
+        hostClass: Class<*>,
+        tag: String,
+        requestCode: String,
+        isSticky: Boolean,
+        paramType: Class<T>
+    ) {
         if (tag.isEmpty()) {
             Log.e(TAG, "订阅事件失败 --> tag 不能为空")
             return
@@ -37,23 +44,48 @@ object EventManager {
         }
     }
 
+    private fun getMethods(host: Any): List<MethodInfo> {
+        try {
+            // 查找并实例化由 javapoet 自动生成的宿主代理类，此类继承自 HostProxy 类。
+            val clazz = Class.forName("${host::class.qualifiedName}_Methods")
+            val methods = clazz.getDeclaredField("METHODS").get(null)?.toString() ?: return emptyList()
+            return mGson.fromJson<List<MethodInfo>>(methods, object : TypeToken<List<MethodInfo>>() {}.type).apply {
+                Log.i(TAG, "获取宿主($host)的方法 --> $this")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "获取宿主($host)的方法失败 --> ${e.message}")
+        }
+        return emptyList()
+    }
+
     @JvmStatic
-    fun <T> registerHost(host: Any, owner: LifecycleOwner?, observer: Observer<T>) {
+    fun registerHost(host: Any, owner: LifecycleOwner?) {
         val isRegistered = mEventList.any { it.host == host }
         if (isRegistered) {
             Log.e(TAG, "注册宿主失败 --> $host 已经注册过")
             return
         }
-        val events = mEventList.filter {
-            host::class == it.hostClass
+        getMethods(host).forEach { methodInfo ->
+            methodInfo.tags.forEach { tag ->
+                subscribeEvent(
+                    Class.forName(methodInfo.hostClass),
+                    tag,
+                    methodInfo.requestCode,
+                    methodInfo.isSticky,
+                    Class.forName(methodInfo.paramType)
+                )
+            }
         }
-        if (events.isEmpty()) {
-            Log.e(TAG, "注册宿主失败 --> $host 不是宿主类，无需注册！")
-            return
-        }
-        events.forEach {
-            (it as Event<T>).bind(host, owner, observer)
-        }
+//        val events = mEventList.filter {
+//            host::class == it.hostClass
+//        }
+//        if (events.isEmpty()) {
+//            Log.e(TAG, "注册宿主失败 --> $host 不是宿主类，无需注册！")
+//            return
+//        }
+//        events.forEach {
+//            (it as Event<T>).bind(host, owner, observer)
+//        }
     }
 
     fun <T> post(tag: String, requestCode: String, data: T) {

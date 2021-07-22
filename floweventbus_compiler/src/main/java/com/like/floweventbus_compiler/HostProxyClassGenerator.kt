@@ -5,7 +5,6 @@ import com.squareup.javapoet.*
 import java.io.IOException
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
 
 /*
 public class MainViewModel_Proxy<T extends User> extends HostProxy {
@@ -39,11 +38,10 @@ object HostProxyClassGenerator {
     private const val CLASS_UNIFORM_MARK = "_Proxy"
 
     // 因为java工程中没有下面这些类(Android中的类)，所以只能采用ClassName的方式。
-    private val HOST_PROXY = ClassName.get("com.like.floweventbus", "HostProxy")
-    private val OBSERVER = ClassName.get("androidx.lifecycle", "Observer")
-    private val LIFECYCLE_OWNER = ClassName.get("androidx.lifecycle", "LifecycleOwner")
-    private val NO_ARGS = ClassName.get("com.like.floweventbus", "NoArgs")
-    private val EVENT_MANAGER = ClassName.get("com.like.floweventbus", "EventManager")
+    private val HOST_PROXY: ClassName = ClassName.get("com.like.floweventbus", "HostProxy")
+    private val OBSERVER: ClassName = ClassName.get("androidx.lifecycle", "Observer")
+    private val LIFECYCLE_OWNER: ClassName = ClassName.get("androidx.lifecycle", "LifecycleOwner")
+    private val EVENT_MANAGER: ClassName = ClassName.get("com.like.floweventbus", "EventManager")
 
     fun create(hostClass: TypeElement, methodInfoList: List<MethodInfo>) {
         try {
@@ -123,15 +121,7 @@ object HostProxyClassGenerator {
      */
     private fun createObserverParam(hostClass: TypeElement, methodInfo: MethodInfo): TypeSpec {
         // 获取onChanged方法的参数类型
-        var typeName: TypeName = NO_ARGS
-        methodInfo.paramType?.let {
-            if (it.kind.isPrimitive) {
-                typeName = TypeName.get(it)
-                if (!typeName.isBoxedPrimitive)// 如果是装箱数据类型
-                    typeName = typeName.box()
-            } else
-                typeName = ClassName.get(it)
-        }
+        val typeName: TypeName = methodInfo.paramType
 
         // 创建onChanged方法
         val methodBuilder = MethodSpec.methodBuilder("onChanged")
@@ -143,10 +133,10 @@ object HostProxyClassGenerator {
         val callbackStatement =
             "((${
                 ClassName.get(hostClass).simpleName()
-            }) host).${methodInfo.methodName}(${if (typeName == NO_ARGS) "" else "t"});"
+            }) host).${methodInfo.methodName}(${if (typeName == ClassGenerator.NO_ARGS) "" else "t"});"
         methodBuilder.addStatement(
             // 当参数为NO_OBSERVER_PARAMS时，代表被@BusObserver注解的方法没有参数。
-            if (typeName == NO_ARGS) {
+            if (typeName == ClassGenerator.NO_ARGS) {
                 // 为了和其它参数（可为null）区分开，需要判断null
                 "if (t != null) {$callbackStatement}"
             } else {
