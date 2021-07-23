@@ -70,7 +70,7 @@ object EventManager {
     fun register(host: Any, owner: LifecycleOwner?) {
         val isRegistered = mEventList.any { it.host == host }
         if (isRegistered) {
-            Log.e(TAG, "绑定事件失败 --> 宿主 $host 已经绑定过")
+            Log.e(TAG, "绑定宿主失败 --> 宿主 $host 已经绑定过")
             return
         }
 
@@ -79,13 +79,13 @@ object EventManager {
             it.hostClass == host.javaClass
         }
         if (hostEvents.isEmpty()) {
-            Log.e(TAG, "绑定事件失败 --> $host 不是宿主类，不能绑定！")
+            Log.e(TAG, "绑定宿主失败 --> $host 不是宿主类，不能绑定！")
             return
         }
         hostEvents.forEach { event ->
             event.bind(host, owner)
         }
-        Log.i(TAG, "绑定事件 --> $host")
+        Log.i(TAG, "绑定宿主 --> $host")
         logEvent()
         logHostAndOwner()
     }
