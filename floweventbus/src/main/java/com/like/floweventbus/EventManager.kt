@@ -16,7 +16,6 @@ object EventManager {
         try {
             val methodsClass = Class.forName("com.like.floweventbus_compiler.FlowEventbusMethods").kotlin
             methodsClass.declaredMemberProperties.forEach {
-                Log.i(TAG, "获取到属性 --> ${it.call()}")
                 val methods = mGson.fromJson<List<MethodInfo>>(
                     it.call().toString(),
                     object : TypeToken<List<MethodInfo>>() {}.type
@@ -58,10 +57,13 @@ object EventManager {
         with(Event(hostClass, tag, requestCode, isSticky, flow, methodName, paramType)) {
             mEventList.add(this)
             Log.i(TAG, "订阅事件 --> $this")
+            logEvent()
+
             onCancel = {
                 Log.w(TAG, "取消事件 --> $this")
                 mEventList.remove(this)// event 由 host、tag、requestCode 组合决定
                 logEvent()
+                logHostAndOwner()
             }
         }
     }
@@ -85,6 +87,7 @@ object EventManager {
             event.bind(host, owner)
         }
         Log.i(TAG, "注册宿主 --> $host")
+        logHostAndOwner()
     }
 
     fun <T> post(tag: String, requestCode: String, data: T) {
@@ -113,12 +116,16 @@ object EventManager {
      */
     private fun logEvent() {
         Log.d(TAG, "事件总数：${mEventList.size}${if (mEventList.isEmpty()) "" else "，包含：$mEventList"}")
-
-        val hosts = mEventList.distinctBy { it.host }.map { it.host }
-        Log.d(TAG, "宿主总数：${hosts.size}${if (hosts.isEmpty()) "" else "，包含：$hosts"}")
-
-        val owners = mEventList.distinctBy { it.owner }.map { if (it.owner != null) it.owner!!::class.java.name else "null" }
-        Log.d(TAG, "生命周期类总数：${owners.size}${if (owners.isEmpty()) "" else "，包含：$owners"}")
     }
 
+    /**
+     * 打印缓存的宿主和生命周期类
+     */
+    private fun logHostAndOwner() {
+        val hosts = mEventList.map { it.host }.distinct().filterNotNull()
+        Log.d(TAG, "宿主总数：${hosts.size}${if (hosts.isEmpty()) "" else "，包含：$hosts"}")
+
+        val owners = mEventList.map { it.owner }.distinct().filterNotNull()
+        Log.d(TAG, "生命周期类总数：${owners.size}${if (owners.isEmpty()) "" else "，包含：$owners"}")
+    }
 }

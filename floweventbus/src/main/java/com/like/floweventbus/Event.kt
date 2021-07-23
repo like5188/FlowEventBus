@@ -64,7 +64,7 @@ class Event<T>(
     }
 
     override fun toString(): String {
-        return "Event(host=$host, tag='$tag'${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, isSticky='$isSticky')"
+        return "Event(hostClass=${hostClass.name}, tag='$tag'${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, isSticky='$isSticky')"
     }
 
     override fun equals(other: Any?): Boolean {
