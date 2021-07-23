@@ -5,6 +5,25 @@ import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
+/*
+Element有以下几个实现类
+PackageElement 			表示一个包程序元素。提供对有关包及其成员的信息的访问
+ExecutableElement 		表示某个类或接口的方法、构造方法或初始化程序（静态或实例）
+TypeElement 			表示一个类或接口程序元素。提供对有关类型及其成员的信息的访问
+VariableElement 		表示一个字段、enum 常量、方法或构造方法参数、局部变量或异常参数
+
+Element节点中的API
+getEnclosedElements() 	返回该元素直接包含的子元素
+getEnclosingElement() 	返回包含该element的父element，与上一个方法相反
+getKind() 				返回element的类型，判断是哪种element
+getModifiers() 			获取修饰关键字,入public static final等关键字
+getSimpleName()			获取名字，不带包名
+getQualifiedName() 		获取全名，如果是类的话，包含完整的包名路径
+getParameters() 		获取方法的参数元素，每个元素是一个VariableElement
+getReturnType() 		获取方法元素的返回值
+getConstantValue() 		如果属性变量被final修饰，则可以使用该方法获取它的值
+
+ */
 
 /**
  * RxBus 注解处理器。每一个注解处理器类都必须有一个空的构造函数，默认不写就行;
