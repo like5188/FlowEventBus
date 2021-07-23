@@ -10,7 +10,7 @@ import kotlin.reflect.full.declaredMemberProperties
 
 object EventManager {
     private val mGson = Gson()
-    private val mEventList = mutableListOf<Event<*>>()
+    val mEventList = mutableListOf<Event<*>>()
 
     init {
         try {
@@ -47,18 +47,24 @@ object EventManager {
         methodName: String,
         paramType: Class<T>
     ) {
-        val flow = (mEventList.firstOrNull {
-            // Flow 由 tag、requestCode 组合决定 todo 还需加上参数类型 paramType 的判断
-            it.tag == tag && it.requestCode == requestCode
-        }?.flow as? MutableSharedFlow<T>) ?: MutableSharedFlow(
-            replay = if (isSticky) 1 else 0,
-            extraBufferCapacity = Int.MAX_VALUE // 避免挂起导致数据发送失败
-        )
+        val flow = getCachedFlowOrCreateIfAbsent(tag, requestCode, paramType)
         with(Event(hostClass, tag, requestCode, isSticky, flow, methodName, paramType)) {
             mEventList.add(this)
             Log.i(TAG, "添加事件 --> $this")
             logEvent()
         }
+    }
+
+    private fun <T> getCachedFlowOrCreateIfAbsent(tag: String, requestCode: String, paramType: Class<T>): MutableSharedFlow<T> {
+        val isSticky = mEventList.any { it.tag == tag && it.requestCode == requestCode && it.isSticky }
+        val cachedFlow = mEventList.firstOrNull {
+            // Flow 由 tag、requestCode、paramType 组合决定
+            it.tag == tag && it.requestCode == requestCode && it.paramType == paramType
+        }?.flow as? MutableSharedFlow<T>
+        return cachedFlow ?: MutableSharedFlow(
+            replay = if (isSticky) 1 else 0,
+            extraBufferCapacity = Int.MAX_VALUE // 避免挂起导致数据发送失败
+        )
     }
 
     fun register(host: Any, owner: LifecycleOwner?) {
@@ -84,13 +90,17 @@ object EventManager {
         logHostAndOwner()
     }
 
-    fun <T> post(tag: String, requestCode: String, data: T) {
-        // tag、requestCode 对应的所有事件，它们用了同一个 MutableSharedFlow
+    inline fun <reified T> post(tag: String, requestCode: String, data: T) {
+        // tag、requestCode、paramType 对应的所有事件，它们用了同一个 MutableSharedFlow
         val events = mEventList.filter {
-            it.tag == tag && it.requestCode == requestCode
+            Log.i(TAG, "[it.tag=${it.tag} tag=$tag ${it.tag == tag}] [it.requestCode=${it.requestCode} requestCode=$requestCode ${it.requestCode == requestCode}] [it.paramType=${it.paramType} T::class.java=${T::class.java} ${it.paramType == T::class.java}]")
+            it.tag == tag && it.requestCode == requestCode && it.paramType == T::class.java
         }
         if (events.isEmpty()) {
-            Log.e(TAG, "发送消息失败，没有订阅事件 --> tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}")
+            Log.e(
+                TAG,
+                "发送消息失败，没有订阅事件，或者参数类型不匹配 --> tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据类型=${T::class.java}, 数据=$data"
+            )
             return
         }
         // 同一个 MutableSharedFlow，取任意一个即可

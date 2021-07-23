@@ -45,12 +45,12 @@ object FlowEventBus {
     }
 
     @JvmStatic
-    fun <T> post(tag: String, t: T) {
+    inline fun <reified T> post(tag: String, t: T) {
         EventManager.post(tag, "", t)
     }
 
     @JvmStatic
-    fun <T> post(tag: String, requestCode: String, t: T) {
+    inline fun <reified T> post(tag: String, requestCode: String, t: T) {
         EventManager.post(tag, requestCode, t)
     }
 
