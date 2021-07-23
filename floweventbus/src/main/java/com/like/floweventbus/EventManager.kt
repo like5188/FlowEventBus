@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.like.floweventbus_compiler.MethodInfo
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlin.reflect.full.declaredMemberProperties
 
 object EventManager {
     private val mGson = Gson()
@@ -14,22 +13,25 @@ object EventManager {
 
     init {
         try {
-            val methodsClass = Class.forName("com.like.floweventbus_compiler.FlowEventbusMethods").kotlin
-            methodsClass.declaredMemberProperties.forEach {
+            val methodsClass = Class.forName("com.like.floweventbus_compiler.FlowEventbusMethods")
+            for (field in methodsClass.declaredFields) {
+                if (field.name == "INSTANCE") {// 除去 kotlin 类中的隐藏属性
+                    continue
+                }
                 val methods = mGson.fromJson<List<MethodInfo>>(
-                    it.call().toString(),
+                    field.get(null).toString(),
                     object : TypeToken<List<MethodInfo>>() {}.type
                 )
                 // 订阅事件
                 for (methodInfo in methods) {
                     for (tag in methodInfo.tags) {
                         addEvent(
-                            methodInfo.hostClass.toClass(),
+                            Class.forName(methodInfo.hostClass),
                             tag,
                             methodInfo.requestCode,
                             methodInfo.isSticky,
                             methodInfo.methodName,
-                            methodInfo.paramType.toClass()
+                            Class.forName(methodInfo.paramType)
                         )
                     }
                 }
@@ -93,7 +95,10 @@ object EventManager {
     inline fun <reified T> post(tag: String, requestCode: String, data: T) {
         // tag、requestCode、paramType 对应的所有事件，它们用了同一个 MutableSharedFlow
         val events = mEventList.filter {
-            Log.i(TAG, "[it.tag=${it.tag} tag=$tag ${it.tag == tag}] [it.requestCode=${it.requestCode} requestCode=$requestCode ${it.requestCode == requestCode}] [it.paramType=${it.paramType} T::class.java=${T::class.java} ${it.paramType == T::class.java}]")
+            Log.i(
+                TAG,
+                "[it.tag=${it.tag} tag=$tag ${it.tag == tag}] [it.requestCode=${it.requestCode} requestCode=$requestCode ${it.requestCode == requestCode}] [it.paramType=${it.paramType} T::class.java=${T::class.java} ${it.paramType == T::class.java}]"
+            )
             it.tag == tag && it.requestCode == requestCode && it.paramType == T::class.java
         }
         if (events.isEmpty()) {
