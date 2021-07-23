@@ -58,12 +58,6 @@ object EventManager {
             mEventList.add(this)
             Log.i(TAG, "添加事件 --> $this")
             logEvent()
-
-            onCancel = {
-                Log.w(TAG, "取消绑定事件 --> $this")
-                logEvent()
-                logHostAndOwner()
-            }
         }
     }
 
@@ -114,18 +108,18 @@ object EventManager {
     /**
      * 打印缓存的事件
      */
-    private fun logEvent() {
+    fun logEvent() {
         Log.d(TAG, "事件总数：${mEventList.size}${if (mEventList.isEmpty()) "" else "，包含：$mEventList"}")
     }
 
     /**
      * 打印缓存的宿主和生命周期类
      */
-    private fun logHostAndOwner() {
-        val hosts = mEventList.map { it.host }.distinct().filterNotNull()
+    fun logHostAndOwner() {
+        val hosts = mEventList.mapNotNull { it.host }.distinct()
         Log.d(TAG, "宿主总数：${hosts.size}${if (hosts.isEmpty()) "" else "，包含：$hosts"}")
 
-        val owners = mEventList.map { it.owner }.distinct().filterNotNull()
+        val owners = mEventList.mapNotNull { it.owner }.distinct()
         Log.d(TAG, "生命周期类总数：${owners.size}${if (owners.isEmpty()) "" else "，包含：$owners"}")
     }
 }

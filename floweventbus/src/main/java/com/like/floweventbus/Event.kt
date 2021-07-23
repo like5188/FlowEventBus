@@ -1,5 +1,6 @@
 package com.like.floweventbus
 
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -24,7 +25,6 @@ class Event<T>(
     var host: Any? = null// 宿主
     var owner: LifecycleOwner? = null// 宿主所属的生命周期类
     private var job: Job? = null
-    var onCancel: (() -> Unit)? = null
 
     fun bind(host: Any, owner: LifecycleOwner?) {
         this.host = host
@@ -47,10 +47,12 @@ class Event<T>(
             }
         }).apply {
             invokeOnCompletion {
+                Log.w(TAG, "解绑事件 --> ${this@Event}")
                 this@Event.host = null
                 this@Event.owner = null
                 this@Event.job = null
-                onCancel?.invoke()
+                EventManager.logEvent()
+                EventManager.logHostAndOwner()
             }
         }
     }
