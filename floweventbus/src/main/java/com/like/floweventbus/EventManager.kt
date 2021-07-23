@@ -35,7 +35,7 @@ object EventManager {
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "获取方法失败 --> ${e.message}")
+            Log.e(TAG, "获取注解方法信息失败 --> ${e.message}")
         }
     }
 
