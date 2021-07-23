@@ -4,11 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.like.floweventbus_compiler.MethodInfo
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlin.reflect.full.declaredMemberExtensionProperties
 import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.staticProperties
 
 object EventManager {
     private val mGson = Gson()

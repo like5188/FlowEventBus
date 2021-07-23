@@ -1,13 +1,10 @@
 package com.like.floweventbus_compiler
 
-import com.squareup.kotlinpoet.TypeName
-import javax.lang.model.element.TypeElement
-
 /**
  * 被@BusObserver注解标注的方法的相关信息
  */
 data class MethodInfo(
-    val hostClass: TypeElement,// 宿主类
+    val hostClass: String,// 宿主类
     val methodName: String,// 被@BusObserver注解标注的方法名字
     val tags: List<String>,// 标签
     val requestCode: String,// 请求码

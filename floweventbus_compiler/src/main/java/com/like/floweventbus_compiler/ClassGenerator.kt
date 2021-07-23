@@ -1,8 +1,6 @@
 package com.like.floweventbus_compiler
 
 import com.like.floweventbus_annotations.BusObserver
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.asTypeName
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
@@ -26,10 +24,6 @@ TypeName 			类型，如在添加返回值类型是使用 TypeName.VOID
 
  */
 internal class ClassGenerator {
-    companion object {
-        val NO_ARGS: ClassName = ClassName("com.like.floweventbus", "NoArgs")
-    }
-
     private val mMethodInfoList = mutableListOf<MethodInfo>()// 类中的所有方法
 
     fun create() {
@@ -65,12 +59,12 @@ internal class ClassGenerator {
 
         val executableElement = method as ExecutableElement
         val typeName = when (executableElement.parameters.size) {
-            0 -> NO_ARGS
-            1 -> executableElement.parameters[0].asType().asTypeName()
+            0 -> "com.like.floweventbus.NoArgs"
+            1 -> executableElement.parameters[0].asType().toString()
             else -> return
         }
         mMethodInfoList.add(
-            MethodInfo(hostClass, methodName, tags, requestCode, isSticky, typeName.toString())
+            MethodInfo(hostClass.qualifiedName.toString(), methodName, tags, requestCode, isSticky, typeName)
         )
     }
 }

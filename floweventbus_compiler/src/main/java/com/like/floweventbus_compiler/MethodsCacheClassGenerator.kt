@@ -65,8 +65,8 @@ object MethodsCacheClassGenerator {
      *
      * const val XXX_METHODS = ""
      */
-    private fun createMethodsProperty(hostClass: TypeElement, methods: List<MethodInfo>): PropertySpec {
-        val propertyName = "${hostClass.qualifiedName.toString().replace(".", "_")}$FIELD_SUFFIX"
+    private fun createMethodsProperty(hostClass: String, methods: List<MethodInfo>): PropertySpec {
+        val propertyName = "${hostClass.replace(".", "_")}$FIELD_SUFFIX"
         return PropertySpec.builder(propertyName, String::class)
             .addModifiers(KModifier.CONST)
             .initializer("%S", mGson.toJson(methods))
