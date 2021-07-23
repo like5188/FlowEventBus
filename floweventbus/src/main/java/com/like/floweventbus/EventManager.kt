@@ -25,12 +25,12 @@ object EventManager {
                 for (methodInfo in methods) {
                     for (tag in methodInfo.tags) {
                         addEvent(
-                            Class.forName(methodInfo.hostClass),
+                            methodInfo.hostClass.toClass(),
                             tag,
                             methodInfo.requestCode,
                             methodInfo.isSticky,
                             methodInfo.methodName,
-                            Class.forName(methodInfo.paramType)
+                            methodInfo.paramType.toClass()
                         )
                     }
                 }
