@@ -47,10 +47,10 @@ class Event<T>(
             }
         }).apply {
             invokeOnCompletion {
-                onCancel?.invoke()
                 this@Event.host = null
                 this@Event.owner = null
                 this@Event.job = null
+                onCancel?.invoke()
             }
         }
     }
