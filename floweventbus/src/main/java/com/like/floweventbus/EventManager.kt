@@ -18,11 +18,11 @@ object EventManager {
         try {
             val methodsClass = Class.forName("com.like.floweventbus_compiler.FlowEventbusMethods").kotlin
             methodsClass.declaredMemberProperties.forEach {
+                Log.i(TAG, "获取到属性 --> ${it.call()}")
                 val methods = mGson.fromJson<List<MethodInfo>>(
                     it.call().toString(),
                     object : TypeToken<List<MethodInfo>>() {}.type
                 )
-                Log.i(TAG, "获取到属性 --> ${it.call()}")
                 // 订阅事件
                 for (methodInfo in methods) {
                     for (tag in methodInfo.tags) {
