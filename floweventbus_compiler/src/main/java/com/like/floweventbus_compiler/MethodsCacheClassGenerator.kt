@@ -12,7 +12,8 @@ import javax.lang.model.element.TypeElement
 
 /*
 object FlowEventbusMethods {
-    const val XXX_METHODS = ""
+    const val com_like_floweventbus_sample_BaseActivity1_METHODS_METHODS = ""
+    const val com_like_floweventbus_sample_MainActivity_METHODS = ""
 }
  */
 /**
@@ -63,7 +64,7 @@ object MethodsCacheClassGenerator {
     /**
      * 创建 methods 属性
      *
-     * const val XXX_METHODS = ""
+     * const val com_like_floweventbus_sample_BaseActivity1_METHODS_METHODS = ""
      */
     private fun createMethodsProperty(hostClass: String, methods: List<MethodInfo>): PropertySpec {
         val propertyName = "${hostClass.replace(".", "_")}$FIELD_SUFFIX"
