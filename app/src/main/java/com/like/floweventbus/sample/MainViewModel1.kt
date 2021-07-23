@@ -7,8 +7,8 @@ import com.like.floweventbus_annotations.BusObserver
 class MainViewModel1 {
 
     @BusObserver(["like4"])
-    fun test(i: Int) {
-        Log.e(TAG, "MainViewModel1 test tag=like4，数据：$i")
+    fun test(data: Int) {
+        Log.e(TAG, "MainViewModel1 test tag=like4 数据：$data")
     }
 
 }

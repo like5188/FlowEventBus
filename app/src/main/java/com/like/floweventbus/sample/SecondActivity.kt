@@ -34,14 +34,14 @@ class SecondActivity : AppCompatActivity() {
     }
 
     @BusObserver(value = ["like1"], isSticky = true)
-    fun observer1(i: Int) {
-        Log.e(TAG, "SecondActivity onChanged tag=like1")
-        mBinding!!.tv1.text = i.toString()
+    fun observer1(data: Int) {
+        Log.e(TAG, "SecondActivity observer1 tag=like1 数据：$data")
+        mBinding!!.tv1.text = data.toString()
     }
 
     @BusObserver(value = ["like2"], requestCode = "re")
-    fun observer2(u: User) {
-        Log.e(TAG, "SecondActivity onChanged tag=like2")
-        mBinding!!.tv2.text = u.toString()
+    fun observer2(data: User) {
+        Log.e(TAG, "SecondActivity observer2 tag=like2 数据：$data")
+        mBinding!!.tv2.text = data.toString()
     }
 }
