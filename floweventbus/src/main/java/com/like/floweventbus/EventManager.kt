@@ -95,7 +95,7 @@ object EventManager {
         }
         // 同一个 MutableSharedFlow，取任意一个即可
         val event = events.first() as Event<T>
-        Log.v(TAG, "发送消息 --> $event，内容=$data")
+        Log.v(TAG, "发送消息 --> tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}，内容=$data")
         event.post(data)
     }
 
