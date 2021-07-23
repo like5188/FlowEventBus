@@ -22,7 +22,7 @@ object EventManager {
                 // 订阅事件
                 for (methodInfo in methods) {
                     for (tag in methodInfo.tags) {
-                        subscribeEvent(
+                        addEvent(
                             methodInfo.hostClass,
                             tag,
                             methodInfo.requestCode,
@@ -37,7 +37,7 @@ object EventManager {
         }
     }
 
-    private fun <T> subscribeEvent(
+    private fun <T> addEvent(
         hostClass: String,
         tag: String,
         requestCode: String,
@@ -45,46 +45,48 @@ object EventManager {
         paramType: Class<T>
     ) {
         val flow = (mEventList.firstOrNull {
-            // Flow由tag、requestCode组合决定
+            // Flow 由 tag、requestCode 组合决定
             it.tag == tag && it.requestCode == requestCode
         }?.flow as? MutableSharedFlow<T>) ?: MutableSharedFlow(
             replay = if (isSticky) 1 else 0,
-            extraBufferCapacity = Int.MAX_VALUE //避免挂起导致数据发送失败
+            extraBufferCapacity = Int.MAX_VALUE // 避免挂起导致数据发送失败
         )
         with(Event(hostClass, tag, requestCode, isSticky, flow)) {
             mEventList.add(this)
             Log.i(TAG, "订阅事件 --> $this")
             onCancel = {
                 Log.w(TAG, "取消事件 --> $this")
-                mEventList.remove(this)// event由host、tag、requestCode组合决定
+                mEventList.remove(this)// event 由 host、tag、requestCode 组合决定
                 logEvent()
             }
         }
     }
 
-    @JvmStatic
-    fun registerHost(host: Any, owner: LifecycleOwner?) {
+    fun register(host: Any, owner: LifecycleOwner?) {
         val isRegistered = mEventList.any { it.host == host }
         if (isRegistered) {
             Log.e(TAG, "注册宿主失败 --> $host 已经注册过")
             return
         }
 
-        val events = mEventList.filter {
+        // 宿主对应的所有事件
+        val hostEvents = mEventList.filter {
             it.hostClass == host.javaClass.name
         }
-        if (events.isEmpty()) {
+        if (hostEvents.isEmpty()) {
             Log.e(TAG, "注册宿主失败 --> $host 不是宿主类，无需注册！")
             return
         }
-        events.forEach {
+        hostEvents.forEach {
             it.bind(host, owner) {
+
             }
         }
-        Log.e(TAG, "注册宿主 --> $host")
+        Log.i(TAG, "注册宿主 --> $host")
     }
 
     fun <T> post(tag: String, requestCode: String, data: T) {
+        // tag、requestCode 对应的所有事件，它们用了同一个 MutableSharedFlow
         val events = mEventList.filter {
             it.tag == tag && it.requestCode == requestCode
         }
@@ -92,12 +94,13 @@ object EventManager {
             Log.e(TAG, "发送消息失败，没有订阅事件 --> tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}")
             return
         }
+        // 同一个 MutableSharedFlow，取任意一个即可
         val event = events.first() as Event<T>
         Log.v(TAG, "发送消息 --> $event，内容=$data")
         event.post(data)
     }
 
-    fun removeHost(host: Any) {
+    fun unregister(host: Any) {
         mEventList.filter { it.host == host }.listIterator().forEach {
             it.cancel()
         }
