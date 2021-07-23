@@ -12,5 +12,5 @@ data class MethodInfo(
     val tags: List<String>,// 标签
     val requestCode: String,// 请求码
     val isSticky: Boolean,// 是否粘性消息
-    val paramType: TypeName // 被@BusObserver注解标注的方法的参数类型。只支持一个参数
+    val paramType: String // 被@BusObserver注解标注的方法的参数类型。只支持一个参数
 )

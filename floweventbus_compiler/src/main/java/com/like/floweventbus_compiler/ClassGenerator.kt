@@ -70,7 +70,7 @@ internal class ClassGenerator {
             else -> return
         }
         mMethodInfoList.add(
-            MethodInfo(hostClass, methodName, tags, requestCode, isSticky, typeName)
+            MethodInfo(hostClass, methodName, tags, requestCode, isSticky, typeName.toString())
         )
     }
 }
