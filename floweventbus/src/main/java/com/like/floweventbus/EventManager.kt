@@ -23,10 +23,11 @@ object EventManager {
                 for (methodInfo in methods) {
                     for (tag in methodInfo.tags) {
                         addEvent(
-                            methodInfo.hostClass,
+                            Class.forName(methodInfo.hostClass),
                             tag,
                             methodInfo.requestCode,
                             methodInfo.isSticky,
+                            methodInfo.methodName,
                             Class.forName(methodInfo.paramType)
                         )
                     }
@@ -38,10 +39,11 @@ object EventManager {
     }
 
     private fun <T> addEvent(
-        hostClass: String,
+        hostClass: Class<*>,
         tag: String,
         requestCode: String,
         isSticky: Boolean,
+        methodName: String,
         paramType: Class<T>
     ) {
         val flow = (mEventList.firstOrNull {
@@ -51,7 +53,7 @@ object EventManager {
             replay = if (isSticky) 1 else 0,
             extraBufferCapacity = Int.MAX_VALUE // 避免挂起导致数据发送失败
         )
-        with(Event(hostClass, tag, requestCode, isSticky, flow)) {
+        with(Event(hostClass, tag, requestCode, isSticky, flow, methodName, paramType)) {
             mEventList.add(this)
             Log.i(TAG, "订阅事件 --> $this")
             onCancel = {
@@ -71,16 +73,14 @@ object EventManager {
 
         // 宿主对应的所有事件
         val hostEvents = mEventList.filter {
-            it.hostClass == host.javaClass.name
+            it.hostClass == host.javaClass
         }
         if (hostEvents.isEmpty()) {
             Log.e(TAG, "注册宿主失败 --> $host 不是宿主类，无需注册！")
             return
         }
-        hostEvents.forEach {
-            it.bind(host, owner) {
-
-            }
+        hostEvents.forEach { event ->
+            event.bind(host, owner)
         }
         Log.i(TAG, "注册宿主 --> $host")
     }
