@@ -5,6 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlin.reflect.full.staticProperties
 
 object EventManager {
     private val mGson = Gson()
@@ -12,13 +13,13 @@ object EventManager {
 
     init {
         try {
-            val methodsClass = Class.forName("com.like.floweventbus_compiler.FlowEventbusMethods")
-            methodsClass.declaredFields.forEach {
+            val methodsClass = Class.forName("com.like.floweventbus_compiler.FlowEventbusMethods").kotlin
+            methodsClass.staticProperties.forEach {
                 val methods = mGson.fromJson<List<MethodInfo>>(
-                    it.get(null)?.toString(),
+                    it.get().toString(),
                     object : TypeToken<List<MethodInfo>>() {}.type
                 )
-                Log.i(TAG, "获取到方法 --> $methods")
+                Log.i(TAG, "获取到属性 --> $methods")
                 // 订阅事件
                 for (methodInfo in methods) {
                     for (tag in methodInfo.tags) {
