@@ -48,7 +48,7 @@ object EventManager {
         paramType: Class<T>
     ) {
         val flow = (mEventList.firstOrNull {
-            // Flow 由 tag、requestCode 组合决定
+            // Flow 由 tag、requestCode 组合决定 todo 还需加上参数类型 paramType 的判断
             it.tag == tag && it.requestCode == requestCode
         }?.flow as? MutableSharedFlow<T>) ?: MutableSharedFlow(
             replay = if (isSticky) 1 else 0,

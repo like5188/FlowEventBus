@@ -64,6 +64,7 @@ class Event<T>(
     fun post(data: T) {
         val scope = owner?.lifecycleScope ?: GlobalScope
         scope.launch {
+            // todo 参数不匹配判断
             if (data!!::class.java != paramType) {
                 Log.e(TAG, "发送消息失败，参数类型不匹配 --> tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, data=$data")
                 return@launch
