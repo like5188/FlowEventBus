@@ -1,15 +1,33 @@
 package com.like.floweventbus_compiler
 
 import com.like.floweventbus_annotations.BusObserver
-import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.TypeName
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.asTypeName
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 
+/*
+在kotlinpoet中，每一个节点都对应一个Spec
+类对象 					说明
+
+MethodSpec 			代表一个构造函数或方法声明
+TypeSpec 			代表一个类，接口，或者枚举声明
+FieldSpec 			代表一个成员变量，一个字段声明
+JavaFile 			包含一个顶级类的Java文件
+ParameterSpec 		用来创建参数
+AnnotationSpec 		用来创建注解
+ClassName 			用来包装一个类
+TypeName 			类型，如在添加返回值类型是使用 TypeName.VOID
+
+通配符：
+%S 字符串，如：%S, ”hello”
+%T 类、接口，如：%T, MainActivity
+
+ */
 internal class ClassGenerator {
     companion object {
-        val NO_ARGS: ClassName = ClassName.get("com.like.floweventbus", "NoArgs")
+        val NO_ARGS: ClassName = ClassName("com.like.floweventbus", "NoArgs")
     }
 
     private val mMethodInfoList = mutableListOf<MethodInfo>()// 类中的所有方法
@@ -46,17 +64,10 @@ internal class ClassGenerator {
         val isSticky = annotation.isSticky
 
         val executableElement = method as ExecutableElement
-        var typeName: TypeName = NO_ARGS
-        if (executableElement.parameters.size >= 1) {
-            val paramType = executableElement.parameters[0].asType()
-            if (paramType.kind.isPrimitive) {
-                typeName = TypeName.get(paramType)
-                if (!TypeName.get(paramType).isBoxedPrimitive) {// 如果不是装箱数据类型
-                    typeName = typeName.box()
-                }
-            } else {
-                typeName = ClassName.get(paramType)
-            }
+        val typeName = when (executableElement.parameters.size) {
+            0 -> NO_ARGS
+            1 -> executableElement.parameters[0].asType().asTypeName()
+            else -> return
         }
         mMethodInfoList.add(
             MethodInfo(hostClass, methodName, tags, requestCode, isSticky, typeName)

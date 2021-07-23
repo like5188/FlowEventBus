@@ -1,6 +1,6 @@
 package com.like.floweventbus_compiler
 
-import com.squareup.javapoet.TypeName
+import com.squareup.kotlinpoet.TypeName
 import javax.lang.model.element.TypeElement
 
 /**
