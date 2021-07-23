@@ -48,8 +48,15 @@ class Event<T>(
         }).apply {
             invokeOnCompletion {
                 onCancel?.invoke()
+                this@Event.host = null
+                this@Event.owner = null
+                this@Event.job = null
             }
         }
+    }
+
+    fun unbind() {
+        this.job?.cancel()
     }
 
     fun post(data: T) {
@@ -59,12 +66,8 @@ class Event<T>(
         }
     }
 
-    fun cancel() {
-        job?.cancel()
-    }
-
     override fun toString(): String {
-        return "Event(hostClass=${hostClass.name}, tag='$tag'${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, isSticky='$isSticky')"
+        return "Event(host=$host, tag='$tag'${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, isSticky='$isSticky')"
     }
 
     override fun equals(other: Any?): Boolean {

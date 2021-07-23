@@ -56,12 +56,11 @@ object EventManager {
         )
         with(Event(hostClass, tag, requestCode, isSticky, flow, methodName, paramType)) {
             mEventList.add(this)
-            Log.i(TAG, "订阅事件 --> $this")
+            Log.i(TAG, "添加事件 --> $this")
             logEvent()
 
             onCancel = {
-                Log.w(TAG, "取消事件 --> $this")
-                mEventList.remove(this)// event 由 host、tag、requestCode 组合决定
+                Log.w(TAG, "取消绑定事件 --> $this")
                 logEvent()
                 logHostAndOwner()
             }
@@ -71,7 +70,7 @@ object EventManager {
     fun register(host: Any, owner: LifecycleOwner?) {
         val isRegistered = mEventList.any { it.host == host }
         if (isRegistered) {
-            Log.e(TAG, "注册宿主失败 --> $host 已经注册过")
+            Log.e(TAG, "绑定事件失败 --> 宿主 $host 已经绑定过")
             return
         }
 
@@ -80,13 +79,14 @@ object EventManager {
             it.hostClass == host.javaClass
         }
         if (hostEvents.isEmpty()) {
-            Log.e(TAG, "注册宿主失败 --> $host 不是宿主类，无需注册！")
+            Log.e(TAG, "绑定事件失败 --> $host 不是宿主类，不能绑定！")
             return
         }
         hostEvents.forEach { event ->
             event.bind(host, owner)
         }
-        Log.i(TAG, "注册宿主 --> $host")
+        Log.i(TAG, "绑定事件 --> $host")
+        logEvent()
         logHostAndOwner()
     }
 
@@ -107,7 +107,7 @@ object EventManager {
 
     fun unregister(host: Any) {
         mEventList.filter { it.host == host }.listIterator().forEach {
-            it.cancel()
+            it.unbind()
         }
     }
 
