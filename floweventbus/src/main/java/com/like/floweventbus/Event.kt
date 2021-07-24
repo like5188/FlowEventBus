@@ -22,9 +22,11 @@ class Event<T>(
     val methodName: String,// 被@BusObserver注解标注的方法名字
     val paramType: Class<T>// 被@BusObserver注解标注的方法的参数类型。只支持一个参数
 ) {
-    var host: Any? = null// 宿主
-    var owner: LifecycleOwner? = null// 宿主所属的生命周期类
+    private var host: Any? = null// 宿主
+    private var owner: LifecycleOwner? = null// 宿主所属的生命周期类
     private var job: Job? = null
+
+    fun getHost() = host
 
     fun bind(host: Any, owner: LifecycleOwner?) {
         this.host = host

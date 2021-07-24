@@ -70,7 +70,7 @@ object EventManager {
     }
 
     fun register(host: Any, owner: LifecycleOwner?) {
-        val isRegistered = mEventList.any { it.host == host }
+        val isRegistered = mEventList.any { it.getHost() == host }
         if (isRegistered) {
             Log.e(TAG, "绑定宿主失败 --> 宿主 $host 已经绑定过")
             return
@@ -109,7 +109,7 @@ object EventManager {
     }
 
     fun unregister(host: Any) {
-        mEventList.filter { it.host == host }.listIterator().forEach {
+        mEventList.filter { it.getHost() == host }.listIterator().forEach {
             it.unbind()
         }
     }
@@ -125,10 +125,10 @@ object EventManager {
      * 打印缓存的宿主和生命周期类
      */
     fun logHostAndOwner() {
-        val hosts = mEventList.mapNotNull { it.host }.distinct()
+        val hosts = mEventList.mapNotNull { it.getHost() }.distinct()
         Log.d(TAG, "宿主总数：${hosts.size}${if (hosts.isEmpty()) "" else "，包含：$hosts"}")
 
-        val owners = mEventList.mapNotNull { it.owner }.distinct()
+        val owners = mEventList.mapNotNull { it.getHost() }.distinct()
         Log.d(TAG, "生命周期类总数：${owners.size}${if (owners.isEmpty()) "" else "，包含：$owners"}")
     }
 }
