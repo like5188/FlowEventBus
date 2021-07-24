@@ -33,8 +33,8 @@ class SecondActivity : AppCompatActivity() {
         FlowEventBus.unregister(this)
     }
 
-    @BusObserver(value = ["like1"], isSticky = true)
-    fun observer1(data: Int?) {
+    @BusObserver(value = ["like4"], isSticky = true)
+    fun observer1(data: Int) {
         Log.e(TAG, "SecondActivity observer1 tag=like1 isSticky=true 数据：$data")
         mBinding.tv1.text = data.toString()
     }
