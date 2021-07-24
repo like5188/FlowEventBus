@@ -58,7 +58,7 @@ internal class ClassGenerator {
         val isSticky = annotation.isSticky
 
         val executableElement = method as ExecutableElement
-        val typeName = when (executableElement.parameters.size) {
+        val paramType = when (executableElement.parameters.size) {
             0 -> "com.like.floweventbus.NoArgs"// 用于注解的方法没有参数时的处理
             /*
              * AbstractProcessor中，
@@ -70,7 +70,7 @@ internal class ClassGenerator {
             else -> return
         }
         mMethodInfoList.add(
-            MethodInfo(hostClass.qualifiedName.toString(), methodName, tags, requestCode, isSticky, typeName)
+            MethodInfo(hostClass.qualifiedName.toString(), methodName, tags, requestCode, isSticky, paramType)
         )
     }
 
