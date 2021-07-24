@@ -17,7 +17,6 @@ class Event<T>(
     val hostClass: Class<*>,// 宿主类
     val tag: String,// 标签
     val requestCode: String,// 请求码。当标签相同时，可以使用请求码区分
-    val isSticky: Boolean,
     val flow: MutableSharedFlow<T>,
     val methodName: String,// 被@BusObserver注解标注的方法名字
     val paramType: Class<T>// 被@BusObserver注解标注的方法的参数类型。只支持一个参数
@@ -71,7 +70,7 @@ class Event<T>(
     }
 
     override fun toString(): String {
-        return "Event(host=$host, tag='$tag'${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, isSticky='$isSticky')"
+        return "Event(host=$host, tag='$tag'${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""})"
     }
 
     override fun equals(other: Any?): Boolean {

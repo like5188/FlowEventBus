@@ -12,32 +12,37 @@ object EventManager {
     val mEventList = mutableListOf<Event<*>>()
 
     init {
+        val methodInfoList = mutableListOf<MethodInfo>()
         try {
             val methodsClass = Class.forName("com.like.floweventbus_compiler.FlowEventbusMethods")
             for (field in methodsClass.declaredFields) {
                 if (field.name == "INSTANCE") {// 除去 kotlin 类中的隐藏属性
                     continue
                 }
-                val methodInfoList = mGson.fromJson<List<MethodInfo>>(
-                    field.get(null).toString(),
-                    object : TypeToken<List<MethodInfo>>() {}.type
+                methodInfoList.addAll(
+                    mGson.fromJson<List<MethodInfo>>(
+                        field.get(null).toString(),
+                        object : TypeToken<List<MethodInfo>>() {}.type
+                    )
                 )
-                // 订阅事件
-                for (methodInfo in methodInfoList) {
-                    for (tag in methodInfo.tags) {
-                        addEvent(
-                            methodInfo.hostClass.javaPrimitiveTypeToKotlin(),
-                            tag,
-                            methodInfo.requestCode,
-                            methodInfo.isSticky,
-                            methodInfo.methodName,
-                            methodInfo.paramType.javaPrimitiveTypeToKotlin()
-                        )
-                    }
-                }
             }
         } catch (e: Exception) {
             Log.e(TAG, "获取被 BusObserver 注解的方法信息失败 --> ${e.message}")
+        }
+
+        // 订阅事件
+        for (methodInfo in methodInfoList) {
+            for (tag in methodInfo.tags) {
+                val isStickyMethod = methodInfoList.any { it.tags.contains(tag) && it.requestCode == methodInfo.requestCode && it.isSticky }
+                addEvent(
+                    methodInfo.hostClass.javaPrimitiveTypeToKotlin(),
+                    tag,
+                    methodInfo.requestCode,
+                    isStickyMethod,
+                    methodInfo.methodName,
+                    methodInfo.paramType.javaPrimitiveTypeToKotlin()
+                )
+            }
         }
     }
 
@@ -45,26 +50,30 @@ object EventManager {
         hostClass: Class<*>,
         tag: String,
         requestCode: String,
-        isSticky: Boolean,
+        isStickyMethod: Boolean,
         methodName: String,
         paramType: Class<T>
     ) {
-        val flow = getCachedFlowOrCreateIfAbsent(tag, requestCode, paramType)
-        with(Event(hostClass, tag, requestCode, isSticky, flow, methodName, paramType)) {
+        val flow = getCachedFlowOrCreateIfAbsent(isStickyMethod, tag, requestCode, paramType)
+        with(Event(hostClass, tag, requestCode, flow, methodName, paramType)) {
             mEventList.add(this)
             Log.i(TAG, "添加事件 --> $this")
             logEvent()
         }
     }
 
-    private fun <T> getCachedFlowOrCreateIfAbsent(tag: String, requestCode: String, paramType: Class<T>): MutableSharedFlow<T> {
-        val isSticky = mEventList.any { it.tag == tag && it.requestCode == requestCode && it.isSticky }
+    private fun <T> getCachedFlowOrCreateIfAbsent(
+        isStickyMethod: Boolean,
+        tag: String,
+        requestCode: String,
+        paramType: Class<T>
+    ): MutableSharedFlow<T> {
         val cachedFlow = mEventList.firstOrNull {
             // Flow 由 tag、requestCode、paramType 组合决定
             it.tag == tag && it.requestCode == requestCode && it.paramType == paramType
         }?.flow as? MutableSharedFlow<T>
         return cachedFlow ?: MutableSharedFlow(
-            replay = if (isSticky) 1 else 0,
+            replay = if (isStickyMethod) 1 else 0,
             extraBufferCapacity = Int.MAX_VALUE // 避免挂起导致数据发送失败
         )
     }
