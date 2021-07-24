@@ -33,7 +33,7 @@ fun Class<*>.box(): Class<*> {
  * Int?->getDeclaredMethod(methodName, Class.forName("java.lang.Integer"))
  */
 @Throws(ClassNotFoundException::class)
-fun String.toKotlinPrimitiveClass(): Class<*> {
+fun String.javaPrimitiveTypeToKotlin(): Class<*> {
     return when (this) {
         "boolean" -> Boolean::class.java
         "byte" -> Byte::class.java

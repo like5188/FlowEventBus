@@ -26,12 +26,12 @@ object EventManager {
                 for (methodInfo in methods) {
                     for (tag in methodInfo.tags) {
                         addEvent(
-                            methodInfo.hostClass.toKotlinPrimitiveClass(),
+                            methodInfo.hostClass.javaPrimitiveTypeToKotlin(),
                             tag,
                             methodInfo.requestCode,
                             methodInfo.isSticky,
                             methodInfo.methodName,
-                            methodInfo.paramType.toKotlinPrimitiveClass()
+                            methodInfo.paramType.javaPrimitiveTypeToKotlin()
                         )
                     }
                 }
