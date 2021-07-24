@@ -18,12 +18,12 @@ object EventManager {
                 if (field.name == "INSTANCE") {// 除去 kotlin 类中的隐藏属性
                     continue
                 }
-                val methods = mGson.fromJson<List<MethodInfo>>(
+                val methodInfoList = mGson.fromJson<List<MethodInfo>>(
                     field.get(null).toString(),
                     object : TypeToken<List<MethodInfo>>() {}.type
                 )
                 // 订阅事件
-                for (methodInfo in methods) {
+                for (methodInfo in methodInfoList) {
                     for (tag in methodInfo.tags) {
                         addEvent(
                             methodInfo.hostClass.javaPrimitiveTypeToKotlin(),
