@@ -33,12 +33,6 @@ class Event<T>(
         val method = if (paramType == NoArgs::class.java) {
             hostClass.getDeclaredMethod(methodName)
         } else {
-            Log.e(TAG, "paramType1=$paramType")
-            Log.e(TAG, "paramType2=${paramType.javaClass}")
-            Log.e(TAG, "paramType3=${paramType::class}")
-            Log.e(TAG, "paramType4=${paramType::class.java}")
-            Log.e(TAG, "paramType5=${paramType.name}")
-            Log.e(TAG, "paramType6=${Int::class.java}")
             hostClass.getDeclaredMethod(methodName, paramType)
         }
         job = (owner?.lifecycleScope?.launch {

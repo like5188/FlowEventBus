@@ -26,12 +26,12 @@ object EventManager {
                 for (methodInfo in methods) {
                     for (tag in methodInfo.tags) {
                         addEvent(
-                            methodInfo.hostClass.toJavaClassForReflect(),
+                            methodInfo.hostClass.toKotlinPrimitiveClass(),
                             tag,
                             methodInfo.requestCode,
                             methodInfo.isSticky,
                             methodInfo.methodName,
-                            methodInfo.paramType.toJavaClassForReflect()
+                            methodInfo.paramType.toKotlinPrimitiveClass()
                         )
                     }
                 }
@@ -95,16 +95,13 @@ object EventManager {
     inline fun <reified T> post(tag: String, requestCode: String, data: T) {
         // tag、requestCode、paramType 对应的所有事件，它们用了同一个 MutableSharedFlow
         val events = mEventList.filter {
-            Log.i(
-                TAG,
-                "[it.tag=${it.tag} tag=$tag ${it.tag == tag}] [it.requestCode=${it.requestCode} requestCode=$requestCode ${it.requestCode == requestCode}] [it.paramType.toJavaClass()=${it.paramType} T::class.java=${T::class.java} ${it.paramType == T::class.java}]"
-            )
-            it.tag == tag && it.requestCode == requestCode && it.paramType == T::class.java
+            // 因为使用 kotlin 代码发送数据时，T::class.java 会自动装箱，所以需要装箱后再比较。
+            it.tag == tag && it.requestCode == requestCode && it.paramType.box() == T::class.java
         }
         if (events.isEmpty()) {
             Log.e(
                 TAG,
-                "发送消息失败，没有订阅事件，或者参数类型不匹配 --> tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据类型=${T::class.java}, 数据=$data"
+                "发送消息失败，没有订阅事件，或者参数类型不匹配 --> tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据=$data (${T::class.java.name})"
             )
             return
         }
