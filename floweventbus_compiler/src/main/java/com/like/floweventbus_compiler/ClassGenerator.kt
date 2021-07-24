@@ -4,7 +4,6 @@ import com.like.floweventbus_annotations.BusObserver
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
 
 /*
 在kotlinpoet中，每一个节点都对应一个Spec
@@ -61,7 +60,13 @@ internal class ClassGenerator {
         val executableElement = method as ExecutableElement
         val typeName = when (executableElement.parameters.size) {
             0 -> "com.like.floweventbus.NoArgs"
-            1 -> executableElement.parameters[0].asType().toJavaClass()
+            /*
+             * AbstractProcessor中，
+             * 对于 kotlin 代码中的数据类型：
+             * Int? 会转换成 java.lang.Integer；
+             * Int 会转换成 int；
+             */
+            1 -> executableElement.parameters[0].asType().toString()
             else -> return
         }
         mMethodInfoList.add(
@@ -69,25 +74,4 @@ internal class ClassGenerator {
         )
     }
 
-    /**
-     * 因为 executableElement.parameters[0].asType()中，
-     * 对于 kotlin 代码中的数据类型：
-     * Int?会转换成java.lang.Integer；
-     * Int会转换成int；
-     * 这里统一全部转换为 java 包装类，便于 java 反射时使用。
-     */
-    @Throws(ClassNotFoundException::class)
-    private fun TypeMirror.toJavaClass(): String {
-        return when (val type = this.toString()) {
-            "boolean" -> "java.lang.Boolean"
-            "byte" -> "java.lang.Byte"
-            "short" -> "java.lang.Short"
-            "int" -> "java.lang.Integer"
-            "long" -> "java.lang.Long"
-            "char" -> "java.lang.Character"
-            "float" -> "java.lang.Float"
-            "double" -> "java.lang.Double"
-            else -> type
-        }
-    }
 }

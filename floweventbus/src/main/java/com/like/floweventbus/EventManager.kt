@@ -26,12 +26,12 @@ object EventManager {
                 for (methodInfo in methods) {
                     for (tag in methodInfo.tags) {
                         addEvent(
-                            Class.forName(methodInfo.hostClass),
+                            methodInfo.hostClass.toJavaClassForReflect(),
                             tag,
                             methodInfo.requestCode,
                             methodInfo.isSticky,
                             methodInfo.methodName,
-                            Class.forName(methodInfo.paramType)
+                            methodInfo.paramType.toJavaClassForReflect()
                         )
                     }
                 }
@@ -97,7 +97,7 @@ object EventManager {
         val events = mEventList.filter {
             Log.i(
                 TAG,
-                "[it.tag=${it.tag} tag=$tag ${it.tag == tag}] [it.requestCode=${it.requestCode} requestCode=$requestCode ${it.requestCode == requestCode}] [it.paramType=${it.paramType} T::class.java=${T::class.java} ${it.paramType == T::class.java}]"
+                "[it.tag=${it.tag} tag=$tag ${it.tag == tag}] [it.requestCode=${it.requestCode} requestCode=$requestCode ${it.requestCode == requestCode}] [it.paramType.toJavaClass()=${it.paramType} T::class.java=${T::class.java} ${it.paramType == T::class.java}]"
             )
             it.tag == tag && it.requestCode == requestCode && it.paramType == T::class.java
         }
