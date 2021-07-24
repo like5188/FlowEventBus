@@ -11,7 +11,7 @@ import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus_annotations.BusObserver
 import kotlin.concurrent.thread
 
-class MainActivity : BaseActivity1() {
+class MainActivity : BaseActivity() {
     private val mBinding by lazy {
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
     }
@@ -43,10 +43,11 @@ class MainActivity : BaseActivity1() {
 
     fun changeData1(view: View) {
         FlowEventBus.post<Int?>("like1", null)
-        FlowEventBus.post("like2", 123)
+        FlowEventBus.post("like1", 5)
     }
 
     fun changeData2(view: View) {
+        FlowEventBus.post("like2", 123)
         thread {
             FlowEventBus.post("like2", "1", 2)
         }
@@ -58,10 +59,6 @@ class MainActivity : BaseActivity1() {
 
     fun changeData4(view: View) {
         FlowEventBus.post("like4", 4)
-    }
-
-    fun changeData5(view: View) {
-        FlowEventBus.post("like5", 5)
     }
 
     fun startActivity2(view: View) {

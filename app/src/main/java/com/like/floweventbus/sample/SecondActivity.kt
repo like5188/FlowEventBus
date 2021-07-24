@@ -34,8 +34,8 @@ class SecondActivity : AppCompatActivity() {
     }
 
     @BusObserver(value = ["like1"], isSticky = true)
-    fun observer1(data: Int) {
-        Log.e(TAG, "SecondActivity observer1 tag=like1 数据：$data")
+    fun observer1(data: Int?) {
+        Log.e(TAG, "SecondActivity observer1 tag=like1 isSticky=true 数据：$data")
         mBinding!!.tv1.text = data.toString()
     }
 
@@ -44,4 +44,5 @@ class SecondActivity : AppCompatActivity() {
         Log.e(TAG, "SecondActivity observer2 tag=like2 数据：$data")
         mBinding!!.tv2.text = data.toString()
     }
+
 }
