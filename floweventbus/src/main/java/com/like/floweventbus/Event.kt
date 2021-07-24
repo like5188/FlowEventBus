@@ -31,6 +31,13 @@ class Event<T>(
         this.host = host
         this.owner = owner
 
+        /* todo 自动生成方法调用代码，不用反射。
+            object com_like_floweventbus_sample_MainViewModel {
+                fun test(host: Any, data: Int) {
+                    (host as MainViewModel).test(data)
+                }
+            }
+         */
         val method = if (paramType == NoArgs::class.java) {
             hostClass.getDeclaredMethod(methodName)
         } else {
