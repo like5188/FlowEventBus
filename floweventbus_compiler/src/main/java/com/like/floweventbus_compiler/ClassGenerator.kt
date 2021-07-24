@@ -59,7 +59,7 @@ internal class ClassGenerator {
 
         val executableElement = method as ExecutableElement
         val typeName = when (executableElement.parameters.size) {
-            0 -> "com.like.floweventbus.NoArgs"
+            0 -> "com.like.floweventbus.NoArgs"// 用于注解的方法没有参数时的处理
             /*
              * AbstractProcessor中，
              * 对于 kotlin 代码中的数据类型：
