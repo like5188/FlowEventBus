@@ -37,7 +37,7 @@ object EventManager {
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "获取注解方法信息失败 --> ${e.message}")
+            Log.e(TAG, "获取被 BusObserver 注解的方法信息失败 --> ${e.message}")
         }
     }
 
@@ -98,17 +98,14 @@ object EventManager {
             // 因为使用 kotlin 代码发送数据时，T::class.java 会自动装箱，所以需要装箱后再比较。
             it.tag == tag && it.requestCode == requestCode && it.paramType.box() == T::class.java
         }
+        val logMessage = "tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据=$data (${T::class.java.name})"
         if (events.isEmpty()) {
-            Log.e(
-                TAG,
-                "发送消息失败，没有订阅事件，或者参数类型不匹配 --> tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据=$data (${T::class.java.name})"
-            )
+            Log.e(TAG, "发送消息失败，没有订阅事件，或者参数类型不匹配 --> $logMessage")
             return
         }
+        Log.v(TAG, "发送消息 --> $logMessage")
         // 同一个 MutableSharedFlow，取任意一个即可
-        val event = events.first() as Event<T>
-        Log.v(TAG, "发送消息 --> tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}，内容=$data")
-        event.post(data)
+        (events.first() as Event<T>).post(data)
     }
 
     fun unregister(host: Any) {
