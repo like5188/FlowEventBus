@@ -11,7 +11,7 @@ import com.like.floweventbus.sample.databinding.ActivitySecondBinding
 import com.like.floweventbus_annotations.BusObserver
 
 class SecondActivity : AppCompatActivity() {
-    private var mBinding: ActivitySecondBinding? = null
+    private lateinit var mBinding: ActivitySecondBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_second)
@@ -26,7 +26,7 @@ class SecondActivity : AppCompatActivity() {
 
     fun changeData1(view: View?) {
         FlowEventBus.post("like1", 100)
-        FlowEventBus.post("like2", User("name", 18))
+        FlowEventBus.post("like2", "re", User("name", 18))
     }
 
     fun unregister(view: View?) {
@@ -36,13 +36,13 @@ class SecondActivity : AppCompatActivity() {
     @BusObserver(value = ["like1"], isSticky = true)
     fun observer1(data: Int?) {
         Log.e(TAG, "SecondActivity observer1 tag=like1 isSticky=true 数据：$data")
-        mBinding!!.tv1.text = data.toString()
+        mBinding.tv1.text = data.toString()
     }
 
     @BusObserver(value = ["like2"], requestCode = "re")
     fun observer2(data: User) {
-        Log.e(TAG, "SecondActivity observer2 tag=like2 数据：$data")
-        mBinding!!.tv2.text = data.toString()
+        Log.e(TAG, "SecondActivity observer2 tag=like2 requestCode=re 数据：$data")
+        mBinding.tv2.text = data.toString()
     }
 
 }
