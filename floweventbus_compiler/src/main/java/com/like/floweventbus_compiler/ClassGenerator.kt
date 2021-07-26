@@ -30,7 +30,7 @@ internal class ClassGenerator {
         if (mMethodInfoList.isEmpty()) {
             return
         }
-        MethodsCacheClassGenerator.create(mMethodInfoList)
+        RealClassGenerator.create(mMethodInfoList)
     }
 
     /**
@@ -60,17 +60,11 @@ internal class ClassGenerator {
         val executableElement = method as ExecutableElement
         val paramType = when (executableElement.parameters.size) {
             0 -> "com.like.floweventbus.NoArgs"// 用于注解的方法没有参数时的处理
-            /*
-             * AbstractProcessor中，
-             * 对于 kotlin 代码中的数据类型：
-             * Int? 会转换成 java.lang.Integer；
-             * Int 会转换成 int；
-             */
             1 -> executableElement.parameters[0].asType().toString()
             else -> return
         }
         mMethodInfoList.add(
-            MethodInfo(hostClass.qualifiedName.toString(), methodName, tags, requestCode, isSticky, paramType)
+            MethodInfo(hostClass, methodName, tags, requestCode, isSticky, paramType)
         )
     }
 

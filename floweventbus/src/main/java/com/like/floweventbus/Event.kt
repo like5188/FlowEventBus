@@ -8,18 +8,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
-class Event<T>(
-    val hostClass: Class<*>,// 宿主类
-    val tag: String,// 标签
-    val requestCode: String,// 请求码。当标签相同时，可以使用请求码区分
-    val flow: MutableSharedFlow<T>,
-    val methodName: String,// 被@BusObserver注解标注的方法的名字
-    val paramType: Class<T>// 被@BusObserver注解标注的方法的参数类型。只支持一个参数
+class Event(
+    val hostClass: String,// 宿主类
+    val flow: FlowWrapper<Any?>,
+    val callback: (Any, Any?) -> Unit
 ) {
     private var host: Any? = null// 宿主
     private var owner: LifecycleOwner? = null// 宿主所属的生命周期类
@@ -31,27 +26,15 @@ class Event<T>(
         this.host = host
         this.owner = owner
 
-        /* todo 自动生成方法调用代码，不用反射。然后去掉 PrimitiveDataTrans.kt 中的转换方法。
-            object com_like_floweventbus_sample_MainViewModel {
-                fun test(host: Any, data: Int) {
-                    (host as MainViewModel).test(data)
-                }
-            }
-         */
-        val method = if (paramType == NoArgs::class.java) {
-            hostClass.getDeclaredMethod(methodName)
-        } else {
-            hostClass.getDeclaredMethod(methodName, paramType)
-        }
         job = (owner?.lifecycleScope?.launch {
             owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 flow.collect {
-                    method.invoke(host, it)
+                    callback(host, it)
                 }
             }
         } ?: GlobalScope.launch {
             flow.collect {
-                method.invoke(host, it)
+                callback(host, it)
             }
         }).apply {
             invokeOnCompletion {
@@ -69,7 +52,7 @@ class Event<T>(
         this.job?.cancel()
     }
 
-    fun post(data: T) {
+    fun post(data: Any?) {
         val scope = owner?.lifecycleScope ?: GlobalScope
         scope.launch {
             flow.emit(data)
@@ -77,26 +60,22 @@ class Event<T>(
     }
 
     override fun toString(): String {
-        return "Event(host=$host, tag='$tag'${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""})"
+        return "Event(host=$host, flow=$flow)"
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other !is Event) return false
 
-        other as Event<*>
-
+        if (flow != other.flow) return false
         if (host != other.host) return false
-        if (tag != other.tag) return false
-        if (requestCode != other.requestCode) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = host.hashCode()
-        result = 31 * result + tag.hashCode()
-        result = 31 * result + requestCode.hashCode()
+        var result = flow.hashCode()
+        result = 31 * result + (host?.hashCode() ?: 0)
         return result
     }
 
