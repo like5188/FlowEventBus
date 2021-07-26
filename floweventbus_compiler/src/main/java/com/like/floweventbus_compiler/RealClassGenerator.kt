@@ -87,7 +87,7 @@ object RealClassGenerator {
                         }
                         addStatement(
                             "%T.addEvent(%S, %S, %S, %S, %L) { host, data ->",
-                            ClassName("com.like.floweventbus", "Bridge"),
+                            ClassName("com.like.floweventbus", "EventManager"),
                             hostClass,
                             tag,
                             requestCode,

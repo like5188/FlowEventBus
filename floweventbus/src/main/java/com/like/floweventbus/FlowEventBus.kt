@@ -28,7 +28,7 @@ object FlowEventBus {
             else -> null
         }
     ) {
-        EventManager.register(host, owner)
+        RealFlowEventBus.register(host, owner)
     }
 
     /**
@@ -36,22 +36,22 @@ object FlowEventBus {
      */
     @JvmStatic
     fun unregister(host: Any) {
-        EventManager.unregister(host)
+        RealFlowEventBus.unregister(host)
     }
 
     @JvmStatic
     fun post(tag: String) {
-        EventManager.post(tag, "", NoArgs())
+        RealFlowEventBus.post(tag, "", NoArgs())
     }
 
     @JvmStatic
     inline fun <reified T> post(tag: String, t: T) {
-        EventManager.post(tag, "", t)
+        RealFlowEventBus.post(tag, "", t)
     }
 
     @JvmStatic
     inline fun <reified T> post(tag: String, requestCode: String, t: T) {
-        EventManager.post(tag, requestCode, t)
+        RealFlowEventBus.post(tag, requestCode, t)
     }
 
 }
