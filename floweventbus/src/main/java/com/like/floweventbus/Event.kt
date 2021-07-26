@@ -18,7 +18,7 @@ class Event<T>(
     val tag: String,// 标签
     val requestCode: String,// 请求码。当标签相同时，可以使用请求码区分
     val flow: MutableSharedFlow<T>,
-    val methodName: String,// 被@BusObserver注解标注的方法名字
+    val methodName: String,// 被@BusObserver注解标注的方法的名字
     val paramType: Class<T>// 被@BusObserver注解标注的方法的参数类型。只支持一个参数
 ) {
     private var host: Any? = null// 宿主
