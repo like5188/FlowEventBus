@@ -35,10 +35,8 @@ object EventManager {
 
     private fun handleAnnotations() {
         try {
-            Class.forName("com.like.floweventbus.FlowEventbusMethods")
-                .getDeclaredMethod("initialize").apply {
-                    println(this)
-                }
+            val clazz = Class.forName("com.like.floweventbus.FlowEventbusMethods")
+            clazz.getDeclaredMethod("initialize").invoke(clazz.kotlin.objectInstance)
         } catch (e: Exception) {
             Log.e(TAG, "处理注解信息失败 --> ${e.message}")
         }
