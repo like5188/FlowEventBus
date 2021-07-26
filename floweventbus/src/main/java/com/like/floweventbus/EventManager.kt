@@ -33,7 +33,19 @@ object EventManager {
         }
     }
 
+    private fun handleAnnotations() {
+        try {
+            Class.forName("com.like.floweventbus.FlowEventbusMethods")
+                .getDeclaredMethod("initialize").apply {
+                    println(this)
+                }
+        } catch (e: Exception) {
+            Log.e(TAG, "处理注解信息失败 --> ${e.message}")
+        }
+    }
+
     fun register(host: Any, owner: LifecycleOwner?) {
+        handleAnnotations()
         val isRegistered = mEventList.any { it.getHost() == host }
         if (isRegistered) {
             Log.e(TAG, "绑定宿主失败 --> 宿主 $host 已经绑定过")

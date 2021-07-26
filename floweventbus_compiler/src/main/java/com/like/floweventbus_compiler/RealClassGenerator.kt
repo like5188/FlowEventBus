@@ -53,18 +53,28 @@ object RealClassGenerator {
      */
     private fun createClass(methodInfoList: List<MethodInfo>): TypeSpec {
         return TypeSpec.objectBuilder(CLASS_NAME)
-            .addFunction(createInitFun(methodInfoList))
+            .addProperty(createInitializedProperty())
+            .addFunction(createInitializeFun(methodInfoList))
             .build()
     }
 
-    private fun createInitFun(methodInfoList: List<MethodInfo>): FunSpec {
-        return FunSpec.builder("init")
+    private fun createInitializedProperty(): PropertySpec {
+        return PropertySpec.builder("initialized", Boolean::class, KModifier.PRIVATE)
+            .initializer("%L", false)
+            .mutable(true)
+            .build()
+    }
+
+    private fun createInitializeFun(methodInfoList: List<MethodInfo>): FunSpec {
+        return FunSpec.builder("initialize")
             .addCode(createInitializerBlock(methodInfoList))
             .build()
     }
 
     private fun createInitializerBlock(methodInfoList: List<MethodInfo>): CodeBlock {
         return buildCodeBlock {
+            addStatement("if (initialized) { return }")
+            addStatement("initialized = true")
             methodInfoList.groupBy { it.hostClass }.forEach { entry ->
                 val hostClass = entry.key
                 val hostMethodInfoList = entry.value
