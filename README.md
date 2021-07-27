@@ -1,7 +1,7 @@
 #### 最新版本
 
 模块|floweventbus|floweventbus_annotations|floweventbus_compiler
----|---|---
+---|---|---|---
 最新版本|[![Download](https://jitpack.io/v/like5188/FlowEventBus.svg)](https://jitpack.io/#like5188/FlowEventBus)|[![Download](https://jitpack.io/v/like5188/FlowEventBus.svg)](https://jitpack.io/#like5188/FlowEventBus)|[![Download](https://jitpack.io/v/like5188/FlowEventBus.svg)](https://jitpack.io/#like5188/FlowEventBus)
 
 ## 功能介绍
