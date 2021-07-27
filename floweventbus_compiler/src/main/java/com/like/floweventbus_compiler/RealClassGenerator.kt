@@ -5,23 +5,15 @@ import com.squareup.kotlinpoet.*
 import java.io.IOException
 
 /*
-object FlowEventbusMethods {
-    init {
-        val methodInfoList = mutableListOf<MethodInfo>()
-        for (methodInfo in methodInfoList) {
-            for (tag in methodInfo.tags) {
-                val isStickyMethod = methodInfoList.any { it.tags.contains(tag) && it.requestCode == methodInfo.requestCode && it.isSticky }
-                EventManager.addEvent(
-                    methodInfo.hostClass.javaPrimitiveTypeToKotlin(),
-                    tag,
-                    methodInfo.requestCode,
-                    methodInfo.paramType.javaPrimitiveTypeToKotlin(),
-                    isStickyMethod
-                ) { host, data ->
+//  This codes are generated automatically by FlowEventBus. Do not modify!
+package com.like.floweventbus
 
-                }
-            }
+public object FlowEventbusMethods {
+    public fun initialize(): Unit {
+        EventManager.addEvent("com.like.floweventbus.sample.MainActivity", "like1", "1", "com.like.floweventbus.NoArgs", false) { host, data ->
+            (host as MainActivity).observer1();
         }
+        ……
     }
 }
  */
@@ -35,7 +27,11 @@ object RealClassGenerator {
     fun create(methodInfoList: List<MethodInfo>) {
         val filer = ProcessUtils.mFiler ?: return
         try {
-            // 创建包名及类的注释
+            /*
+             创建包名及类的注释
+             // This codes are generated automatically by FlowEventBus. Do not modify!
+             package com.like.floweventbus
+             */
             FileSpec.builder(PACKAGE_NAME, CLASS_NAME)
                 .addComment(" This codes are generated automatically by FlowEventBus. Do not modify!")// 类的注释
                 .addType(createClass(methodInfoList))
@@ -53,28 +49,31 @@ object RealClassGenerator {
      */
     private fun createClass(methodInfoList: List<MethodInfo>): TypeSpec {
         return TypeSpec.objectBuilder(CLASS_NAME)
-            .addProperty(createInitializedProperty())
             .addFunction(createInitializeFun(methodInfoList))
             .build()
     }
 
-    private fun createInitializedProperty(): PropertySpec {
-        return PropertySpec.builder("initialized", Boolean::class, KModifier.PRIVATE)
-            .initializer("%L", false)
-            .mutable(true)
-            .build()
-    }
-
+    /*
+     * 创建方法
+     *
+     * fun initialize() {}
+     */
     private fun createInitializeFun(methodInfoList: List<MethodInfo>): FunSpec {
         return FunSpec.builder("initialize")
-            .addCode(createInitializerBlock(methodInfoList))
+            .addCode(createCodeBlock(methodInfoList))
             .build()
     }
 
-    private fun createInitializerBlock(methodInfoList: List<MethodInfo>): CodeBlock {
+    /*
+     * 创建方法的代码
+     *
+        EventManager.addEvent("com.like.floweventbus.sample.MainActivity", "like1", "1", "com.like.floweventbus.NoArgs", false) { host, data ->
+            (host as MainActivity).observer1();
+        }
+        ……
+     */
+    private fun createCodeBlock(methodInfoList: List<MethodInfo>): CodeBlock {
         return buildCodeBlock {
-            addStatement("if (initialized) { return }")
-            addStatement("initialized = true")
             methodInfoList.groupBy { it.hostClass }.forEach { entry ->
                 val hostClass = entry.key
                 val hostMethodInfoList = entry.value
