@@ -40,12 +40,9 @@
 ```groovy
     dependencies {
         implementation 'com.github.like5188.FlowEventBus:floweventbus:版本号'
-        // gradle 3.2.1 不需要添加这个引用 ， 升级到 3.5.2 后必须添加 ， 否则会提示找不到floweventbus_annotations中的类 。
         implementation 'com.github.like5188.FlowEventBus:floweventbus_annotations:版本号'
         kapt 'com.github.like5188.FlowEventBus:floweventbus_compiler:版本号'
-
-        compileOnly 'com.squareup:kotlinpoet:1.9.0'// 自动生成源码的库
-        compileOnly 'com.google.code.gson:gson:2.8.7'
+        implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.20")
     }
 ```
 
