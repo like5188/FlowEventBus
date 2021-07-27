@@ -59,7 +59,7 @@ dependencies {
     implementation project(':floweventbus_annotations')
     kapt project(':floweventbus_compiler')
 
-//    implementation 'com.github.like5188.FlowEventBus:floweventbus:0.0.1'
-//    implementation 'com.github.like5188.FlowEventBus:floweventbus_annotations:0.0.1'
-//    kapt 'com.github.like5188.FlowEventBus:floweventbus_compiler:0.0.1'
+//    implementation 'com.github.like5188.FlowEventBus:floweventbus:0.0.2'
+//    implementation 'com.github.like5188.FlowEventBus:floweventbus_annotations:0.0.2'
+//    kapt 'com.github.like5188.FlowEventBus:floweventbus_compiler:0.0.2'
 }
