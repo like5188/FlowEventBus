@@ -4,27 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 
 object RealFlowEventBus {
-    private var initialized: Boolean = false
-
-    /**
-     * 处理注解，注册的时候调用。
-     * 此方法会调用 FlowEventbusMethods.initialize() 方法，然后触发 [EventManager.addEvent] 方法。
-     */
-    private fun handleAnnotations() {
-        if (initialized) {
-            return
-        }
-        initialized = true
-        try {
-            val clazz = Class.forName("com.like.floweventbus.FlowEventbusMethods")
-            clazz.getDeclaredMethod("initialize").invoke(clazz.kotlin.objectInstance)
-        } catch (e: Exception) {
-            Log.e(TAG, "处理注解信息失败 --> ${e.message}")
-        }
-    }
+    private var mInitializer: Initializer = Initializer()
 
     fun register(host: Any, owner: LifecycleOwner?) {
-        handleAnnotations()
+        mInitializer.initialize()
         if (EventManager.isRegistered(host)) {
             Log.e(TAG, "绑定宿主失败 --> 宿主 $host 已经绑定过")
             return
