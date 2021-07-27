@@ -9,16 +9,18 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 object EventManager {
     private val mEventList = mutableListOf<Event>()
 
-    fun isRegistered(host: Any) = mEventList.any { it.getHost() == host }
+    fun isRegistered(host: Any): Boolean = mEventList.any { it.getHost() == host }
 
-    fun getEventList(hostClass: String) = mEventList.filter { it.hostClass == hostClass }
+    fun getEventList(hostClass: String): List<Event> = mEventList.filter { it.hostClass == hostClass }
 
-    fun getEventList(host: Any) = mEventList.filter { it.getHost() == host }
+    fun getEventList(host: Any): List<Event> = mEventList.filter { it.getHost() == host }
 
-    fun getEventList(tag: String, requestCode: String, paramType: String) = mEventList.filter {
-        // 因为使用 kotlin 代码发送数据时，T::class.java 会自动装箱，所以需要装箱后再比较，但是这里在自动生成的代码中已经做了装箱处理再传递过来的。
-        it.flow.tag == tag && it.flow.requestCode == requestCode && it.flow.paramType == paramType
-    }
+    fun getEvent(tag: String, requestCode: String, paramType: String): Event? =
+        // 同一个 MutableSharedFlow，取任意一个即可
+        mEventList.firstOrNull {
+            // 因为使用 kotlin 代码发送数据时，T::class.java 会自动装箱，所以需要装箱后再比较，但是这里在自动生成的代码中已经做了装箱处理再传递过来的。
+            it.flow.tag == tag && it.flow.requestCode == requestCode && it.flow.paramType == paramType
+        }
 
     /**
      * 由自动生成的代码来调用

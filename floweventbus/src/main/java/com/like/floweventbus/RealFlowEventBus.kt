@@ -29,15 +29,15 @@ object RealFlowEventBus {
 
     inline fun <reified T> post(tag: String, requestCode: String, data: T) {
         // tag、requestCode、paramType 对应的所有事件，它们用了同一个 MutableSharedFlow
-        val events = EventManager.getEventList(tag, requestCode, T::class.java.name)
+        val event = EventManager.getEvent(tag, requestCode, T::class.java.name)
         val logMessage = "tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据=$data (${T::class.java.name})"
-        if (events.isEmpty()) {
+        if (event == null) {
             Log.e(TAG, "发送消息失败，没有订阅事件，或者参数类型不匹配 --> $logMessage")
             return
         }
         Log.v(TAG, "发送消息 --> $logMessage")
         // 同一个 MutableSharedFlow，取任意一个即可
-        events.first().post(data)
+        event.post(data)
     }
 
     fun unregister(host: Any) {
