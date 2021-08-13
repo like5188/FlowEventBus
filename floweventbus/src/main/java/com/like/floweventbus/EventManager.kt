@@ -38,7 +38,7 @@ object EventManager {
         }?.flow ?: FlowWrapper(
             tag, requestCode, paramType, MutableSharedFlow(
                 replay = if (isStickyMethod) 1 else 0,
-                extraBufferCapacity = Int.MAX_VALUE // 避免挂起导致数据发送失败
+                extraBufferCapacity = if (isStickyMethod) Int.MAX_VALUE else 0 // 避免挂起导致数据发送失败
             )
         )
         with(Event(hostClass, flow, callback)) {
@@ -52,19 +52,17 @@ object EventManager {
      * 打印缓存的事件
      */
     fun logEvent() {
-        val eventList = EventManager.mEventList
-        Log.d(TAG, "事件总数：${eventList.size}${if (eventList.isEmpty()) "" else "，包含：$eventList"}")
+        Log.d(TAG, "事件总数：${mEventList.size}${if (mEventList.isEmpty()) "" else "，包含：$mEventList"}")
     }
 
     /**
      * 打印缓存的宿主和生命周期类
      */
     fun logHostAndOwner() {
-        val eventList = EventManager.mEventList
-        val hosts = eventList.mapNotNull { it.getHost() }.distinct()
+        val hosts = mEventList.mapNotNull { it.getHost() }.distinct()
         Log.d(TAG, "宿主总数：${hosts.size}${if (hosts.isEmpty()) "" else "，包含：$hosts"}")
 
-        val owners = eventList.mapNotNull { it.getHost() }.distinct()
+        val owners = mEventList.mapNotNull { it.getHost() }.distinct()
         Log.d(TAG, "生命周期类总数：${owners.size}${if (owners.isEmpty()) "" else "，包含：$owners"}")
     }
 

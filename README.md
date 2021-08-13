@@ -62,28 +62,28 @@
 
 4、接收消息与发送消息一一对应。
 ```java
-    发送消息:
+    发送消息:(主线程)
     FlowEventBus.post(tag: String)
     
-    接收消息:
+    接收消息:(主线程)
     @BusObserver(["tag"])
     fun test() {
     }
 ```
 ```java
-    发送消息:
+    发送消息:(主线程)
     FlowEventBus.post(tag: String, t: T)
 
-    接收消息:
+    接收消息:(主线程)
     @BusObserver(["tag"])
     fun test(t: T) {
     }
 ```
 ```java
-    发送消息:
+    发送消息:(主线程)
     FlowEventBus.post(tag: String, requestCode: String, t: T)
     
-    接收消息:
+    接收消息:(主线程)
     @BusObserver(["tag"], requestCode = "requestCode")
     fun test(t: T) {
     }

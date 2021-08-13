@@ -5,10 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 @OptIn(DelicateCoroutinesApi::class)
 class Event(
@@ -26,13 +23,13 @@ class Event(
         this.host = host
         this.owner = owner
 
-        job = (owner?.lifecycleScope?.launch {
+        job = (owner?.lifecycleScope?.launch(Dispatchers.Main) {
             owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 flow.collect {
                     callback(host, it)
                 }
             }
-        } ?: GlobalScope.launch {
+        } ?: GlobalScope.launch(Dispatchers.Main) {
             flow.collect {
                 callback(host, it)
             }
@@ -54,7 +51,7 @@ class Event(
 
     fun post(data: Any?) {
         val scope = owner?.lifecycleScope ?: GlobalScope
-        scope.launch {
+        scope.launch(Dispatchers.Main) {
             flow.emit(data)
         }
     }
