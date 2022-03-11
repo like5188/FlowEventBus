@@ -39,10 +39,11 @@
 在Module的gradle中加入：
 ```groovy
     dependencies {
+        implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
+        implementation 'org.jetbrains.kotlin:kotlin-reflect:1.6.10'
         implementation 'com.github.like5188.FlowEventBus:floweventbus:版本号'
         implementation 'com.github.like5188.FlowEventBus:floweventbus_annotations:版本号'
         kapt 'com.github.like5188.FlowEventBus:floweventbus_compiler:版本号'
-        implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.10")
     }
 ```
 
