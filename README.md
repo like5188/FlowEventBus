@@ -60,7 +60,7 @@
     FlowEventBus.post(tag: String, requestCode: String, t: T)
 ```
 
-4、接收消息与发送消息一一对应。
+4、接收消息与发送消息一一对应。(注意：如果接收String类型的参数，只能使用String?来接收)
 ```java
     发送消息:(主线程)
     FlowEventBus.post(tag: String)

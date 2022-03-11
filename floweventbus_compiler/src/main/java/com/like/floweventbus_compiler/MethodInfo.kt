@@ -39,9 +39,9 @@ data class MethodInfo(
         }
     }
 
-    /*
-      * 在调用 kotlin 方法时，需要还原，才能匹配 kotlin 方法
-      */
+    /**
+     * 在调用 kotlin 方法时，需要还原，才能匹配 kotlin 方法
+     */
     @Throws(ClassNotFoundException::class)
     fun getKotlinParamType(): String {
         return when (paramType) {
@@ -61,6 +61,7 @@ data class MethodInfo(
             "java.lang.Float" -> "Float?"
             "double" -> "Double"
             "java.lang.Double" -> "Double?"
+            "java.lang.String" -> "String?"
             else -> paramType
         }
     }

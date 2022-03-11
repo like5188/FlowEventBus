@@ -37,7 +37,7 @@ class MainActivity : BaseActivity() {
     }
 
     @BusObserver(["like1", "like2"])
-    fun observer2(data: Int?) {
+    fun observer2(data: String?) {
         Log.e(TAG, "MainActivity observer2 tag=like1like2 数据：$data")
     }
 
@@ -47,7 +47,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun changeData2(view: View) {
-        FlowEventBus.post("like2", 123)
+        FlowEventBus.post("like2", "123")
     }
 
     fun changeData3(view: View) {
