@@ -42,7 +42,7 @@
         implementation 'com.github.like5188.FlowEventBus:floweventbus:版本号'
         implementation 'com.github.like5188.FlowEventBus:floweventbus_annotations:版本号'
         kapt 'com.github.like5188.FlowEventBus:floweventbus_compiler:版本号'
-        implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.20")
+        implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.21")
     }
 ```
 
