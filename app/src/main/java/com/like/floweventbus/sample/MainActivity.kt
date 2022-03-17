@@ -43,7 +43,7 @@ class MainActivity : BaseActivity() {
 
     fun changeData1(view: View) {
         FlowEventBus.post<Int?>("like1", null)
-        FlowEventBus.post("like1", 5)
+        FlowEventBus.post("like1", "123")
     }
 
     fun changeData2(view: View) {
