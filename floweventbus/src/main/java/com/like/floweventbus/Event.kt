@@ -34,6 +34,7 @@ class Event(
                     callback(host, it)
                 }
             }
+            //如果这里被执行，则代表生命周期已经走到了onDestroy，因为repeatOnLifecycle是挂起函数，在生命周期为onDestroy的时候进行了恢复。
         } ?: GlobalScope.launch(Dispatchers.Main) {
             flow.collect {
                 callback(host, it)
