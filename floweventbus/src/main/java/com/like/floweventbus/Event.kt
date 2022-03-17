@@ -23,8 +23,13 @@ class Event(
         this.host = host
         this.owner = owner
 
+        // 由于 repeatOnLifecycle 是一个挂起函数，
+        // 因此从 lifecycleScope 中创建新的协程
         job = (owner?.lifecycleScope?.launch(Dispatchers.Main) {
-            owner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            // 直到 lifecycle 进入 DESTROYED 状态前都将当前协程挂起。
+            // repeatOnLifecycle 每当生命周期处于 STARTED 或以后的状态时会在新的协程中
+            // 启动执行代码块，并在生命周期进入 STOPPED 时取消协程。
+            owner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 flow.collect {
                     callback(host, it)
                 }
