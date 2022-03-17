@@ -36,7 +36,7 @@ class MainActivity : BaseActivity() {
         Log.e(TAG, "MainActivity observer1 tag=like1like2 requestCode=1")
     }
 
-    @BusObserver(["like1", "like2"])
+    @BusObserver(["like1", "like2"], isSticky = true)
     fun observer2(data: String?) {
         Log.e(TAG, "MainActivity observer2 tag=like1like2 数据：$data")
     }

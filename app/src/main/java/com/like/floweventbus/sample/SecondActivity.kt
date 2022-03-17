@@ -25,7 +25,7 @@ class SecondActivity : AppCompatActivity() {
     }
 
     fun changeData1(view: View?) {
-        FlowEventBus.post("like1", "123")
+        FlowEventBus.post("like1", "232323")
         FlowEventBus.post("like4", 100)
         FlowEventBus.post("like2", "re", User("name", 18))
     }
