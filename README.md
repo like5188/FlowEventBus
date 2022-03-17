@@ -14,7 +14,7 @@
 
     ①、此注解中可以设置 tag、requestCode、isSticky 三个参数。
     ②、当 tag 相同时，可以用 requestCode 来区分。
-    ③、isSticky 只是针对`@BusObserver`注解的接收消息的方法。发送消息时不区分粘性或者非粘性消息。sticky 为 true 时表示会缓存最近的一条消息，让之前注册但是处于后台（当它转到前台时，可以替换 startActivityForResult ，因为 startActivityForResult 有个弊端，就是会忽略 launchModel 设置，造成 singleTask 的界面被多次启动），或者新注册的宿主收到这条消息。
+    ③、isSticky 只是针对`@BusObserver`注解的接收消息的方法。发送消息时不区分粘性或者非粘性消息。sticky 为 true 时表示会缓存最近的一条消息，让新注册的宿主也能收到这条消息。
     ④、发送消息时，必须要由相同的 tag、requestCode、参数类型，才能成功发送消息。
     ⑤、此方法必须用 public 修饰，且不能被 static 修饰，且参数最多只能是1个。
 
