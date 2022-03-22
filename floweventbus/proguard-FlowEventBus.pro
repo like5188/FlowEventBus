@@ -21,10 +21,11 @@
 #-renamesourcefileattribute SourceFile
 
 # floweventbus
--keep class com.like.floweventbus.**{*;}
-# 不混淆包含被 BusObserver 注解的方法的宿主类，因为需要用到它的类名。
+# 需要发送的数据不能被混淆。因为用到了反射获取其类型。
+-keep class com.like.floweventbus.NoArgs
+# 不混淆包含被 BusObserver 注解的方法的宿主类，因为需要用它的类名来获取自动生成的类 FlowEventbusInitializer。
 -keepclasseswithmembernames class **{
      @com.like.floweventbus_annotations.BusObserver <methods>;
 }
-# 不能混淆自动生成的类 FlowEventbusInitializer，因为需要反射实例化它并调用其中的方法进行初始化。
--keep class **.FlowEventbusMethods{*;}
+# 不能混淆自动生成的类 FlowEventbusInitializer，因为需要反射调用它的方法进行初始化。
+-keep class **.FlowEventbusInitializer{*;}
