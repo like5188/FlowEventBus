@@ -34,16 +34,5 @@ class SecondActivity : AppCompatActivity() {
         FlowEventBus.unregister(this)
     }
 
-    @BusObserver(value = ["like4"], isSticky = true)
-    fun observer1(data: Int) {
-        Log.e(TAG, "SecondActivity observer1 tag=like4 isSticky=true 数据：$data")
-        mBinding.tv1.text = data.toString()
-    }
-
-    @BusObserver(value = ["like2"], requestCode = "re")
-    fun observer2(data: User) {
-        Log.e(TAG, "SecondActivity observer2 tag=like2 requestCode=re 数据：$data")
-        mBinding.tv2.text = data.toString()
-    }
 
 }

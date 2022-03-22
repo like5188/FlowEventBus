@@ -37,7 +37,7 @@ data class FlowWrapper<T>(
     }
 
     override fun toString(): String {
-        return "FlowWrapper(tag='$tag', ${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, paramType=$paramType)"
+        return "tag=$tag,${if (requestCode.isNotEmpty()) " requestCode=$requestCode," else ""} paramType=$paramType"
     }
 
     override fun equals(other: Any?): Boolean {

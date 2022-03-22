@@ -22,6 +22,11 @@ object EventManager {
             it.flow.tag == tag && it.flow.requestCode == requestCode && it.flow.paramType == paramType
         }
 
+    fun getEvent(hostClass: String, tag: String, requestCode: String, paramType: String): Event? =
+        mEventList.firstOrNull {
+            it.hostClass == hostClass && it.flow.tag == tag && it.flow.requestCode == requestCode && it.flow.paramType == paramType
+        }
+
     /**
      * 由自动生成的代码来调用
      */
@@ -33,9 +38,13 @@ object EventManager {
         isStickyMethod: Boolean,
         callback: (Any, Any?) -> Unit
     ) {
-        val flow = mEventList.firstOrNull {
-            it.flow.tag == tag && it.flow.requestCode == requestCode && it.flow.paramType == paramType
-        }?.flow ?: FlowWrapper(
+        val oldEvent = getEvent(hostClass, tag, requestCode, paramType)
+        if (oldEvent != null) {
+            Log.e(TAG, "添加事件失败 --> 事件 $oldEvent 已经添加过")
+            return
+        }
+        // 同一个 MutableSharedFlow，取任意一个即可
+        val flow = getEvent(tag, requestCode, paramType)?.flow ?: FlowWrapper(
             tag, requestCode, paramType, MutableSharedFlow(
                 replay = if (isStickyMethod) 1 else 0,
                 extraBufferCapacity = if (isStickyMethod) Int.MAX_VALUE else 0 // 避免挂起导致数据发送失败

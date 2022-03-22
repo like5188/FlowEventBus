@@ -9,6 +9,7 @@ import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus_annotations.BusObserver
+import java.util.logging.Logger
 import kotlin.concurrent.thread
 
 class MainActivity : BaseActivity() {
@@ -19,10 +20,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding
-        val mainViewModel = MainViewModel()
-        FlowEventBus.register(mainViewModel, this)
-        val mainViewModel1 = MainViewModel1()
-        FlowEventBus.register(mainViewModel1, this)
         Log.w(TAG, "MainActivity onCreate")
     }
 
@@ -31,19 +28,18 @@ class MainActivity : BaseActivity() {
         Log.w(TAG, "MainActivity onDestroy")
     }
 
-    @BusObserver(["like1", "like2"], requestCode = "1")
+    @BusObserver(["like1"])
     fun observer1() {
-        Log.e(TAG, "MainActivity observer1 tag=like1like2 requestCode=1")
+        Log.w("Logger", "1")
     }
 
-    @BusObserver(["like1", "like2"], isSticky = true)
-    fun observer2(data: String?) {
-        Log.e(TAG, "MainActivity observer2 tag=like1like2 数据：$data")
+    @BusObserver(["like1"])
+    fun observer2() {
+        Log.e("Logger", "2")
     }
 
     fun changeData1(view: View) {
-        FlowEventBus.post<Int?>("like1", null)
-        FlowEventBus.post("like1", "123")
+        FlowEventBus.post("like1")
     }
 
     fun changeData2(view: View) {

@@ -50,7 +50,7 @@ class Event(
     }
 
     override fun toString(): String {
-        return "Event(host=$host, flow=$flow)"
+        return "Event(${if (host != null) "host=$host" else "hostClass=$hostClass"}, $flow)"
     }
 
     override fun equals(other: Any?): Boolean {
