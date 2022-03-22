@@ -78,7 +78,8 @@ class BusProcessor : AbstractProcessor() {
         }
 
         // 生成宿主类对应的代理类的代码
-        val packageName = ProcessUtils.mElements?.getPackageOf(roundEnv.rootElements.first())
+        val buildConfigElement = roundEnv.rootElements.first { it.simpleName.toString() == "BuildConfig" }
+        val packageName = ProcessUtils.mElements?.getPackageOf(buildConfigElement)
         classGenerator.create(packageName.toString())
         return true
     }
