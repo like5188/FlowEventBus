@@ -17,6 +17,9 @@ class Event(
 
     fun getHost() = host
 
+    /**
+     * 绑定事件到宿主和生命周期类
+     */
     fun bind(host: Any, owner: LifecycleOwner?) {
         this.host = host
         this.owner = owner
@@ -38,6 +41,9 @@ class Event(
         }
     }
 
+    /**
+     * 解绑事件的宿主和生命周期类
+     */
     fun unbind() {
         this.job?.cancel()
     }
