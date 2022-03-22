@@ -29,17 +29,15 @@ class Initializer {
             val sb = StringBuilder()
             (s.indices).forEach {
                 sb.append("${s[it]}.")
-                val buildConfigClassName = "${sb}BuildConfig"
-                Log.d("Logger", "buildConfigClassName=$buildConfigClassName")
+                val flowEventbusInitializerClassName = "${sb}FlowEventbusInitializer"
+                Log.d("Logger", "flowEventbusInitializerClassName=$flowEventbusInitializerClassName")
                 try {
-                    Class.forName(buildConfigClassName)// 找到了 BuildConfig 类
-                    val flowEventbusInitializerClassName = "${sb}FlowEventbusInitializer"
-                    Log.d("Logger", "flowEventbusInitializerClassName=$flowEventbusInitializerClassName")
                     val clazz = Class.forName(flowEventbusInitializerClassName)
                     clazz.getDeclaredMethod(INIT_METHOD).invoke(clazz.kotlin.objectInstance)
                     Log.e(TAG, "初始化成功")
                     return
                 } catch (e: Exception) {
+                    Log.e(TAG, e.message ?: "")
                 }
             }
             Log.e(TAG, "初始化失败")
