@@ -24,20 +24,17 @@ class Initializer {
                 Log.e(TAG, "初始化失败 --> 获取宿主 $host 的包名失败")
                 return
             }
-            Log.d("Logger", "hostPackageName=$hostPackageName")
             val s = hostPackageName.split(".")
             val sb = StringBuilder()
             (s.indices).forEach {
                 sb.append("${s[it]}.")
                 val flowEventbusInitializerClassName = "${sb}FlowEventbusInitializer"
-                Log.d("Logger", "flowEventbusInitializerClassName=$flowEventbusInitializerClassName")
                 try {
                     val clazz = Class.forName(flowEventbusInitializerClassName)
                     clazz.getDeclaredMethod(INIT_METHOD).invoke(clazz.kotlin.objectInstance)
-                    Log.e(TAG, "初始化成功")
+                    Log.d(TAG, "初始化成功 $flowEventbusInitializerClassName")
                     return
                 } catch (e: Exception) {
-                    Log.e(TAG, e.message ?: "")
                 }
             }
             Log.e(TAG, "初始化失败")
