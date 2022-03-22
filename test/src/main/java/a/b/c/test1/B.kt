@@ -1,4 +1,4 @@
-package com.like.floweventbus.test.test1
+package a.b.c.test1
 
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner

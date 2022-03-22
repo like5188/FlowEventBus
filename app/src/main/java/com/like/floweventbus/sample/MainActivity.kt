@@ -9,7 +9,7 @@ import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus.sample.test.test1.SecondActivity
-import com.like.floweventbus.test.test1.B
+import a.b.c.test1.B
 
 class MainActivity : BaseActivity() {
     private val mBinding by lazy {
