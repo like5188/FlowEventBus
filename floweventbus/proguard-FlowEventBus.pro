@@ -21,8 +21,8 @@
 #-renamesourcefileattribute SourceFile
 
 # floweventbus
-# 不能混淆 HostProxy 的实现类，因为需要反射实例化它并调用其中的方法进行注册。
--keep class com.like.floweventbus.FlowEventbusMethods.** {*;}
+# 不能混淆自动生成的类 FlowEventbusInitializer，因为需要反射实例化它并调用其中的方法进行初始化。
+-keep class **.FlowEventbusMethods.** {*;}
 # 不混淆包含被 BusObserver 注解的方法的宿主类，因为注册时需要用到它的类名，然后根据此类名来获取其代理类。
 -keepclasseswithmembernames class **{
      @com.like.floweventbus_annotations.BusObserver <methods>;
