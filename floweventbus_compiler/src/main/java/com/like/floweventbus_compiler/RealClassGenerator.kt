@@ -21,10 +21,9 @@ public object FlowEventbusMethods {
  * [BusObserver]注解的方法缓存类的代码。
  */
 object RealClassGenerator {
-    private const val PACKAGE_NAME = "com.like.floweventbus"
     private const val CLASS_NAME = "FlowEventbusMethods"
 
-    fun create(methodInfoList: List<MethodInfo>) {
+    fun create(packageName: String, methodInfoList: List<MethodInfo>) {
         val filer = ProcessUtils.mFiler ?: return
         try {
             /*
@@ -32,7 +31,7 @@ object RealClassGenerator {
              // This codes are generated automatically by FlowEventBus. Do not modify!
              package com.like.floweventbus
              */
-            FileSpec.builder(PACKAGE_NAME, CLASS_NAME)
+            FileSpec.builder(packageName, CLASS_NAME)
                 .addComment(" This codes are generated automatically by FlowEventBus. Do not modify!")// 类的注释
                 .addType(createClass(methodInfoList))
                 .build()

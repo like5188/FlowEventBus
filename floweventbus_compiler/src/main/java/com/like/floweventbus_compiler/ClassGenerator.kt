@@ -26,11 +26,11 @@ TypeName 			类型，如在添加返回值类型是使用 TypeName.VOID
 internal class ClassGenerator {
     private val mMethodInfoList = mutableListOf<MethodInfo>()// 类中的所有方法
 
-    fun create() {
+    fun create(packageName: String) {
         if (mMethodInfoList.isEmpty()) {
             return
         }
-        RealClassGenerator.create(mMethodInfoList)
+        RealClassGenerator.create(packageName, mMethodInfoList)
     }
 
     /**

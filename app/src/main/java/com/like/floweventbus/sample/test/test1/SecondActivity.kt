@@ -1,4 +1,4 @@
-package com.like.floweventbus.sample
+package com.like.floweventbus.sample.test.test1
 
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
+import com.like.floweventbus.sample.R
+import com.like.floweventbus.sample.User
 import com.like.floweventbus.sample.databinding.ActivitySecondBinding
 import com.like.floweventbus_annotations.BusObserver
 
@@ -15,7 +17,6 @@ class SecondActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_second)
-        FlowEventBus.register(this)
         Log.e(TAG, "SecondActivity onCreate")
     }
 

@@ -5,6 +5,7 @@ import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
+
 /*
 Element有以下几个实现类
 PackageElement 			表示一个包程序元素。提供对有关包及其成员的信息的访问
@@ -77,7 +78,8 @@ class BusProcessor : AbstractProcessor() {
         }
 
         // 生成宿主类对应的代理类的代码
-        classGenerator.create()
+        val packageName = ProcessUtils.mElements?.getPackageOf(roundEnv.rootElements.first())
+        classGenerator.create(packageName.toString())
         return true
     }
 

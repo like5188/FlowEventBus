@@ -8,9 +8,10 @@ import androidx.databinding.DataBindingUtil
 import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
+import com.like.floweventbus.sample.test.test1.SecondActivity
+import com.like.floweventbus.test.FlowEventbusMethods
+import com.like.floweventbus.test.test1.B
 import com.like.floweventbus_annotations.BusObserver
-import java.util.logging.Logger
-import kotlin.concurrent.thread
 
 class MainActivity : BaseActivity() {
     private val mBinding by lazy {
@@ -20,22 +21,14 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding
+        FlowEventbusMethods.initialize()
+        val b = B()
         Log.w(TAG, "MainActivity onCreate")
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.w(TAG, "MainActivity onDestroy")
-    }
-
-    @BusObserver(["like1"])
-    fun observer1() {
-        Log.w("Logger", "1")
-    }
-
-    @BusObserver(["like1"])
-    fun observer2() {
-        Log.e("Logger", "2")
     }
 
     fun changeData1(view: View) {
