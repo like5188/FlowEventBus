@@ -8,8 +8,8 @@ import java.io.IOException
 //  This codes are generated automatically by FlowEventBus. Do not modify!
 package com.like.floweventbus
 
-public object FlowEventbusMethods {
-    public fun initialize(): Unit {
+public object FlowEventbusInitializer {
+    public fun init(): Unit {
         EventManager.addEvent("com.like.floweventbus.sample.MainActivity", "like1", "1", "com.like.floweventbus.NoArgs", false) { host, data ->
             (host as MainActivity).observer1();
         }
@@ -21,7 +21,7 @@ public object FlowEventbusMethods {
  * [BusObserver]注解的方法缓存类的代码。
  */
 object RealClassGenerator {
-    private const val CLASS_NAME = "FlowEventbusMethods"
+    private const val CLASS_NAME = "FlowEventbusInitializer"
 
     fun create(packageName: String, methodInfoList: List<MethodInfo>) {
         val filer = ProcessUtils.mFiler ?: return
@@ -55,10 +55,10 @@ object RealClassGenerator {
     /*
      * 创建方法
      *
-     * fun initialize() {}
+     * fun init() {}
      */
     private fun createInitializeFun(methodInfoList: List<MethodInfo>): FunSpec {
-        return FunSpec.builder("initialize")
+        return FunSpec.builder("init")
             .addCode(createCodeBlock(methodInfoList))
             .build()
     }

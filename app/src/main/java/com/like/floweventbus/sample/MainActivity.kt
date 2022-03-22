@@ -9,9 +9,8 @@ import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus.sample.test.test1.SecondActivity
-import com.like.floweventbus.test.FlowEventbusMethods
+import com.like.floweventbus.test.FlowEventbusInitializer
 import com.like.floweventbus.test.test1.B
-import com.like.floweventbus_annotations.BusObserver
 
 class MainActivity : BaseActivity() {
     private val mBinding by lazy {
@@ -21,9 +20,13 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding
-        FlowEventbusMethods.initialize()
-        val b = B()
+        FlowEventbusInitializer.init()
+        val b = B(this)
         Log.w(TAG, "MainActivity onCreate")
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 
     override fun onDestroy() {

@@ -1,12 +1,13 @@
 package com.like.floweventbus.test.test1
 
 import android.util.Log
+import androidx.lifecycle.LifecycleOwner
 import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus_annotations.BusObserver
 
-class B {
+class B(owner: LifecycleOwner) {
     init {
-        FlowEventBus.register(this)
+        FlowEventBus.register(this, owner)
     }
 
     @BusObserver(["like1"])
