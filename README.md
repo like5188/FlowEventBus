@@ -46,21 +46,27 @@
     }
 ```
 
-2、在需要接收消息的类的初始化方法（通常为构造函数）中调用`register`方法进行注册宿主。当在父类调用`register`方法后，在子类中无需再调用。
+2、初始化。
 ```java
-    FlowEventBus.register(host: Any, owner: LifecycleOwner?)//
+    // FlowEventbusInitializer 是在编译时自动生成的类。
+    FlowEventbusInitializer.init()
+```
+
+3、在需要接收消息的类的初始化方法（通常为构造函数）中调用`register`方法进行注册宿主。当在父类调用`register`方法后，在子类中无需再调用。
+```java
+    FlowEventBus.register(host: Any, owner: LifecycleOwner?)
     // 当注册时参数 owner 不是LifecycleOwner或者View类型，或者为null时，不会自动关联生命周期，必须显示调用下面的方法取消注册；不为null时会自动关联生命周期，不用调用取消注册的方法。
     FlowEventBus.unregister(host: Any)
 ```
 
-3、发送消息。
+4、发送消息。
 ```java
     FlowEventBus.post(tag: String)
     FlowEventBus.post(tag: String, t: T)
     FlowEventBus.post(tag: String, requestCode: String, t: T)
 ```
 
-4、接收消息与发送消息一一对应。(注意：如果接收String类型的参数，只能使用String?来接收)
+5、接收消息与发送消息一一对应。(注意：如果接收String类型的参数，只能使用String?来接收)
 ```java
     发送消息:(主线程)
     FlowEventBus.post(tag: String)
@@ -89,4 +95,4 @@
     }
 ```
 
-5、混淆。需要发送的数据不能被混淆。因为用到了反射获取其类型。
+6、混淆。需要发送的数据不能被混淆。因为用到了反射获取其类型。
