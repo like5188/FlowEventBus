@@ -85,8 +85,7 @@ object RealClassGenerator {
                             it.tags.contains(tag) && it.requestCode == requestCode && it.isSticky
                         }
                         addStatement(
-                            "%T.addEvent(%S, %S, %S, %S, %L) { host, data ->",
-                            ClassName("com.like.floweventbus", "EventManager"),
+                            "com.like.floweventbus.EventManager.addEvent(%S, %S, %S, %S, %L) { host, data ->",
                             hostClass,
                             tag,
                             requestCode,
@@ -95,7 +94,7 @@ object RealClassGenerator {
                         )
                         addStatement(
                             "(host as %T).${hostMethodInfo.methodName}(${if (paramType == "com.like.floweventbus.NoArgs") "" else "data as ${hostMethodInfo.getKotlinParamType()}"});",
-                            hostClass.asClassName()
+                            hostClass
                         )
                         addStatement("}")
                     }
