@@ -9,7 +9,6 @@ import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus.sample.test.test1.SecondActivity
-import com.like.floweventbus.test.FlowEventbusInitializer
 import com.like.floweventbus.test.test1.B
 
 class MainActivity : BaseActivity() {
@@ -20,7 +19,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding
-        FlowEventbusInitializer.init()
         val b = B(this)
         Log.w(TAG, "MainActivity onCreate")
     }

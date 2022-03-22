@@ -44,4 +44,5 @@ dependencies {
 
     // Activity 或 Fragment 对协程的支持：lifecycleScope
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.6.10'
 }
