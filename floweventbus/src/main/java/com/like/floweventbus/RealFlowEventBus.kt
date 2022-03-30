@@ -4,10 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 
 object RealFlowEventBus {
-    private var mInitializer: Initializer = Initializer()
-
     fun register(host: Any, owner: LifecycleOwner?) {
-        mInitializer.initialize(host)
+        Initializer.initialize(host)
         if (EventManager.isRegistered(host)) {
             Log.e(TAG, "绑定宿主失败 --> 宿主 $host 已经绑定过")
             return
