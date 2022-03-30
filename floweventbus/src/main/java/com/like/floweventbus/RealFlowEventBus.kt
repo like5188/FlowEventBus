@@ -21,7 +21,6 @@ object RealFlowEventBus {
             event.bind(host, owner)
         }
         Log.i(TAG, "绑定宿主 --> $host")
-        EventManager.logEvent()
         EventManager.logHostAndOwner()
     }
 

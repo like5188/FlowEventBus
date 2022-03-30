@@ -71,7 +71,7 @@ object EventManager {
         val hosts = mEventList.mapNotNull { it.getHost() }.distinct()
         Log.d(TAG, "宿主总数：${hosts.size}${if (hosts.isEmpty()) "" else "，包含：$hosts"}")
 
-        val owners = mEventList.mapNotNull { it.getHost() }.distinct()
+        val owners = mEventList.mapNotNull { it.getOwner() }.distinct()
         Log.d(TAG, "生命周期类总数：${owners.size}${if (owners.isEmpty()) "" else "，包含：$owners"}")
     }
 

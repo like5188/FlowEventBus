@@ -16,6 +16,7 @@ class Event(
     private var job: Job? = null
 
     fun getHost() = host
+    fun getOwner() = owner
 
     /**
      * 绑定事件到宿主和生命周期类
@@ -35,7 +36,6 @@ class Event(
                 this@Event.host = null
                 this@Event.owner = null
                 this@Event.job = null
-                EventManager.logEvent()
                 EventManager.logHostAndOwner()
             }
         }
