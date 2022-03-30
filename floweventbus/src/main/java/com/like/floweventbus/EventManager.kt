@@ -61,7 +61,10 @@ object EventManager {
      * 打印缓存的事件
      */
     fun logEvent() {
-        Log.d(TAG, "事件总数：${mEventList.size}${if (mEventList.isEmpty()) "" else "，包含：$mEventList"}")
+        Log.v(TAG, "事件总数：${mEventList.size}")
+        mEventList.forEach {
+            Log.v(TAG, " --> $it")
+        }
     }
 
     /**
@@ -69,10 +72,16 @@ object EventManager {
      */
     fun logHostAndOwner() {
         val hosts = mEventList.mapNotNull { it.getHost() }.distinct()
-        Log.d(TAG, "宿主总数：${hosts.size}${if (hosts.isEmpty()) "" else "，包含：$hosts"}")
+        Log.d(TAG, "宿主总数：${hosts.size}")
+        hosts.forEach {
+            Log.d(TAG, " --> $it")
+        }
 
         val owners = mEventList.mapNotNull { it.getOwner() }.distinct()
-        Log.d(TAG, "生命周期类总数：${owners.size}${if (owners.isEmpty()) "" else "，包含：$owners"}")
+        Log.d(TAG, "生命周期类总数：${owners.size}")
+        owners.forEach {
+            Log.d(TAG, " --> $it")
+        }
     }
 
 }

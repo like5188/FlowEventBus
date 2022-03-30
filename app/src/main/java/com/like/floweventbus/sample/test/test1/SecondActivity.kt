@@ -17,6 +17,7 @@ class SecondActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_second)
+        FlowEventBus.register(this)
         Log.e(TAG, "SecondActivity onCreate")
     }
 
@@ -35,5 +36,8 @@ class SecondActivity : AppCompatActivity() {
         FlowEventBus.unregister(this)
     }
 
-
+    @BusObserver(["like222"])
+    fun observer1() {
+        Log.w("Logger", "like1")
+    }
 }
