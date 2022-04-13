@@ -38,35 +38,40 @@
 ```
 在Module的gradle中加入：
 ```groovy
+    // 如果只是发送消息
     dependencies {
         implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
-        implementation 'org.jetbrains.kotlin:kotlin-reflect:1.6.10'
+        implementation 'com.github.like5188.FlowEventBus:floweventbus:版本号'
+    }
+    // 发送消息、接收消息
+    dependencies {
+        implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
         implementation 'com.github.like5188.FlowEventBus:floweventbus:版本号'
         implementation 'com.github.like5188.FlowEventBus:floweventbus_annotations:版本号'
         kapt 'com.github.like5188.FlowEventBus:floweventbus_compiler:版本号'
     }
 ```
 
-2、初始化
-```java
-    FlowEventBus.init()
-```
-
-3、在需要接收消息的类的初始化方法（通常为构造函数）中调用`register`方法进行注册宿主。当在父类调用`register`方法后，在子类中无需再调用。
-```java
-    FlowEventBus.register(host: Any, owner: LifecycleOwner?)
-    // 当注册时参数 owner 不是LifecycleOwner或者View类型，或者为null时，不会自动关联生命周期，必须显示调用下面的方法取消注册；不为null时会自动关联生命周期，不用调用取消注册的方法。
-    FlowEventBus.unregister(host: Any)
-```
-
-4、发送消息。
+2、发送消息。
 ```java
     FlowEventBus.post(tag: String)
     FlowEventBus.post(tag: String, t: T)
     FlowEventBus.post(tag: String, requestCode: String, t: T)
 ```
 
-5、接收消息与发送消息一一对应。(注意：如果接收String类型的参数，只能使用String?来接收)
+3、如果需要接收消息。初始化
+```java
+    FlowEventBus.init()
+```
+
+4、如果需要接收消息。在需要接收消息的类的初始化方法（通常为构造函数）中调用`register`方法进行注册宿主。当在父类调用`register`方法后，在子类中无需再调用。
+```java
+    FlowEventBus.register(host: Any, owner: LifecycleOwner?)
+    // 当注册时参数 owner 不是LifecycleOwner或者View类型，或者为null时，不会自动关联生命周期，必须显示调用下面的方法取消注册；不为null时会自动关联生命周期，不用调用取消注册的方法。
+    FlowEventBus.unregister(host: Any)
+```
+
+5、如果需要接收消息。接收消息与发送消息一一对应。(注意：如果接收String类型的参数，只能使用String?来接收)
 ```java
     发送消息:(主线程)
     FlowEventBus.post(tag: String)
