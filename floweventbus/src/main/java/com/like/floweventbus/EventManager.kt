@@ -35,7 +35,7 @@ object EventManager {
         tag: String,
         requestCode: String,
         paramType: String,
-        isStickyMethod: Boolean,
+        isSticky: Boolean,
         callback: (Any, Any?) -> Unit
     ) {
         val oldEvent = getEvent(hostClass, tag, requestCode, paramType)
@@ -45,9 +45,9 @@ object EventManager {
         }
         // 同一个 MutableSharedFlow，取任意一个即可
         val flow = getEvent(tag, requestCode, paramType)?.flow ?: FlowWrapper(
-            tag, requestCode, paramType, MutableSharedFlow(
-                replay = if (isStickyMethod) 1 else 0,
-                extraBufferCapacity = if (isStickyMethod) Int.MAX_VALUE else 0 // 避免挂起导致数据发送失败
+            tag, requestCode, paramType, isSticky, MutableSharedFlow(
+                replay = if (isSticky) 1 else 0,
+                extraBufferCapacity = if (isSticky) Int.MAX_VALUE else 0 // 避免挂起导致数据发送失败
             )
         )
         with(Event(hostClass, flow, callback)) {
