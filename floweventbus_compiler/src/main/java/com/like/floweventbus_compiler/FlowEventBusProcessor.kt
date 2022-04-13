@@ -27,11 +27,11 @@ getConstantValue() 		如果属性变量被final修饰，则可以使用该方法
  */
 
 /**
- * RxBus 注解处理器。每一个注解处理器类都必须有一个空的构造函数，默认不写就行;
+ * FlowEventBus 框架的注解处理器。每一个注解处理器类都必须有一个空的构造函数，默认不写就行;
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes("com.like.floweventbus_annotations.BusObserver")
-class BusProcessor : AbstractProcessor() {
+class FlowEventBusProcessor : AbstractProcessor() {
 
     /**
      * init()方法会被注解处理工具调用，并输入 ProcessingEnvironment 参数。
@@ -77,7 +77,7 @@ class BusProcessor : AbstractProcessor() {
             }
         }
 
-        // 生成宿主类对应的代理类的代码
+        // 生成宿主类对应的代理类及它的配置文件
         val buildConfigElement = roundEnv.rootElements.first { it.simpleName.toString() == "BuildConfig" }
         val packageName = ProcessUtils.mElements?.getPackageOf(buildConfigElement)
         classGenerator.generate(packageName.toString())
