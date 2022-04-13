@@ -27,17 +27,15 @@ class SecondActivity : AppCompatActivity() {
     }
 
     fun changeData1(view: View?) {
-        FlowEventBus.post("like1", "232323")
-        FlowEventBus.post("like4", 100)
-        FlowEventBus.post("like2", "re", User("name", 18))
+        FlowEventBus.post("like222")
     }
 
     fun unregister(view: View?) {
         FlowEventBus.unregister(this)
     }
 
-    @BusObserver(["like222"])
+    @BusObserver(["like222"], isSticky = true)
     fun observer1() {
-        Log.w("Logger", "like1")
+        Log.w(TAG, "observer1 like222")
     }
 }

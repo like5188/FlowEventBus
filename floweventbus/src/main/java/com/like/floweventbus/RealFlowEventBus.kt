@@ -2,10 +2,28 @@ package com.like.floweventbus
 
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
+import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 object RealFlowEventBus {
+    private val initialized = AtomicBoolean(false)
+
+    /**
+     * 此方法会[Initializer]类的所有实现类（floweventbus_compiler中自动生成的FlowEventbusInitializer类）的 init() 方法，然后触发 [EventManager.addEvent] 方法去添加所有被注解方法对应的[Event]。
+     * FlowEventbusInitializer类在每个模块对应一个，和模块的BuildConfig类的包名一致。
+     */
+    fun init() {
+        if (initialized.compareAndSet(false, true)) {
+            ServiceLoader.load(Initializer::class.java).toList().forEach {
+                it.init()
+            }
+            Log.d(TAG, "初始化成功")
+        } else {
+            Log.e(TAG, "已经初始化过了")
+        }
+    }
+
     fun register(host: Any, owner: LifecycleOwner?) {
-        Initializer.initialize(host)
         if (EventManager.isRegistered(host)) {
             Log.e(TAG, "绑定宿主失败 --> 宿主 $host 已经绑定过")
             return

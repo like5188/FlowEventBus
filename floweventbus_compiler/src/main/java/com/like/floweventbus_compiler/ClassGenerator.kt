@@ -31,6 +31,7 @@ internal class ClassGenerator {
             return
         }
         RealClassGenerator.create(packageName, mMethodInfoList)
+        FileGenerator.generateConfigFiles("com.like.floweventbus.Initializer", "$packageName.FlowEventBusInitializer")
     }
 
     /**

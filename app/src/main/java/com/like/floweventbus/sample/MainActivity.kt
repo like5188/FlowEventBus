@@ -19,6 +19,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding
+        FlowEventBus.init()
         val b = B(this)
         Log.w(TAG, "MainActivity onCreate")
     }
@@ -33,7 +34,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun changeData1(view: View) {
-        FlowEventBus.post("like1")
+        FlowEventBus.post("like222")
     }
 
     fun changeData2(view: View) {

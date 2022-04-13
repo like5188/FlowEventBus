@@ -6,10 +6,11 @@ import java.io.IOException
 
 /*
 //  This codes are generated automatically by FlowEventBus. Do not modify!
-package com.like.floweventbus
+package xxx
 
-public object FlowEventbusInitializer {
-    public fun init(): Unit {
+@AutoService(Initializer::class)
+class FlowEventBusInitializer : Initializer {
+    override fun init() {
         EventManager.addEvent("com.like.floweventbus.sample.MainActivity", "like1", "1", "com.like.floweventbus.NoArgs", false) { host, data ->
             (host as MainActivity).observer1();
         }
@@ -21,7 +22,7 @@ public object FlowEventbusInitializer {
  * [BusObserver]注解的方法缓存类的代码。
  */
 object RealClassGenerator {
-    private const val CLASS_NAME = "FlowEventbusInitializer"
+    private const val CLASS_NAME = "FlowEventBusInitializer"
 
     fun create(packageName: String, methodInfoList: List<MethodInfo>) {
         val filer = ProcessUtils.mFiler ?: return
@@ -29,7 +30,7 @@ object RealClassGenerator {
             /*
              创建包名及类的注释
              // This codes are generated automatically by FlowEventBus. Do not modify!
-             package com.like.floweventbus
+             package xxx
              */
             FileSpec.builder(packageName, CLASS_NAME)
                 .addComment(" This codes are generated automatically by FlowEventBus. Do not modify!")// 类的注释
@@ -43,11 +44,11 @@ object RealClassGenerator {
 
     /*
      * 创建类
-     *
-     * object FlowEventbusMethods {}
+     * class FlowEventBusInitializer : Initializer {}
      */
     private fun createClass(methodInfoList: List<MethodInfo>): TypeSpec {
-        return TypeSpec.objectBuilder(CLASS_NAME)
+        return TypeSpec.classBuilder(CLASS_NAME)
+            .addSuperinterface(Class.forName("com.like.floweventbus.Initializer"))
             .addFunction(createInitializeFun(methodInfoList))
             .build()
     }
@@ -55,10 +56,11 @@ object RealClassGenerator {
     /*
      * 创建方法
      *
-     * fun init() {}
+     * override fun init() {}
      */
     private fun createInitializeFun(methodInfoList: List<MethodInfo>): FunSpec {
         return FunSpec.builder("init")
+            .addModifiers(KModifier.OVERRIDE)
             .addCode(createCodeBlock(methodInfoList))
             .build()
     }
