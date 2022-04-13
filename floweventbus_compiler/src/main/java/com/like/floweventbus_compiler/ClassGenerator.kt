@@ -1,72 +1,105 @@
 package com.like.floweventbus_compiler
 
 import com.like.floweventbus_annotations.BusObserver
-import javax.lang.model.element.Element
-import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.TypeElement
+import com.squareup.kotlinpoet.*
+import java.io.IOException
 
 /*
-在kotlinpoet中，每一个节点都对应一个Spec
-类对象 					说明
+//  This codes are generated automatically by FlowEventBus. Do not modify!
+package xxx
 
-MethodSpec 			代表一个构造函数或方法声明
-TypeSpec 			代表一个类，接口，或者枚举声明
-FieldSpec 			代表一个成员变量，一个字段声明
-JavaFile 			包含一个顶级类的Java文件
-ParameterSpec 		用来创建参数
-AnnotationSpec 		用来创建注解
-ClassName 			用来包装一个类
-TypeName 			类型，如在添加返回值类型是使用 TypeName.VOID
-
-通配符：
-%S 字符串，如：%S, ”hello”
-%T 类、接口，如：%T, MainActivity
-
- */
-internal class ClassGenerator {
-    private val mMethodInfoList = mutableListOf<MethodInfo>()// 类中的所有方法
-
-    fun create(packageName: String) {
-        if (mMethodInfoList.isEmpty()) {
-            return
+class FlowEventBusInitializer : Initializer {
+    override fun init() {
+        EventManager.addEvent("com.like.floweventbus.sample.MainActivity", "like1", "1", "com.like.floweventbus.NoArgs", false) { host, data ->
+            (host as MainActivity).observer1();
         }
-        RealClassGenerator.create(packageName, mMethodInfoList)
-        FileGenerator.generateConfigFiles("com.like.floweventbus.Initializer", "$packageName.FlowEventBusInitializer")
+        ……
+    }
+}
+ */
+/**
+ * [BusObserver]注解的方法缓存类的代码。
+ */
+object ClassGenerator {
+
+    fun generate(packageName: String, className: String, methodInfoList: List<MethodInfo>) {
+        val filer = ProcessUtils.mFiler ?: return
+        try {
+            /*
+             创建包名及类的注释
+             // This codes are generated automatically by FlowEventBus. Do not modify!
+             package xxx
+             */
+            FileSpec.builder(packageName, className)
+                .addComment(" This codes are generated automatically by FlowEventBus. Do not modify!")// 类的注释
+                .addType(createClass(className, methodInfoList))
+                .build()
+                .writeTo(filer)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
-    /**
-     * 添加元素，用于生成类
+    /*
+     * 创建类
+     * class FlowEventBusInitializer : Initializer {}
      */
-    fun addMethod(method: Element) {
-        val hostClass = method.enclosingElement as? TypeElement
-        hostClass ?: return
+    private fun createClass(className: String, methodInfoList: List<MethodInfo>): TypeSpec {
+        return TypeSpec.classBuilder(className)
+            .addSuperinterface(Class.forName("com.like.floweventbus.Initializer"))
+            .addFunction(createInitializeFun(methodInfoList))
+            .build()
+    }
 
-        val annotation = method.getAnnotation(BusObserver::class.java)
+    /*
+     * 创建方法
+     *
+     * override fun init() {}
+     */
+    private fun createInitializeFun(methodInfoList: List<MethodInfo>): FunSpec {
+        return FunSpec.builder("init")
+            .addModifiers(KModifier.OVERRIDE)
+            .addCode(createCodeBlock(methodInfoList))
+            .build()
+    }
 
-        val tags = annotation.value.toList()
-        if (tags.isNullOrEmpty()) return
-        tags.forEach {
-            if (it.isEmpty()) {
-                return
+    /*
+     * 创建方法的代码
+     *
+        EventManager.addEvent("com.like.floweventbus.sample.MainActivity", "like1", "1", "com.like.floweventbus.NoArgs", false) { host, data ->
+            (host as MainActivity).observer1();
+        }
+        ……
+     */
+    private fun createCodeBlock(methodInfoList: List<MethodInfo>): CodeBlock {
+        return buildCodeBlock {
+            methodInfoList.groupBy { it.hostClass }.forEach { entry ->
+                val hostClass = entry.key
+                val hostMethodInfoList = entry.value
+                hostMethodInfoList.forEach { hostMethodInfo ->
+                    hostMethodInfo.tags.forEach { tag ->
+                        val requestCode = hostMethodInfo.requestCode
+                        val paramType = hostMethodInfo.paramType
+                        val isStickyMethod = methodInfoList.any {
+                            it.tags.contains(tag) && it.requestCode == requestCode && it.isSticky
+                        }
+                        addStatement(
+                            "com.like.floweventbus.EventManager.addEvent(%S, %S, %S, %S, %L) { host, data ->",
+                            hostClass,
+                            tag,
+                            requestCode,
+                            hostMethodInfo.getJavaBoxParamType(),
+                            isStickyMethod
+                        )
+                        addStatement(
+                            "(host as %T).${hostMethodInfo.methodName}(${if (paramType == "com.like.floweventbus.NoArgs") "" else "data as ${hostMethodInfo.getKotlinParamType()}"});",
+                            hostClass
+                        )
+                        addStatement("}")
+                    }
+                }
             }
         }
-
-        val requestCode = annotation.requestCode
-
-        val methodName = method.simpleName.toString()
-        if (methodName.isEmpty()) return
-
-        val isSticky = annotation.isSticky
-
-        val executableElement = method as ExecutableElement
-        val paramType = when (executableElement.parameters.size) {
-            0 -> "com.like.floweventbus.NoArgs"// 用于注解的方法没有参数时的处理
-            1 -> executableElement.parameters[0].asType().toString()
-            else -> return
-        }
-        mMethodInfoList.add(
-            MethodInfo(hostClass, methodName, tags, requestCode, isSticky, paramType)
-        )
     }
 
 }

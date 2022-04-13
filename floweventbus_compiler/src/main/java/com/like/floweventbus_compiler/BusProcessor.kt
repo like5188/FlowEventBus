@@ -63,7 +63,7 @@ class BusProcessor : AbstractProcessor() {
         if (methods.isEmpty()) {
             return false
         }
-        val classGenerator = ClassGenerator()
+        val classGenerator = Generator()
         for (method in methods) {
             try {
                 // 验证方法的有效性
@@ -80,7 +80,7 @@ class BusProcessor : AbstractProcessor() {
         // 生成宿主类对应的代理类的代码
         val buildConfigElement = roundEnv.rootElements.first { it.simpleName.toString() == "BuildConfig" }
         val packageName = ProcessUtils.mElements?.getPackageOf(buildConfigElement)
-        classGenerator.create(packageName.toString())
+        classGenerator.generate(packageName.toString())
         return true
     }
 
