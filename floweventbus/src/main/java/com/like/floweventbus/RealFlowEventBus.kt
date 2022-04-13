@@ -14,6 +14,7 @@ object RealFlowEventBus {
      */
     fun init() {
         if (initialized.compareAndSet(false, true)) {
+            Log.d(TAG, "开始初始化")
             ServiceLoader.load(Initializer::class.java).toList().forEach {
                 it.init()
             }

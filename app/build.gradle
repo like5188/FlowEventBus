@@ -55,6 +55,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation project(':test')
+    implementation project(':test1')
     implementation project(':floweventbus')
     implementation project(':floweventbus_annotations')
     kapt project(':floweventbus_compiler')

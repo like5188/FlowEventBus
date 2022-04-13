@@ -1,5 +1,7 @@
 package com.like.floweventbus.sample
 
+import a.b.c.test1.B
+import a.b.c.test2.C
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +11,6 @@ import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus.sample.test.test1.SecondActivity
-import a.b.c.test1.B
 
 class MainActivity : BaseActivity() {
     private val mBinding by lazy {
@@ -19,9 +20,10 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding
-        FlowEventBus.init()
-        val b = B(this)
         Log.w(TAG, "MainActivity onCreate")
+        FlowEventBus.init()
+        B(this)
+        C(this)
     }
 
     override fun onBackPressed() {
@@ -34,6 +36,8 @@ class MainActivity : BaseActivity() {
     }
 
     fun changeData1(view: View) {
+        FlowEventBus.post("like1")
+        FlowEventBus.post("like2")
         FlowEventBus.post("like222")
     }
 

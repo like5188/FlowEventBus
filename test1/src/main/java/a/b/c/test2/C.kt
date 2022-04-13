@@ -1,4 +1,4 @@
-package a.b.c.test1
+package a.b.c.test2
 
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
@@ -6,14 +6,14 @@ import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
 import com.like.floweventbus_annotations.BusObserver
 
-class B(owner: LifecycleOwner) {
+class C(owner: LifecycleOwner) {
     init {
         FlowEventBus.register(this, owner)
     }
 
-    @BusObserver(["like1"])
-    fun observer1() {
-        Log.w(TAG, "like1")
+    @BusObserver(["like2"])
+    fun observer2() {
+        Log.w(TAG, "like2")
     }
 
 }

@@ -1,2 +1,3 @@
 include ':app', ':floweventbus', ':floweventbus_annotations', ':floweventbus_compiler'
 include ':test'
+include ':test1'
