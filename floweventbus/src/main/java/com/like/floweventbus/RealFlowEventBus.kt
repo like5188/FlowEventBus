@@ -15,12 +15,16 @@ object RealFlowEventBus {
     fun init() {
         if (initialized.compareAndSet(false, true)) {
             Log.d(TAG, "开始初始化")
-            ServiceLoader.load(Initializer::class.java).toList().forEach {
-                it.init()
+            try {
+                ServiceLoader.load(Initializer::class.java).toList().forEach {
+                    it.init()
+                }
+                Log.d(TAG, "初始化成功")
+            } catch (e: Exception) {
+                Log.e(TAG, "初始化失败 ${e.message}")
             }
-            Log.d(TAG, "初始化成功")
         } else {
-            Log.e(TAG, "已经初始化过了")
+            Log.d(TAG, "已经初始化过了")
         }
     }
 
