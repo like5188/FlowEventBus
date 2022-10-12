@@ -69,7 +69,12 @@ internal class Generator {
 
         val paramType = when (method.parameters.size) {
             0 -> "com.like.floweventbus.NoArgs"// 用于注解的方法没有参数时的处理
-            1 -> method.parameters[0].asType().toString()
+            1 -> {
+                val nullable = method.parameters[0].annotationMirrors.any {
+                    it.annotationType.toString() == "org.jetbrains.annotations.Nullable"
+                }
+                "${method.parameters[0].asType()}${if (nullable) "?" else ""}"
+            }
             else -> return
         }
         mMethodInfoList.add(
