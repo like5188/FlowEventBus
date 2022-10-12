@@ -50,27 +50,24 @@ internal class Generator {
      * 添加元素，用于生成类
      */
     fun addMethod(method: Element) {
-        val hostClass = method.enclosingElement as? TypeElement
-        hostClass ?: return
+        val hostClass = (method.enclosingElement as? TypeElement) ?: return
+        val executableElement = (method as? ExecutableElement) ?: return
+
+        val methodName = method.simpleName.toString()
+        if (methodName.isEmpty()) return
 
         val annotation = method.getAnnotation(BusObserver::class.java)
 
         val tags = annotation.value.toList()
-        if (tags.isNullOrEmpty()) return
+        if (tags.isEmpty()) return
         tags.forEach {
             if (it.isEmpty()) {
                 return
             }
         }
-
         val requestCode = annotation.requestCode
-
-        val methodName = method.simpleName.toString()
-        if (methodName.isEmpty()) return
-
         val isSticky = annotation.isSticky
 
-        val executableElement = method as ExecutableElement
         val paramType = when (executableElement.parameters.size) {
             0 -> "com.like.floweventbus.NoArgs"// 用于注解的方法没有参数时的处理
             1 -> executableElement.parameters[0].asType().toString()
