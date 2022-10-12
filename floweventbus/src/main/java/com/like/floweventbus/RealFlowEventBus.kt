@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.reflect.typeOf
 
 object RealFlowEventBus {
     private val initialized = AtomicBoolean(false)
@@ -49,8 +50,15 @@ object RealFlowEventBus {
 
     inline fun <reified T> post(tag: String, requestCode: String, data: T) {
         // tag、requestCode、paramType 对应的所有事件，它们用了同一个 MutableSharedFlow
-        val event = EventManager.getEvent(tag, requestCode, T::class.java.name)
-        val logMessage = "tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据=$data (${T::class.java.name})"
+        val qualifiedName = T::class.qualifiedName ?: ""
+        val kType = typeOf<T>()
+        val paramType = if (kType.isMarkedNullable) {
+            "$qualifiedName?"
+        } else {
+            qualifiedName
+        }
+        val event = EventManager.getEvent(tag, requestCode, paramType)
+        val logMessage = "tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据=$data ($paramType)"
         if (event == null) {
             Log.e(TAG, "发送消息失败，没有订阅事件，或者参数类型不匹配 --> $logMessage")
             return

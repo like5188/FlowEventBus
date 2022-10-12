@@ -21,18 +21,6 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="changeData3"
-            android:text="改变数据3" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="changeData4"
-            android:text="改变数据4" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:onClick="startActivity2"
             android:text="启动界面2" />
     </LinearLayout>

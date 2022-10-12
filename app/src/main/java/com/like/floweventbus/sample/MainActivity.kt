@@ -43,12 +43,6 @@ class MainActivity : BaseActivity() {
         FlowEventBus.post("like222", User("like", 18))
     }
 
-    fun changeData3(view: View) {
-    }
-
-    fun changeData4(view: View) {
-    }
-
     fun startActivity2(view: View) {
         startActivity(Intent(this, SecondActivity::class.java))
     }
