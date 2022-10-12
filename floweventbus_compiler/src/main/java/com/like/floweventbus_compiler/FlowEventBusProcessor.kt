@@ -58,21 +58,21 @@ class FlowEventBusProcessor : AbstractProcessor() {
      */
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
         // 返回使用给定注解类型的元素
-        val methods = roundEnv.getElementsAnnotatedWith(BusObserver::class.java)
-        if (methods.isEmpty()) {
+        val elements = roundEnv.getElementsAnnotatedWith(BusObserver::class.java)
+        if (elements.isEmpty()) {
             return false
         }
         val classGenerator = Generator()
-        for (method in methods) {
+        for (element in elements) {
             try {
                 // 验证方法的有效性
-                if (!ProcessUtils.verifyMethod(method))
+                if (!ProcessUtils.verifyMethod(element))
                     continue
                 // 添加被BusObserver注解的方法
-                classGenerator.addMethod(method)
+                classGenerator.addElement(element)
             } catch (e: Exception) {
                 e.printStackTrace()
-                ProcessUtils.error(method, e.message ?: "")
+                ProcessUtils.error(element, e.message ?: "")
             }
         }
 
