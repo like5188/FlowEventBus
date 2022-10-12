@@ -3,7 +3,6 @@ package com.like.floweventbus_compiler
 import com.like.floweventbus_annotations.BusObserver
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 
 /*
@@ -59,7 +58,7 @@ class FlowEventBusProcessor : AbstractProcessor() {
      */
     override fun process(annotations: Set<TypeElement>, roundEnv: RoundEnvironment): Boolean {
         // 返回使用给定注解类型的元素
-        val methods = roundEnv.getElementsAnnotatedWith(BusObserver::class.java) as Set<Element>
+        val methods = roundEnv.getElementsAnnotatedWith(BusObserver::class.java)
         if (methods.isEmpty()) {
             return false
         }
