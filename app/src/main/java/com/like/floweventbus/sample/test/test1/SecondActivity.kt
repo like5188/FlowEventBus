@@ -35,7 +35,7 @@ class SecondActivity : AppCompatActivity() {
     }
 
     @BusObserver(["like222"], isSticky = true)
-    fun observer1(user: User) {
-        Log.w(TAG, "observer1 $user")
+    fun observer1(user1: User?) {
+        Log.w(TAG, "observer1 $user1")
     }
 }
