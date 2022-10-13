@@ -23,6 +23,7 @@ class MainActivity : BaseActivity() {
         mBinding
         Log.w(TAG, "MainActivity onCreate")
         FlowEventBus.init()
+        FlowEventBus.register(this)
         B(this)
         C(this)
     }
@@ -38,10 +39,11 @@ class MainActivity : BaseActivity() {
 
     fun changeData1(view: View) {
         FlowEventBus.post<User?>("like222", null)
+        FlowEventBus.post("like222", User("like", 18))
     }
 
     fun changeData2(view: View) {
-        FlowEventBus.post("like222", User("like", 18))
+        FlowEventBus.post("like1", "1")
     }
 
     fun startActivity2(view: View) {

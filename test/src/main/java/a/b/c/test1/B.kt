@@ -13,7 +13,7 @@ class B(owner: LifecycleOwner) {
 
     @BusObserver(["like1"])
     fun observer1() {
-        Log.w(TAG, "like1")
+        Log.w(TAG, "B like1")
     }
 
 }
