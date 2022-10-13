@@ -12,6 +12,7 @@ import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus.sample.test.test1.SecondActivity
 import com.like.floweventbus_annotations.BusObserver
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity : BaseActivity() {
     private val mBinding by lazy {
@@ -44,6 +45,9 @@ class MainActivity : BaseActivity() {
 
     fun changeData2(view: View) {
         FlowEventBus.post("like1", "1")
+        FlowEventBus.post<String?>("like1", null)
+        FlowEventBus.post("like1", 1)
+        FlowEventBus.post<Int?>("like1", 1)
     }
 
     fun startActivity2(view: View) {
@@ -53,6 +57,51 @@ class MainActivity : BaseActivity() {
     @BusObserver(["like1"])
     fun observer1(str: String?) {
         Log.w(TAG, "MainActivity observer1 $str")
+    }
+
+    @BusObserver(["like1"])
+    fun observer2(str: String) {
+        Log.w(TAG, "MainActivity observer2 $str")
+    }
+
+    @BusObserver(["like1"])
+    fun observer3(str: Int?) {
+        Log.w(TAG, "MainActivity observer3 $str")
+    }
+
+    @BusObserver(["like1"])
+    fun observer4(str: Int) {
+        Log.w(TAG, "MainActivity observer4 $str")
+    }
+
+    @BusObserver(["like1"])
+    fun observer5(str: Boolean?) {
+        Log.w(TAG, "MainActivity observer3 $str")
+    }
+
+    @BusObserver(["like1"])
+    fun observer6(str: Boolean) {
+        Log.w(TAG, "MainActivity observer4 $str")
+    }
+
+    @BusObserver(["like1"])
+    fun observer7(str: IntArray) {
+        Log.w(TAG, "MainActivity observer4 $str")
+    }
+
+    @BusObserver(["like1"])
+    fun observer8(str: IntArray?) {
+        Log.w(TAG, "MainActivity observer4 $str")
+    }
+
+    @BusObserver(["like1"])
+    fun observer9(str: Array<String>) {
+        Log.w(TAG, "MainActivity observer4 $str")
+    }
+
+    @BusObserver(["like1"])
+    fun observer10(str: Array<String>?) {
+        Log.w(TAG, "MainActivity observer4 $str")
     }
 
 }
