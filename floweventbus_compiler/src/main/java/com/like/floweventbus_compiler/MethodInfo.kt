@@ -20,7 +20,7 @@ data class MethodInfo(
     val paramType: String // 被@BusObserver注解标注的方法的参数类型。只支持一个参数。
 ) {
     /**
-     * 把 kotlin 中的非空基本数据类型转换成 java 中的基本数据类型装箱类型。
+     * 把 java 中的基本数据类型转换成装箱类型。
      *
      * 因为使用 kotlin 代码发送数据时，T::class.java 会自动装箱，所以为了对比，需要使用此方法进行转换
      */
