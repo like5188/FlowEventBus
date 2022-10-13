@@ -11,6 +11,7 @@ import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus.sample.test.test1.SecondActivity
+import com.like.floweventbus_annotations.BusObserver
 
 class MainActivity : BaseActivity() {
     private val mBinding by lazy {
@@ -46,4 +47,10 @@ class MainActivity : BaseActivity() {
     fun startActivity2(view: View) {
         startActivity(Intent(this, SecondActivity::class.java))
     }
+
+    @BusObserver(["like1"])
+    fun observer1(str: String?) {
+        Log.w(TAG, "MainActivity observer1 $str")
+    }
+
 }
