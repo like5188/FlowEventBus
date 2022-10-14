@@ -92,16 +92,18 @@ object ClassGenerator {
                 hostMethodInfo.tags.forEach { tag ->
                     val requestCode = hostMethodInfo.requestCode
                     val paramType = hostMethodInfo.paramType
+                    val isNullable = hostMethodInfo.isNullable
                     val isSticky = methodInfoList.any {
                         it.tags.contains(tag) && it.requestCode == requestCode && it.isSticky
                     }
                     builder.add(
-                        "com.like.floweventbus.EventManager.addEvent(\$S, \$S, \$S, \$S, \$L, (host, data) -> {",
+                        "com.like.floweventbus.EventManager.addEvent(\$S, \$S, \$S, \$S, \$L, \$L, (host, data) -> {",
                         hostClass,
                         tag,
                         requestCode,
                         hostMethodInfo.paramType,
-                        isSticky.toString()
+                        isNullable,
+                        isSticky
                     )
                     builder.add(
                         "((\$T) host).${hostMethodInfo.methodName}(${if (paramType == "com.like.floweventbus.NoArgs") "" else "(${hostMethodInfo.paramType}) data"});",
