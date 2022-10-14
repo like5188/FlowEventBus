@@ -4,7 +4,7 @@ import kotlin.reflect.typeOf
 
 /**
  * 将 kotlin 数据类型[T]转换成 java 数据类型。
- * （只是对 java 基本数据类型做了处理，为了和 com.like.floweventbus_compiler.Generator 中存储的参数类型一样）
+ * （只是对 java 基本数据类型做了处理，为了和[com.like.floweventbus_compiler.Generator]中存储的参数类型一样）
  * 比如：
  * java.lang.Byte 不为空 -> byte
  * java.lang.Byte 为空  -> java.lang.Byte
