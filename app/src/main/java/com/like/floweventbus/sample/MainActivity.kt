@@ -12,7 +12,6 @@ import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus.sample.test.test1.SecondActivity
 import com.like.floweventbus_annotations.BusObserver
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity : BaseActivity() {
     private val mBinding by lazy {
@@ -42,7 +41,7 @@ class MainActivity : BaseActivity() {
         FlowEventBus.post<String?>("like1", null)
         FlowEventBus.post("like1", "1")
         FlowEventBus.post<Int?>("like1", null)
-        FlowEventBus.post("like1", 1 as java.lang.String)
+        FlowEventBus.post("like1", 1)
         FlowEventBus.post<Boolean?>("like1", null)
         FlowEventBus.post("like1", true)
         FlowEventBus.post<IntArray?>("like1", null)
