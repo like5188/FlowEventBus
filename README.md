@@ -12,7 +12,7 @@
 
 2、通过`@BusObserver`注解方法来接收消息。
 
-    ①、此注解中可以设置 tag、requestCode、isSticky 三个参数。当同一个类中，这三个参数都相同，那么不会重复添加此Event。只有第一个添加的能被回调。
+    ①、此注解中可以设置 tag、requestCode、isSticky 三个参数。
     ②、当 tag 相同时，可以用 requestCode 来区分。
     ③、isSticky 只是针对`@BusObserver`注解的接收消息的方法。发送消息时不区分粘性或者非粘性消息。sticky 为 true 时表示会缓存最近的一条消息，让新注册的宿主也能收到这条消息。
     ④、发送消息时，必须要由相同的 tag、requestCode、参数类型，才能成功发送消息。

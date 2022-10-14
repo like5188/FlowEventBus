@@ -18,14 +18,16 @@ object EventManager {
     fun getEvent(tag: String, requestCode: String, paramType: String, isNullable: Boolean): Event? =
         // 同一个 MutableSharedFlow，取任意一个即可
         mEventList.firstOrNull {
-            // 因为使用 kotlin 代码发送数据时，T::class.java 会自动装箱，所以需要装箱后再比较，但是这里在自动生成的代码中已经做了装箱处理再传递过来的。
-            it.flow.tag == tag && it.flow.requestCode == requestCode && it.flow.paramType == paramType && it.flow.isNullable == isNullable
+            it.flow.tag == tag && it.flow.requestCode == requestCode && isParamCompat(paramType, isNullable, it)
         }
 
-    private fun getEvent(hostClass: String, tag: String, requestCode: String, paramType: String, isNullable: Boolean): Event? =
-        mEventList.firstOrNull {
-            it.hostClass == hostClass && it.flow.tag == tag && it.flow.requestCode == requestCode && it.flow.paramType == paramType && it.flow.isNullable == isNullable
-        }
+    /**
+     * 参数是否匹配
+     */
+    private fun isParamCompat(paramType: String, isNullable: Boolean, event: Event): Boolean {
+        // 注意：可空类型可以接受不可空的值。
+        return event.flow.paramType == paramType && event.flow.isNullable == isNullable
+    }
 
     /**
      * 由自动生成的代码来调用
@@ -40,11 +42,6 @@ object EventManager {
         isSticky: Boolean,
         callback: (Any, Any?) -> Unit
     ) {
-        val oldEvent = getEvent(hostClass, tag, requestCode, paramType, isNullable)
-        if (oldEvent != null) {
-            Log.e(TAG, "添加事件失败 --> 事件 $oldEvent 已经添加过")
-            return
-        }
         // 同一个 MutableSharedFlow，取任意一个即可
         val flow = getEvent(tag, requestCode, paramType, isNullable)?.flow ?: FlowWrapper(
             tag, requestCode, paramType, isNullable, isSticky, MutableSharedFlow(
