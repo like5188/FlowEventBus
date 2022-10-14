@@ -51,19 +51,7 @@ object RealFlowEventBus {
     inline fun <reified T> post(tag: String, requestCode: String, data: T) {
         // tag、requestCode、paramType 对应的所有事件，它们用了同一个 MutableSharedFlow
         val isNullable = typeOf<T>().isMarkedNullable
-        // 为了和 com.like.floweventbus_compiler.Generator 中存储的参数类型一样。需要做下面的转换
-        val canonicalName = T::class.java.canonicalName
-        val paramType = when {
-            canonicalName == "java.lang.Byte" && !isNullable -> "byte"
-            canonicalName == "java.lang.Short" && !isNullable -> "short"
-            canonicalName == "java.lang.Integer" && !isNullable -> "int"
-            canonicalName == "java.lang.Long" && !isNullable -> "long"
-            canonicalName == "java.lang.Float" && !isNullable -> "float"
-            canonicalName == "java.lang.Double" && !isNullable -> "double"
-            canonicalName == "java.lang.Character" && !isNullable -> "char"
-            canonicalName == "java.lang.Boolean" && !isNullable -> "boolean"
-            else -> canonicalName
-        }
+        val paramType = toJavaDataType<T>()
         val event = EventManager.getEvent(tag, requestCode, paramType, isNullable)
         val logMessage =
             "tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据=$data ($paramType ${if (isNullable) "nullable" else "notNull"})"
