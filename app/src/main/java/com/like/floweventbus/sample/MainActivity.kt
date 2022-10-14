@@ -39,11 +39,6 @@ class MainActivity : BaseActivity() {
     }
 
     fun changeData1(view: View) {
-        FlowEventBus.post<User?>("like222", null)
-        FlowEventBus.post("like222", User("like", 18))
-    }
-
-    fun changeData2(view: View) {
         FlowEventBus.post<String?>("like1", null)
         FlowEventBus.post("like1", "1")
         FlowEventBus.post<Int?>("like1", null)
@@ -54,6 +49,11 @@ class MainActivity : BaseActivity() {
         FlowEventBus.post("like1", intArrayOf(1))
         FlowEventBus.post<Array<String>?>("like1", null)
         FlowEventBus.post("like1", arrayOf(""))
+    }
+
+    fun changeData2(view: View) {
+        FlowEventBus.post<User?>("like222", null)
+        FlowEventBus.post("like222", User("like", 18))
     }
 
     fun startActivity2(view: View) {
