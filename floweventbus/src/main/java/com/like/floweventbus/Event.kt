@@ -59,20 +59,4 @@ class Event(
         return "Event(${if (host != null) "host=$host" else "hostClass=$hostClass"}, $flow)"
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Event) return false
-
-        if (flow != other.flow) return false
-        if (host != other.host) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = flow.hashCode()
-        result = 31 * result + (host?.hashCode() ?: 0)
-        return result
-    }
-
 }

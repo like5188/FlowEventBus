@@ -38,16 +38,16 @@ class MainActivity : BaseActivity() {
     }
 
     fun changeData1(view: View) {
-        FlowEventBus.post<String?>("like1", null)
+//        FlowEventBus.post<String?>("like1", null)
         FlowEventBus.post("like1", "1")
-        FlowEventBus.post<Int?>("like1", null)
-        FlowEventBus.post("like1", 1)
-        FlowEventBus.post<Boolean?>("like1", null)
-        FlowEventBus.post("like1", true)
-        FlowEventBus.post<IntArray?>("like1", null)
-        FlowEventBus.post("like1", intArrayOf(1))
-        FlowEventBus.post<Array<String>?>("like1", null)
-        FlowEventBus.post("like1", arrayOf(""))
+//        FlowEventBus.post<Int?>("like1", null)
+//        FlowEventBus.post("like1", 1)
+//        FlowEventBus.post<Boolean?>("like1", null)
+//        FlowEventBus.post("like1", true)
+//        FlowEventBus.post<IntArray?>("like1", null)
+//        FlowEventBus.post("like1", intArrayOf(1))
+//        FlowEventBus.post<Array<String>?>("like1", null)
+//        FlowEventBus.post("like1", arrayOf(""))
     }
 
     fun changeData2(view: View) {

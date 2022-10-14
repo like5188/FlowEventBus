@@ -42,24 +42,4 @@ data class FlowWrapper<T>(
         return "tag=$tag,${if (requestCode.isNotEmpty()) " requestCode=$requestCode," else ""} paramType=$paramType isNullable=$isNullable isSticky=$isSticky"
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is FlowWrapper<*>) return false
-
-        if (tag != other.tag) return false
-        if (requestCode != other.requestCode) return false
-        if (paramType != other.paramType) return false
-        if (isNullable != other.isNullable) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = tag.hashCode()
-        result = 31 * result + requestCode.hashCode()
-        result = 31 * result + paramType.hashCode()
-        result = 31 * result + isNullable.hashCode()
-        return result
-    }
-
 }

@@ -26,7 +26,21 @@ object EventManager {
      */
     private fun isParamCompat(paramType: String, isNullable: Boolean, event: Event): Boolean {
         // 注意：可空类型可以接受不可空的值。
-        return event.flow.paramType == paramType && event.flow.isNullable == isNullable
+        return if (isNullable) {
+            event.flow.paramType == paramType && event.flow.isNullable == isNullable
+        } else {
+            when (paramType) {
+                "byte" -> event.flow.paramType == "byte" || event.flow.paramType == "java.lang.Byte"
+                "short" -> event.flow.paramType == "short" || event.flow.paramType == "java.lang.Short"
+                "int" -> event.flow.paramType == "int" || event.flow.paramType == "java.lang.Integer"
+                "long" -> event.flow.paramType == "long" || event.flow.paramType == "java.lang.Long"
+                "float" -> event.flow.paramType == "float" || event.flow.paramType == "java.lang.Float"
+                "double" -> event.flow.paramType == "double" || event.flow.paramType == "java.lang.Double"
+                "char" -> event.flow.paramType == "char" || event.flow.paramType == "java.lang.Character"
+                "boolean" -> event.flow.paramType == "boolean" || event.flow.paramType == "java.lang.Boolean"
+                else -> event.flow.paramType == paramType
+            }
+        }
     }
 
     /**
