@@ -26,7 +26,7 @@ inline fun <reified T> toJavaDataType(): String {
 }
 
 /**
- * 参数是否匹配
+ * [event]是否和提供的[paramType]+[isNullable]是否匹配
  */
 fun isParamCompat(paramType: String, isNullable: Boolean, event: Event): Boolean {
     // 注意：可空类型可以接受不可空的值。
