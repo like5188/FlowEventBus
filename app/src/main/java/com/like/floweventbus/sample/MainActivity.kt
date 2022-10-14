@@ -44,10 +44,16 @@ class MainActivity : BaseActivity() {
     }
 
     fun changeData2(view: View) {
-        FlowEventBus.post("like1", "1")
         FlowEventBus.post<String?>("like1", null)
+        FlowEventBus.post("like1", "1")
+        FlowEventBus.post<Int?>("like1", null)
         FlowEventBus.post("like1", 1)
-        FlowEventBus.post<Int?>("like1", 1)
+        FlowEventBus.post<Boolean?>("like1", null)
+        FlowEventBus.post("like1", true)
+        FlowEventBus.post<IntArray?>("like1", null)
+        FlowEventBus.post("like1", intArrayOf(1))
+        FlowEventBus.post<Array<String>?>("like1", null)
+        FlowEventBus.post("like1", arrayOf(""))
     }
 
     fun startActivity2(view: View) {
@@ -85,22 +91,22 @@ class MainActivity : BaseActivity() {
     }
 
     @BusObserver(["like1"])
-    fun observer7(str: IntArray) {
+    fun observer7(str: IntArray?) {
         Log.w(TAG, "MainActivity observer4 $str")
     }
 
     @BusObserver(["like1"])
-    fun observer8(str: IntArray?) {
+    fun observer8(str: IntArray) {
         Log.w(TAG, "MainActivity observer4 $str")
     }
 
     @BusObserver(["like1"])
-    fun observer9(str: Array<String>) {
+    fun observer9(str: Array<String>?) {
         Log.w(TAG, "MainActivity observer4 $str")
     }
 
     @BusObserver(["like1"])
-    fun observer10(str: Array<String>?) {
+    fun observer10(str: Array<String>) {
         Log.w(TAG, "MainActivity observer4 $str")
     }
 
