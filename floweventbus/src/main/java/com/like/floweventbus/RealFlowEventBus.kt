@@ -50,11 +50,23 @@ object RealFlowEventBus {
 
     inline fun <reified T> post(tag: String, requestCode: String, data: T) {
         // tag、requestCode、paramType 对应的所有事件，它们用了同一个 MutableSharedFlow
-        val paramType = T::class.qualifiedName ?: ""
         val isNullable = typeOf<T>().isMarkedNullable
+        // 为了匹配 com.like.floweventbus_compiler.Generator 中存储的参数类型。需要做下面的转换
+        val canonicalName = T::class.java.canonicalName
+        val paramType = when {
+            canonicalName == "java.lang.Byte" && !isNullable -> "byte"
+            canonicalName == "java.lang.Short" && !isNullable -> "short"
+            canonicalName == "java.lang.Integer" && !isNullable -> "int"
+            canonicalName == "java.lang.Long" && !isNullable -> "long"
+            canonicalName == "java.lang.Float" && !isNullable -> "float"
+            canonicalName == "java.lang.Double" && !isNullable -> "double"
+            canonicalName == "java.lang.Character" && !isNullable -> "char"
+            canonicalName == "java.lang.Boolean" && !isNullable -> "boolean"
+            else -> canonicalName
+        }
         val event = EventManager.getEvent(tag, requestCode, paramType, isNullable)
         val logMessage =
-            "tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据=$data ($paramType $isNullable)"
+            "tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据=$data ($paramType ${if (isNullable) "nullable" else "notNull"})"
         if (event == null) {
             Log.e(TAG, "发送消息失败，没有订阅事件，或者参数类型不匹配 --> $logMessage")
             return
