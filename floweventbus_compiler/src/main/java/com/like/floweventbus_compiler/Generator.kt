@@ -67,18 +67,24 @@ internal class Generator {
         val requestCode = annotation.requestCode
         val isSticky = annotation.isSticky
 
-        val paramType = when (method.parameters.size) {
-            0 -> "com.like.floweventbus.NoArgs"// 用于注解的方法没有参数时的处理
+        val isNullable: Boolean
+        val paramType: String
+        when (method.parameters.size) {
+            0 -> {
+                paramType = "com.like.floweventbus.NoArgs"// 用于注解的方法没有参数时的处理
+                isNullable = false
+            }
             1 -> {
-                val nullable = method.parameters[0].annotationMirrors.any {
+                val variableElement = method.parameters[0]
+                paramType = variableElement.asType().toString()
+                isNullable = variableElement.annotationMirrors.any {
                     it.annotationType.toString() == "org.jetbrains.annotations.Nullable"
                 }
-                "${method.parameters[0].asType()}${if (nullable) "?" else ""}"
             }
             else -> return
         }
         mMethodInfoList.add(
-            MethodInfo(hostClass, methodName, tags, requestCode, isSticky, paramType)
+            MethodInfo(hostClass, methodName, tags, requestCode, isSticky, paramType, isNullable)
         )
     }
 

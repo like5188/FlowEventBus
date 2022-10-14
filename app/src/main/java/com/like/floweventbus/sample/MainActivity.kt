@@ -42,7 +42,7 @@ class MainActivity : BaseActivity() {
         FlowEventBus.post<String?>("like1", null)
         FlowEventBus.post("like1", "1")
         FlowEventBus.post<Int?>("like1", null)
-        FlowEventBus.post("like1", 1)
+        FlowEventBus.post("like1", 1 as java.lang.String)
         FlowEventBus.post<Boolean?>("like1", null)
         FlowEventBus.post("like1", true)
         FlowEventBus.post<IntArray?>("like1", null)

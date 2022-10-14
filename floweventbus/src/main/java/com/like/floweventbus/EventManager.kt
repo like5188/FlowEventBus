@@ -30,6 +30,7 @@ object EventManager {
     /**
      * 由自动生成的代码来调用
      */
+    @JvmStatic
     fun addEvent(
         hostClass: String,
         tag: String,
