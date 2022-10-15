@@ -31,7 +31,7 @@ inline fun <reified T> toJavaDataType(): String {
 fun isParamCompat(paramType: String, isNullable: Boolean, event: Event): Boolean {
     // 注意：可空类型可以接受不可空的值。
     val flow = (if (isNullable) event.flowNullable else event.flowNotNull) ?: return false
-    return when (paramType) {
+    return when (paramType) {// 其实 flowNullable 不可能存在下面8种java基本数据类型的。
         "byte" -> flow.paramType == "byte" || flow.paramType == "java.lang.Byte"
         "short" -> flow.paramType == "short" || flow.paramType == "java.lang.Short"
         "int" -> flow.paramType == "int" || flow.paramType == "java.lang.Integer"
