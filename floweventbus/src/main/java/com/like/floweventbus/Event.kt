@@ -5,11 +5,15 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
 
+/**
+ * 1、如果事件参数类型是可空类型，那么[flowNullable]、[flowNotNull]都存在，这两个流发射的消息事件都能接收到。
+ * 2、如果事件参数类型是非空类型，那么[flowNotNull]存在，只有它发射的消息事件才能接收到。
+ */
 @OptIn(DelicateCoroutinesApi::class)
 class Event(
     val hostClass: String,// 宿主类
     val flowNullable: FlowWrapper<Any?>?,
-    val flowNotNull: FlowWrapper<Any?>?,
+    val flowNotNull: FlowWrapper<Any>?,
     val callback: (Any, Any?) -> Unit
 ) {
     private var host: Any? = null// 宿主
@@ -58,10 +62,13 @@ class Event(
 
     fun post(data: Any?, isNullable: Boolean) {
         val scope = owner?.lifecycleScope ?: GlobalScope
-        val flow = if (isNullable) flowNullable else flowNotNull
         scope.launch(Dispatchers.Main) {
             try {
-                flow?.emit(data)
+                if (isNullable) {
+                    flowNullable?.emit(data)
+                } else {
+                    flowNotNull?.emit(data!!)
+                }
             } catch (e: Exception) {
             }
         }
