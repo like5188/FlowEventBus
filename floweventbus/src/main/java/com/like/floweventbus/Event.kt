@@ -8,7 +8,8 @@ import kotlinx.coroutines.*
 @OptIn(DelicateCoroutinesApi::class)
 class Event(
     val hostClass: String,// 宿主类
-    val flow: FlowWrapper<Any?>,
+    val flowNullable: FlowWrapper<Any?>?,
+    val flowNotNull: FlowWrapper<Any?>?,
     val callback: (Any, Any?) -> Unit
 ) {
     private var host: Any? = null// 宿主
@@ -27,8 +28,15 @@ class Event(
 
         val scope = owner?.lifecycleScope ?: GlobalScope
         job = scope.launch(Dispatchers.Main) {
-            flow.collect {
-                callback(host, it)
+            launch {
+                flowNullable?.collect {
+                    callback(host, it)
+                }
+            }
+            launch {
+                flowNotNull?.collect {
+                    callback(host, it)
+                }
             }
         }.apply {
             invokeOnCompletion {
@@ -48,15 +56,19 @@ class Event(
         this.job?.cancel()
     }
 
-    fun post(data: Any?) {
+    fun post(data: Any?, isNullable: Boolean) {
         val scope = owner?.lifecycleScope ?: GlobalScope
+        val flow = if (isNullable) flowNullable else flowNotNull
         scope.launch(Dispatchers.Main) {
-            flow.emit(data)
+            try {
+                flow?.emit(data)
+            } catch (e: Exception) {
+            }
         }
     }
 
     override fun toString(): String {
-        return "Event(${if (host != null) "host=$host" else "hostClass=$hostClass"}, $flow)"
+        return "Event(${if (host != null) "host=$host" else "hostClass=$hostClass isNullable=${flowNullable != null}"}, \n flowNullable=$flowNullable \n flowNotNull=$flowNotNull)"
     }
 
 }

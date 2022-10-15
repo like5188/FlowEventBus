@@ -15,7 +15,6 @@ data class FlowWrapper<T>(
     val tag: String,// 标签
     val requestCode: String,// 请求码。当标签相同时，可以使用请求码区分
     val paramType: String,// 被@BusObserver注解标注的方法的参数类型。只支持一个参数
-    val isNullable: Boolean,
     val isSticky: Boolean,
     val flow: MutableSharedFlow<T>,
 ) {
@@ -39,7 +38,7 @@ data class FlowWrapper<T>(
     }
 
     override fun toString(): String {
-        return "tag=$tag,${if (requestCode.isNotEmpty()) " requestCode=$requestCode," else ""} paramType=$paramType isNullable=$isNullable isSticky=$isSticky"
+        return "tag=$tag,${if (requestCode.isNotEmpty()) " requestCode=$requestCode," else ""} paramType=$paramType isSticky=$isSticky"
     }
 
 }

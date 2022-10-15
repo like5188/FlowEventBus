@@ -18,7 +18,14 @@ object EventManager {
     fun getEvent(tag: String, requestCode: String, paramType: String, isNullable: Boolean): Event? =
         // 同一个 MutableSharedFlow，取任意一个即可
         mEventList.firstOrNull {
-            it.flow.tag == tag && it.flow.requestCode == requestCode && isParamCompat(paramType, isNullable, it)
+            if (isNullable) {
+                (it.flowNullable?.tag ?: "") == tag && (it.flowNullable?.requestCode ?: "") == requestCode &&
+                        (it.flowNotNull?.tag ?: "") == tag && (it.flowNotNull?.requestCode ?: "") == requestCode &&
+                        isParamCompat(paramType, isNullable, it)
+            } else {
+                (it.flowNotNull?.tag ?: "") == tag && (it.flowNotNull?.requestCode ?: "") == requestCode &&
+                        isParamCompat(paramType, isNullable, it)
+            }
         }
 
     /**
@@ -35,13 +42,24 @@ object EventManager {
         callback: (Any, Any?) -> Unit
     ) {
         // 同一个 MutableSharedFlow，取任意一个即可
-        val flow = getEvent(tag, requestCode, paramType, isNullable)?.flow ?: FlowWrapper(
-            tag, requestCode, paramType, isNullable, isSticky, MutableSharedFlow(
+        val event = getEvent(tag, requestCode, paramType, isNullable)
+        val flowNullable = if (isNullable) {
+            event?.flowNullable ?: FlowWrapper(
+                tag, requestCode, paramType, isSticky, MutableSharedFlow(
+                    replay = if (isSticky) 1 else 0,
+                    extraBufferCapacity = if (isSticky) Int.MAX_VALUE else 0 // 避免挂起导致数据发送失败
+                )
+            )
+        } else {
+            null
+        }
+        val flowNotNull = event?.flowNotNull ?: FlowWrapper(
+            tag, requestCode, paramType, isSticky, MutableSharedFlow(
                 replay = if (isSticky) 1 else 0,
                 extraBufferCapacity = if (isSticky) Int.MAX_VALUE else 0 // 避免挂起导致数据发送失败
             )
         )
-        with(Event(hostClass, flow, callback)) {
+        with(Event(hostClass, flowNullable, flowNotNull, callback)) {
             mEventList.add(this)
             Log.i(TAG, "添加事件 --> $this")
             logEvent()

@@ -61,7 +61,7 @@ object RealFlowEventBus {
         }
         Log.v(TAG, "发送消息 --> $logMessage")
         // 同一个 MutableSharedFlow，取任意一个即可
-        event.post(data)
+        event.post(data, isNullable)
     }
 
     fun unregister(host: Any) {
