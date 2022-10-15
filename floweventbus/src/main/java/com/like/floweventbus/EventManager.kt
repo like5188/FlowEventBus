@@ -21,7 +21,7 @@ object EventManager {
     fun getEvent(tag: String, requestCode: String, paramType: String, isNullable: Boolean): Event? =
         // 同一个 MutableSharedFlow，取任意一个即可
         mEventList.firstOrNull {
-            it.tag == tag && it.requestCode == requestCode && isParamCompat(paramType, it) && it.isNullable == isNullable
+            it.tag == tag && it.requestCode == requestCode && it.paramType == paramType && it.isNullable == isNullable
         }
 
     /**
