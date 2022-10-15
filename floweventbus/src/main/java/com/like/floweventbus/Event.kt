@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
 
 /**
  * 事件中存在两个流。分别对应事件参数类型为“可空类型”和“非空类型”。
@@ -13,13 +16,39 @@ import kotlinx.coroutines.*
 @OptIn(DelicateCoroutinesApi::class)
 class Event(
     val hostClass: String,// 宿主类
-    val flowNullable: FlowWrapper<Any?>?,
-    val flowNotNull: FlowWrapper<Any>?,
+    val tag: String,// 标签
+    val requestCode: String,// 请求码。当标签相同时，可以使用请求码区分
+    val paramType: String,// 被@BusObserver注解标注的方法的参数类型。只支持一个参数
+    val isNullable: Boolean,
+    val isSticky: Boolean,
     val callback: (Any, Any?) -> Unit
 ) {
     private var host: Any? = null// 宿主
     private var owner: LifecycleOwner? = null// 宿主所属的生命周期类
     private var job: Job? = null
+    private val flowNullable: MutableSharedFlow<Any?>? by lazy {
+        if (isNullable) {
+            FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, paramType, true, isSticky)
+        } else {
+            null
+        }
+    }
+    private val flowNotNull: MutableSharedFlow<Any?>? by lazy {
+        // 如果参数类型是可空类型，那么需要把它的 flowNotNull 对应的参数变为java基本数据类型，
+        // 这样才能和参数类型是非空类型时一致。
+
+        // 比如：
+        // 参数类型为非空类型时：
+        // flowNotNull ： key=like1--int-false-false
+
+        // 参数类型为可空类型时，转换 paramType 后：
+        // flowNotNull ： key=like1--int-false-false
+        // 如果不转换：
+        // flowNotNull ： key=like1--java.lang.Integer-false-false
+
+        val notNullParamType = paramType.toJavaDataType(false)
+        FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, notNullParamType, false, isSticky)
+    }
 
     fun getHost() = host
     fun getOwner() = owner
@@ -39,7 +68,7 @@ class Event(
                 }
             }
             launch {
-                flowNotNull?.collect {
+                flowNotNull?.filterNotNull()?.collect {
                     callback(host, it)
                 }
             }

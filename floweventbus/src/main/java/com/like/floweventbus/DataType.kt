@@ -12,34 +12,37 @@ import kotlin.reflect.typeOf
 inline fun <reified T> toJavaDataType(): String {
     val isNullable = typeOf<T>().isMarkedNullable
     val canonicalName = T::class.java.canonicalName
+    return canonicalName?.toJavaDataType(isNullable) ?: ""
+}
+
+fun String.toJavaDataType(isNullable: Boolean): String {
     return when {
-        canonicalName == "java.lang.Byte" && !isNullable -> "byte"
-        canonicalName == "java.lang.Short" && !isNullable -> "short"
-        canonicalName == "java.lang.Integer" && !isNullable -> "int"
-        canonicalName == "java.lang.Long" && !isNullable -> "long"
-        canonicalName == "java.lang.Float" && !isNullable -> "float"
-        canonicalName == "java.lang.Double" && !isNullable -> "double"
-        canonicalName == "java.lang.Character" && !isNullable -> "char"
-        canonicalName == "java.lang.Boolean" && !isNullable -> "boolean"
-        else -> canonicalName ?: ""
+        this == "java.lang.Byte" && !isNullable -> "byte"
+        this == "java.lang.Short" && !isNullable -> "short"
+        this == "java.lang.Integer" && !isNullable -> "int"
+        this == "java.lang.Long" && !isNullable -> "long"
+        this == "java.lang.Float" && !isNullable -> "float"
+        this == "java.lang.Double" && !isNullable -> "double"
+        this == "java.lang.Character" && !isNullable -> "char"
+        this == "java.lang.Boolean" && !isNullable -> "boolean"
+        else -> this
     }
 }
 
 /**
- * [event]和提供的[paramType]+[isNullable]是否匹配
+ * [event]和提供的[paramType]是否匹配
  */
-fun isParamCompat(paramType: String, isNullable: Boolean, event: Event): Boolean {
+fun isParamCompat(paramType: String, event: Event): Boolean {
     // 注意：可空类型可以接受不可空的值。
-    val flow = (if (isNullable) event.flowNullable else event.flowNotNull) ?: return false
     return when (paramType) {// 其实 flowNullable 不可能存在下面8种java基本数据类型的。
-        "byte" -> flow.paramType == "byte" || flow.paramType == "java.lang.Byte"
-        "short" -> flow.paramType == "short" || flow.paramType == "java.lang.Short"
-        "int" -> flow.paramType == "int" || flow.paramType == "java.lang.Integer"
-        "long" -> flow.paramType == "long" || flow.paramType == "java.lang.Long"
-        "float" -> flow.paramType == "float" || flow.paramType == "java.lang.Float"
-        "double" -> flow.paramType == "double" || flow.paramType == "java.lang.Double"
-        "char" -> flow.paramType == "char" || flow.paramType == "java.lang.Character"
-        "boolean" -> flow.paramType == "boolean" || flow.paramType == "java.lang.Boolean"
-        else -> flow.paramType == paramType
+        "byte" -> event.paramType == "byte" || event.paramType == "java.lang.Byte"
+        "short" -> event.paramType == "short" || event.paramType == "java.lang.Short"
+        "int" -> event.paramType == "int" || event.paramType == "java.lang.Integer"
+        "long" -> event.paramType == "long" || event.paramType == "java.lang.Long"
+        "float" -> event.paramType == "float" || event.paramType == "java.lang.Float"
+        "double" -> event.paramType == "double" || event.paramType == "java.lang.Double"
+        "char" -> event.paramType == "char" || event.paramType == "java.lang.Character"
+        "boolean" -> event.paramType == "boolean" || event.paramType == "java.lang.Boolean"
+        else -> event.paramType == paramType
     }
 }
