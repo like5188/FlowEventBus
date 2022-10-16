@@ -20,7 +20,7 @@ class Event(
     val requestCode: String,// 请求码。当标签相同时，可以使用请求码区分
     val paramType: String,// 被@BusObserver注解标注的方法的参数类型。只支持一个参数
     val isNullable: Boolean,
-    val isSticky: Boolean,
+    isSticky: Boolean,
     val callback: (Any, Any?) -> Unit
 ) {
     private var host: Any? = null// 宿主
@@ -33,7 +33,7 @@ class Event(
             null
         }
     }
-    private val flowNotNull: MutableSharedFlow<Any?>? by lazy {
+    private val flowNotNull: MutableSharedFlow<Any>? by lazy {
         // 如果参数类型是可空类型，那么需要把它的 flowNotNull 对应的参数变为java基本数据类型，
         // 这样才能和参数类型是非空类型时一致。
 
@@ -48,6 +48,7 @@ class Event(
 
         val notNullParamType = paramType.toJavaDataType(false)
         FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, notNullParamType, false, isSticky)
+            .filterNotNull() as? MutableSharedFlow<Any>?
     }
 
     fun getHost() = host
@@ -68,7 +69,7 @@ class Event(
                 }
             }
             launch {
-                flowNotNull?.filterNotNull()?.collect {
+                flowNotNull?.collect {
                     callback(host, it)
                 }
             }
