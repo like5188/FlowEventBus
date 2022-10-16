@@ -45,8 +45,13 @@ class MainActivity : BaseActivity() {
         FlowEventBus.post<IntArray?>("like1", null)
         FlowEventBus.post("like1", intArrayOf(1))
         FlowEventBus.post("like1")
+
         FlowEventBus.post<String?>("like2", null)
         FlowEventBus.post("like2", "1")
+        FlowEventBus.post<Int?>("like2", null)
+        FlowEventBus.post("like2", 1)
+        FlowEventBus.post<IntArray?>("like2", null)
+        FlowEventBus.post("like2", intArrayOf(1))
         FlowEventBus.post("like2")
     }
 
