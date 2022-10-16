@@ -6,7 +6,6 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filterNotNull
 
 /**
  * 事件中存在两个流。分别对应事件参数类型为“可空类型”和“非空类型”。
@@ -35,7 +34,7 @@ class Event(
             null
         }
     }
-    private val flowNotNull: MutableSharedFlow<Any>? by lazy {
+    private val flowNotNull: MutableSharedFlow<Any?>? by lazy {
         // 如果参数类型是可空类型，那么需要把它的 flowNotNull 对应的参数变为java基本数据类型，
         // 这样才能和参数类型是非空类型时一致。
 
@@ -50,7 +49,6 @@ class Event(
 
         val notNullParamType = paramType.toJavaDataType(false)
         FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, notNullParamType, false, isSticky)
-            .filterNotNull() as? MutableSharedFlow<Any>?
     }
 
     /**
