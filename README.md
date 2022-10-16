@@ -15,7 +15,7 @@
     ①、此注解中可以设置 tag、requestCode、isSticky 三个参数。
     ②、当 tag 相同时，可以用 requestCode 来区分。
     ③、isSticky 只是针对`@BusObserver`注解的接收消息的方法。发送消息时不区分粘性或者非粘性消息。sticky 为 true 时表示会缓存最近的一条消息，让新注册的宿主也能收到这条消息。
-    ④、发送消息时，必须要由相同的 tag、requestCode、参数类型，才能成功发送消息。
+    ④、发送消息时，必须要由相同的 tag、requestCode，以及匹配的参数类型（注意：可空类型的参数类型可以接收非空类型的数据），才能成功发送消息。
     ⑤、此方法必须用 public 修饰，且不能被 static 修饰，且参数最多只能是1个。
 
 3、被`@BusObserver`注解的方法所在类称为宿主类。
