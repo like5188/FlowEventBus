@@ -19,7 +19,7 @@ class Event(
     val requestCode: String,// 请求码。当标签相同时，可以使用请求码区分
     val paramType: String,// 被@BusObserver注解标注的方法的参数类型。只支持一个参数
     val isNullable: Boolean,
-    isSticky: Boolean,
+    val isSticky: Boolean,
     val callback: (Any, Any?) -> Unit
 ) {
     var host: Any? = null // 宿主
@@ -103,7 +103,24 @@ class Event(
     }
 
     override fun toString(): String {
-        return "Event(${if (host != null) "host=$host" else "hostClass=$hostClass isNullable=${flowNullable != null}"}, \n flowNullable=$flowNullable \n flowNotNull=$flowNotNull)"
+        val sb = StringBuilder()
+        sb.append("Event")
+        sb.append("(")
+        if (host != null) sb.append("host=$host") else sb.append("hostClass=$hostClass")
+        sb.append(", ")
+        sb.append("tag=$tag")
+        sb.append(", ")
+        if (requestCode.isNotEmpty()) {
+            sb.append("requestCode=$requestCode")
+            sb.append(", ")
+        }
+        if (paramType != NoArgs::class.java.name) {
+            sb.append("paramType=$paramType, isNullable=$isNullable")
+            sb.append(", ")
+        }
+        sb.append("isSticky=$isSticky")
+        sb.append(")")
+        return sb.toString()
     }
 
 }

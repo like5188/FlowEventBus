@@ -1,6 +1,5 @@
 package com.like.floweventbus
 
-import android.util.Log
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 /**
@@ -37,7 +36,6 @@ object FlowManager {
                 extraBufferCapacity = if (isSticky) Int.MAX_VALUE else 0 // 避免挂起导致数据发送失败
             ).apply {
                 val key = createKey(tag, requestCode, paramType, isNullable, isSticky)
-                Log.i(TAG, "创建Flow --> key=$key $this")
                 mFlowCache[key] = this
             }
         }
