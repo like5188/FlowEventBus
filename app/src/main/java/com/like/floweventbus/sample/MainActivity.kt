@@ -42,12 +42,8 @@ class MainActivity : BaseActivity() {
         FlowEventBus.post("like1", "1")
         FlowEventBus.post<Int?>("like1", null)
         FlowEventBus.post("like1", 1)
-        FlowEventBus.post<Boolean?>("like1", null)
-        FlowEventBus.post("like1", true)
         FlowEventBus.post<IntArray?>("like1", null)
         FlowEventBus.post("like1", intArrayOf(1))
-        FlowEventBus.post<Array<String>?>("like1", null)
-        FlowEventBus.post("like1", arrayOf(""))
         FlowEventBus.post("like1")
         FlowEventBus.post<String?>("like2", null)
         FlowEventBus.post("like2", "1")
@@ -68,54 +64,34 @@ class MainActivity : BaseActivity() {
         Log.w(TAG, "MainActivity observer1 String? $str")
     }
 
-    @BusObserver(["like1"])
+    @BusObserver(["like1", "like2"])
     fun observer2(str: String) {
         Log.w(TAG, "MainActivity observer2 String $str")
     }
 
-    @BusObserver(["like1"])
+    @BusObserver(["like1", "like2"])
     fun observer3(str: Int?) {
         Log.w(TAG, "MainActivity observer3 Int? $str")
     }
 
-    @BusObserver(["like1"])
+    @BusObserver(["like1", "like2"])
     fun observer4(str: Int) {
         Log.w(TAG, "MainActivity observer4 Int $str")
     }
 
-    @BusObserver(["like1"])
-    fun observer5(str: Boolean?) {
-        Log.w(TAG, "MainActivity observer5 Boolean? $str")
+    @BusObserver(["like1", "like2"])
+    fun observer5(str: IntArray?) {
+        Log.w(TAG, "MainActivity observer5 IntArray? $str")
     }
 
-    @BusObserver(["like1"])
-    fun observer6(str: Boolean) {
-        Log.w(TAG, "MainActivity observer6 Boolean $str")
+    @BusObserver(["like1", "like2"])
+    fun observer6(str: IntArray) {
+        Log.w(TAG, "MainActivity observer6 IntArray $str")
     }
 
-    @BusObserver(["like1"])
-    fun observer7(str: IntArray?) {
-        Log.w(TAG, "MainActivity observer7 IntArray? $str")
-    }
-
-    @BusObserver(["like1"])
-    fun observer8(str: IntArray) {
-        Log.w(TAG, "MainActivity observer8 IntArray $str")
-    }
-
-    @BusObserver(["like1"])
-    fun observer9(str: Array<String>?) {
-        Log.w(TAG, "MainActivity observer9 Array<String>? $str")
-    }
-
-    @BusObserver(["like1"])
-    fun observer10(str: Array<String>) {
-        Log.w(TAG, "MainActivity observer10 Array<String> $str")
-    }
-
-    @BusObserver(["like1"])
-    fun observer11() {
-        Log.w(TAG, "MainActivity observer11")
+    @BusObserver(["like1", "like2"])
+    fun observer7() {
+        Log.w(TAG, "MainActivity observer7")
     }
 
 }

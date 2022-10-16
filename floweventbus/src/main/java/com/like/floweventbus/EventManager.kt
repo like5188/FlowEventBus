@@ -19,9 +19,12 @@ object EventManager {
      * @param isNullable    发送的数据的参数类型是否为可空类型
      */
     fun getEvent(tag: String, requestCode: String, paramType: String, isNullable: Boolean): Event? =
-        // 同一个 MutableSharedFlow，取任意一个即可
         mEventList.firstOrNull {
-            it.tag == tag && it.requestCode == requestCode && it.paramType == paramType && it.isNullable == isNullable
+            it.tag == tag && it.requestCode == requestCode && if (isNullable) {
+                it.paramType == paramType && it.isNullable == isNullable
+            } else {
+                it.paramType == paramType// 可空类型和非空类型的参数类型都可以接收非空类型的数据
+            }
         }
 
     /**
