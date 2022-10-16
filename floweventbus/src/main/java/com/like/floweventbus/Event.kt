@@ -23,8 +23,10 @@ class Event(
     isSticky: Boolean,
     val callback: (Any, Any?) -> Unit
 ) {
-    private var host: Any? = null// 宿主
-    private var owner: LifecycleOwner? = null// 宿主所属的生命周期类
+    var host: Any? = null // 宿主
+        private set
+    var owner: LifecycleOwner? = null // 宿主所属的生命周期类
+        private set
     private var job: Job? = null
     private val flowNullable: MutableSharedFlow<Any?>? by lazy {
         if (isNullable) {
@@ -50,9 +52,6 @@ class Event(
         FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, notNullParamType, false, isSticky)
             .filterNotNull() as? MutableSharedFlow<Any>?
     }
-
-    fun getHost() = host
-    fun getOwner() = owner
 
     /**
      * 绑定事件到宿主和生命周期类
