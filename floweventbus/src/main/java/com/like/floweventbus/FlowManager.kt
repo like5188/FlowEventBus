@@ -3,6 +3,9 @@ package com.like.floweventbus
 import android.util.Log
 import kotlinx.coroutines.flow.MutableSharedFlow
 
+/**
+ * Flow 管理
+ */
 object FlowManager {
     private val mFlowCache = mutableMapOf<String, MutableSharedFlow<Any?>>()
 
