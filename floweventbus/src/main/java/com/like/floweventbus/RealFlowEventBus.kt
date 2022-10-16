@@ -54,7 +54,7 @@ object RealFlowEventBus {
         val paramType = toJavaDataType<T>()
         val event = EventManager.getEvent(tag, requestCode, paramType, isNullable)
         val logMessage =
-            "tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据=$data ($paramType ${if (isNullable) "nullable" else "notNull"})"
+            "tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}, 数据=$data [$paramType, ${if (isNullable) "nullable" else "notNull"}]"
         if (event == null) {
             Log.e(TAG, "发送消息失败，没有订阅事件，或者参数类型不匹配 --> $logMessage")
             return
