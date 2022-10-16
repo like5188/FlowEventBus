@@ -39,6 +39,7 @@ class MainActivity : BaseActivity() {
 
     fun changeData1(view: View) {
         FlowEventBus.post<String?>("like1", null)
+        FlowEventBus.post<String?>("like1", "1")
         FlowEventBus.post("like1", "1")
         FlowEventBus.post<Int?>("like1", null)
         FlowEventBus.post("like1", 1)
@@ -47,6 +48,7 @@ class MainActivity : BaseActivity() {
         FlowEventBus.post("like1")
 
         FlowEventBus.post<String?>("like2", null)
+        FlowEventBus.post<String?>("like2", "1")
         FlowEventBus.post("like2", "1")
         FlowEventBus.post<Int?>("like2", null)
         FlowEventBus.post("like2", 1)
