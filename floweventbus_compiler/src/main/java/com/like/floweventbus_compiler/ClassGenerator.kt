@@ -97,13 +97,13 @@ object ClassGenerator {
                         it.tags.contains(tag) && it.requestCode == requestCode && it.isSticky
                     }
                     builder.add(
-                        "com.like.floweventbus.EventManager.addEvent(\$S, \$S, \$S, \$S, \$L, \$L, (host, data) -> {",
+                        "com.like.floweventbus.EventManager.addEvent(\$S, \$S, \$S, \$L, \$S, \$L, (host, data) -> {",
                         hostClass,
                         tag,
                         requestCode,
+                        isSticky,
                         hostMethodInfo.paramType,
-                        isNullable,
-                        isSticky
+                        isNullable
                     )
                     builder.add(
                         "((\$T) host).${hostMethodInfo.methodName}(${if (paramType == "com.like.floweventbus.NoArgs") "" else "(${hostMethodInfo.paramType}) data"});",

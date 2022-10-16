@@ -17,9 +17,9 @@ class Event(
     val hostClass: String,// 宿主类
     val tag: String,// 标签
     val requestCode: String,// 请求码。当标签相同时，可以使用请求码区分
+    val isSticky: Boolean,
     val paramType: String,// 被@BusObserver注解标注的方法的参数类型。只支持一个参数
     val isNullable: Boolean,
-    val isSticky: Boolean,
     val callback: (Any, Any?) -> Unit
 ) {
     var host: Any? = null // 宿主
@@ -29,7 +29,7 @@ class Event(
     private var job: Job? = null
     private val flowNullable: MutableSharedFlow<Any?>? by lazy {
         if (isNullable) {
-            FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, paramType, true, isSticky)
+            FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, isSticky, paramType, true)
         } else {
             null
         }
@@ -48,7 +48,7 @@ class Event(
         // flowNotNull ： key=like1--java.lang.Integer-false-false
 
         val notNullParamType = paramType.toJavaDataType(false)
-        FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, notNullParamType, false, isSticky)
+        FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, isSticky, notNullParamType, false)
     }
 
     /**
@@ -104,21 +104,33 @@ class Event(
 
     override fun toString(): String {
         val sb = StringBuilder()
-        sb.append("Event")
-        sb.append("(")
+        sb.append("Event(")
         if (host != null) sb.append("host=$host") else sb.append("hostClass=$hostClass")
         sb.append(", ")
+
         sb.append("tag=$tag")
         sb.append(", ")
+
         if (requestCode.isNotEmpty()) {
             sb.append("requestCode=$requestCode")
             sb.append(", ")
         }
-        if (paramType != NoArgs::class.java.name) {
-            sb.append("paramType=$paramType, isNullable=$isNullable")
+
+        if (isSticky) {
+            sb.append("isSticky=$isSticky")
             sb.append(", ")
         }
-        sb.append("isSticky=$isSticky")
+
+        if (paramType != NoArgs::class.java.name) {
+            sb.append("param=[")
+                .append(paramType)
+                .append(", ")
+                .append(if (isNullable) "nullable" else "notNull")
+                .append("]")
+        }
+        if (sb.endsWith(", ")) {
+            sb.dropLast(2)
+        }
         sb.append(")")
         return sb.toString()
     }

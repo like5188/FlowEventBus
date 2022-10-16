@@ -32,12 +32,12 @@ object EventManager {
         hostClass: String,
         tag: String,
         requestCode: String,
+        isSticky: Boolean,
         paramType: String,
         isNullable: Boolean,
-        isSticky: Boolean,
         callback: (Any, Any?) -> Unit
     ) {
-        val event = Event(hostClass, tag, requestCode, paramType, isNullable, isSticky, callback)
+        val event = Event(hostClass, tag, requestCode, isSticky, paramType, isNullable, callback)
         mEventList.add(event)
         Log.i(TAG, "添加事件 --> $event")
         logEvent()

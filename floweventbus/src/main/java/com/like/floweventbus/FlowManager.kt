@@ -11,11 +11,11 @@ object FlowManager {
     private fun findFlow(
         tag: String,
         requestCode: String,
+        isSticky: Boolean,
         paramType: String,
         isNullable: Boolean,
-        isSticky: Boolean,
     ): MutableSharedFlow<Any?>? {
-        val key = createKey(tag, requestCode, paramType, isNullable, isSticky)
+        val key = createKey(tag, requestCode, isSticky, paramType, isNullable)
         if (mFlowCache.containsKey(key)) {
             return mFlowCache[key]
         }
@@ -25,17 +25,17 @@ object FlowManager {
     fun findFlowOrCreateIfAbsent(
         tag: String,
         requestCode: String,
+        isSticky: Boolean,
         paramType: String,
         isNullable: Boolean,
-        isSticky: Boolean,
     ): MutableSharedFlow<Any?> {
-        var flow = findFlow(tag, requestCode, paramType, isNullable, isSticky)
+        var flow = findFlow(tag, requestCode, isSticky, paramType, isNullable)
         if (flow == null) {
             flow = MutableSharedFlow<Any?>(
                 replay = if (isSticky) 1 else 0,
                 extraBufferCapacity = if (isSticky) Int.MAX_VALUE else 0 // 避免挂起导致数据发送失败
             ).apply {
-                val key = createKey(tag, requestCode, paramType, isNullable, isSticky)
+                val key = createKey(tag, requestCode, isSticky, paramType, isNullable)
                 mFlowCache[key] = this
             }
         }
@@ -45,9 +45,9 @@ object FlowManager {
     private fun createKey(
         tag: String,
         requestCode: String,
+        isSticky: Boolean,
         paramType: String,
         isNullable: Boolean,
-        isSticky: Boolean,
-    ) = "$tag-$requestCode-$paramType-$isNullable-$isSticky"
+    ) = "$tag-$requestCode-$isSticky-$paramType-$isNullable"
 
 }

@@ -48,6 +48,7 @@ class MainActivity : BaseActivity() {
         FlowEventBus.post("like1", intArrayOf(1))
         FlowEventBus.post<Array<String>?>("like1", null)
         FlowEventBus.post("like1", arrayOf(""))
+        FlowEventBus.post("like1")
     }
 
     fun changeData2(view: View) {
@@ -59,7 +60,7 @@ class MainActivity : BaseActivity() {
         startActivity(Intent(this, SecondActivity::class.java))
     }
 
-    @BusObserver(["like1"])
+    @BusObserver(["like1", "like2"])
     fun observer1(str: String?) {
         Log.w(TAG, "MainActivity observer1 String? $str")
     }
@@ -107,6 +108,11 @@ class MainActivity : BaseActivity() {
     @BusObserver(["like1"])
     fun observer10(str: Array<String>) {
         Log.w(TAG, "MainActivity observer10 Array<String> $str")
+    }
+
+    @BusObserver(["like1"])
+    fun observer11() {
+        Log.w(TAG, "MainActivity observer11")
     }
 
 }
