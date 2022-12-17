@@ -5,6 +5,6 @@
         <provider
             android:name=".FlowEventBusProvider"
             android:authorities=".FlowEventBusProvider"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 </manifest>
