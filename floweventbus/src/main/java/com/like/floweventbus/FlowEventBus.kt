@@ -7,14 +7,6 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 object FlowEventBus {
 
     /**
-     * 初始化，添加所有事件。
-     * 必须在[register]方法之前调用
-     */
-    fun init() {
-        RealFlowEventBus.init()
-    }
-
-    /**
      * 注册宿主
      *
      * @param host  宿主，包含被[com.like.floweventbus_annotations.BusObserver]注解的方法的类。会通过它来调用这些方法。

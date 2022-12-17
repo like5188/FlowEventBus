@@ -22,7 +22,6 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         mBinding
         Log.w(TAG, "MainActivity onCreate")
-        FlowEventBus.init()
         FlowEventBus.register(this)
         B(this)
         C(this)

@@ -2,6 +2,8 @@ package com.like.floweventbus
 
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
+import com.like.floweventbus.FlowEventBus.register
+import com.like.floweventbus.RealFlowEventBus.register
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.reflect.typeOf
@@ -10,10 +12,12 @@ object RealFlowEventBus {
     private val initialized = AtomicBoolean(false)
 
     /**
-     * 此方法会[Initializer]类的所有实现类（floweventbus_compiler中自动生成的FlowEventbusInitializer类）的 init() 方法，然后触发 [EventManager.addEvent] 方法去添加所有被注解方法对应的[Event]。
-     * FlowEventbusInitializer类在每个模块对应一个，和模块的BuildConfig类的包名一致。
+     * 初始化，添加所有事件。
+     * 此方法会调用[Initializer]类的所有实现类（floweventbus_compiler中自动生成的FlowEventbusInitializer类）的 init() 方法，然后触发 [EventManager.addEvent] 方法去添加所有被注解方法对应的[Event]。
+     * FlowEventbusInitializer类在每个组件中对应一个，和组件的BuildConfig类的包名一致。
+     * 必须在[register]方法之前调用
      */
-    fun init() {
+    internal fun init() {
         if (initialized.compareAndSet(false, true)) {
             Log.d(TAG, "开始初始化")
             try {
