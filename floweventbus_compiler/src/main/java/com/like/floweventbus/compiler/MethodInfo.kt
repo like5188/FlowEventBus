@@ -1,4 +1,4 @@
-package com.like.floweventbus_compiler
+package com.like.floweventbus.compiler
 
 import javax.lang.model.element.TypeElement
 

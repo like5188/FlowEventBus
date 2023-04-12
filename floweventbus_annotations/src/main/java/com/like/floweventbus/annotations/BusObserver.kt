@@ -1,4 +1,4 @@
-package com.like.floweventbus_annotations
+package com.like.floweventbus.annotations
 
 // @Retention: 定义注解的保留策略。
 // SOURCE：注解仅存在于源码中，在class字节码文件中不包含

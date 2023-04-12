@@ -10,7 +10,7 @@ import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.R
 import com.like.floweventbus.sample.User
 import com.like.floweventbus.sample.databinding.ActivitySecondBinding
-import com.like.floweventbus_annotations.BusObserver
+import com.like.floweventbus.annotations.BusObserver
 
 class SecondActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivitySecondBinding

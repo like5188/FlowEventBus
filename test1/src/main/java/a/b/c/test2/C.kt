@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
-import com.like.floweventbus_annotations.BusObserver
+import com.like.floweventbus.annotations.BusObserver
 
 class C(owner: LifecycleOwner) {
     init {

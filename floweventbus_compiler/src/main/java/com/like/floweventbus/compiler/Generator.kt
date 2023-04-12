@@ -1,6 +1,6 @@
-package com.like.floweventbus_compiler
+package com.like.floweventbus.compiler
 
-import com.like.floweventbus_annotations.BusObserver
+import com.like.floweventbus.annotations.BusObserver
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement

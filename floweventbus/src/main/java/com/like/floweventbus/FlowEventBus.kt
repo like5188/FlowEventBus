@@ -9,7 +9,7 @@ object FlowEventBus {
     /**
      * 注册宿主
      *
-     * @param host  宿主，包含被[com.like.floweventbus_annotations.BusObserver]注解的方法的类。会通过它来调用这些方法。
+     * @param host  宿主，包含被[com.like.floweventbus.annotations.BusObserver]注解的方法的类。会通过它来调用这些方法。
      * @param owner 宿主所属的生命周期类。
      *
      * 注意：

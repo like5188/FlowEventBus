@@ -1,4 +1,4 @@
-package com.like.floweventbus_compiler
+package com.like.floweventbus.compiler
 
 import java.io.IOException
 import javax.tools.StandardLocation

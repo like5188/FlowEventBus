@@ -11,7 +11,7 @@ import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus.sample.test.test1.SecondActivity
-import com.like.floweventbus_annotations.BusObserver
+import com.like.floweventbus.annotations.BusObserver
 
 class MainActivity : BaseActivity() {
     private val mBinding by lazy {

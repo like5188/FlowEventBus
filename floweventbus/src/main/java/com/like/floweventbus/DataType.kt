@@ -11,7 +11,7 @@ inline fun <reified T> toJavaDataType(): String {
 /**
  * 将 kotlin 数据类型[this]转换成 java 数据类型。
  * 只是对 java 基本数据类型做了处理，把不为空的基本数据类型包装类转换成对应的基本数据类型。
- * 这样才能和[com.like.floweventbus_compiler.Generator]中存储的参数类型一样。
+ * 这样才能和[com.like.floweventbus.compiler.Generator]中存储的参数类型一样。
  * 比如：
  * java.lang.Byte 不为空 -> byte
  * java.lang.Byte 为空  -> java.lang.Byte

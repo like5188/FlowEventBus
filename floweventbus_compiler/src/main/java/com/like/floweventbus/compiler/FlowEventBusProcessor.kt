@@ -1,6 +1,6 @@
-package com.like.floweventbus_compiler
+package com.like.floweventbus.compiler
 
-import com.like.floweventbus_annotations.BusObserver
+import com.like.floweventbus.annotations.BusObserver
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
@@ -29,7 +29,7 @@ getConstantValue() 		如果属性变量被final修饰，则可以使用该方法
  * FlowEventBus 框架的注解处理器。每一个注解处理器类都必须有一个空的构造函数，默认不写就行;
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-@SupportedAnnotationTypes("com.like.floweventbus_annotations.BusObserver")
+@SupportedAnnotationTypes("com.like.floweventbus.annotations.BusObserver")
 class FlowEventBusProcessor : AbstractProcessor() {
 
     /**

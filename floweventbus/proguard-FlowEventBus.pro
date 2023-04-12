@@ -25,7 +25,7 @@
 -keep class com.like.floweventbus.NoArgs
 # 不混淆包含被 BusObserver 注解的方法的宿主类，因为需要用它的类名来获取自动生成的类 FlowEventbusInitializer。
 -keepclasseswithmembernames class **{
-     @com.like.floweventbus_annotations.BusObserver <methods>;
+     @com.like.floweventbus.annotations.BusObserver <methods>;
 }
 # 不能混淆自动生成的类 FlowEventbusInitializer，因为需要反射调用它的方法进行初始化。
 -keep class **.FlowEventbusInitializer{*;}

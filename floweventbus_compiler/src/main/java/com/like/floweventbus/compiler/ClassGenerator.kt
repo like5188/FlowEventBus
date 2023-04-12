@@ -1,6 +1,6 @@
-package com.like.floweventbus_compiler
+package com.like.floweventbus.compiler
 
-import com.like.floweventbus_annotations.BusObserver
+import com.like.floweventbus.annotations.BusObserver
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
