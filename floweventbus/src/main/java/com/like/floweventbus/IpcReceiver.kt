@@ -13,8 +13,11 @@ class IpcReceiver : BroadcastReceiver() {
             if (action == ACTION) {
                 val tag = getStringExtra(KEY_TAG) ?: return
                 val requestCode = getStringExtra(KEY_REQUEST_CODE) ?: return
-                val value = getSerializableExtra(KEY_VALUE)
-                FlowEventBus.post(tag, requestCode, value)
+                val processor = getSerializableExtra(KEY_VALUE_PROCESSOR) as Processor
+                intent.extras?.let {
+                    val value = processor.readFromBundle(KEY_VALUE, it)
+                    FlowEventBus.post(tag, requestCode, value)
+                }
             }
         }
     }
@@ -24,5 +27,6 @@ class IpcReceiver : BroadcastReceiver() {
         const val KEY_TAG = "KEY_TAG"
         const val KEY_REQUEST_CODE = "KEY_REQUEST_CODE"
         const val KEY_VALUE = "KEY_VALUE"
+        const val KEY_VALUE_PROCESSOR = "KEY_VALUE_PROCESSOR"
     }
 }

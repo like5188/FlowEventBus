@@ -9,7 +9,6 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.like.floweventbus.FlowEventBus.register
 import com.like.floweventbus.RealFlowEventBus.register
-import java.io.Serializable
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.reflect.typeOf
@@ -83,16 +82,15 @@ object RealFlowEventBus {
         event.post(data, isNullable)
     }
 
-    inline fun <reified T> broadcast(tag: String, requestCode: String, data: T) {
+    fun broadcast(tag: String, requestCode: String, processor: Processor) {
         val intent = Intent(IpcReceiver.ACTION)
         intent.setPackage(context.packageName)
         intent.putExtra(IpcReceiver.KEY_TAG, tag)
         intent.putExtra(IpcReceiver.KEY_REQUEST_CODE, requestCode)
-        when (data) {
-            is Serializable -> {
-                intent.putExtra(IpcReceiver.KEY_VALUE, data)
-            }
+        intent.extras?.let {
+            processor.writeToBundle(IpcReceiver.KEY_VALUE, it)
         }
+        intent.putExtra(IpcReceiver.KEY_VALUE_PROCESSOR, processor)
         context.sendBroadcast(intent)
     }
 
