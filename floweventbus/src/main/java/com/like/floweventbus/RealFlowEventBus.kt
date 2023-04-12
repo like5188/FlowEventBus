@@ -1,29 +1,44 @@
 package com.like.floweventbus
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Process
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.like.floweventbus.FlowEventBus.register
 import com.like.floweventbus.RealFlowEventBus.register
+import java.io.Serializable
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.reflect.typeOf
 
+@SuppressLint("StaticFieldLeak")
 object RealFlowEventBus {
     private val initialized = AtomicBoolean(false)
+    private val receiver by lazy {
+        IpcReceiver()
+    }
+    lateinit var context: Context
 
     /**
      * 初始化，添加所有事件。
      * 此方法会调用[Initializer]类的所有实现类（floweventbus_compiler中自动生成的FlowEventbusInitializer类）的 init() 方法，然后触发 [EventManager.addEvent] 方法去添加所有被注解方法对应的[Event]。
      * FlowEventbusInitializer类在每个组件中对应一个，和组件的BuildConfig类的包名一致。
-     * 必须在[register]方法之前调用
+     * 必须在[register]方法之前调用，推荐在application中调用。
      */
-    internal fun init() {
+    fun init(context: Context) {
         if (initialized.compareAndSet(false, true)) {
-            Log.d(TAG, "开始初始化")
+            Log.d(TAG, "开始初始化 ${Process.myPid()}")
+            RealFlowEventBus.context = context
             try {
                 ServiceLoader.load(Initializer::class.java).toList().forEach {
                     it.init()
                 }
+                val intentFilter = IntentFilter()
+                intentFilter.addAction(IpcReceiver.ACTION)
+                context.registerReceiver(receiver, intentFilter)
                 Log.d(TAG, "初始化成功")
             } catch (e: Exception) {
                 Log.e(TAG, "初始化失败 ${e.message}")
@@ -66,6 +81,19 @@ object RealFlowEventBus {
         Log.v(TAG, "发送消息 --> $logMessage")
         // 同一个 MutableSharedFlow，取任意一个即可
         event.post(data, isNullable)
+    }
+
+    inline fun <reified T> broadcast(tag: String, requestCode: String, data: T) {
+        val intent = Intent(IpcReceiver.ACTION)
+        intent.setPackage(context.packageName)
+        intent.putExtra(IpcReceiver.KEY_TAG, tag)
+        intent.putExtra(IpcReceiver.KEY_REQUEST_CODE, requestCode)
+        when (data) {
+            is Serializable -> {
+                intent.putExtra(IpcReceiver.KEY_VALUE, data)
+            }
+        }
+        context.sendBroadcast(intent)
     }
 
     fun unregister(host: Any) {

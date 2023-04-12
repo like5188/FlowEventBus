@@ -1,10 +1,21 @@
 package com.like.floweventbus
 
+import android.content.Context
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
+import com.like.floweventbus.RealFlowEventBus.register
 
 object FlowEventBus {
+
+    /**
+     * 初始化
+     * 必须在[register]方法之前调用，推荐在application中调用。
+     */
+    @JvmStatic
+    fun init(context: Context) {
+        RealFlowEventBus.init(context)
+    }
 
     /**
      * 注册宿主
@@ -52,6 +63,21 @@ object FlowEventBus {
     @JvmStatic
     inline fun <reified T> post(tag: String, requestCode: String, t: T) {
         RealFlowEventBus.post(tag, requestCode, t)
+    }
+
+    @JvmStatic
+    fun broadcast(tag: String) {
+        RealFlowEventBus.broadcast(tag, "", NoArgs())
+    }
+
+    @JvmStatic
+    inline fun <reified T> broadcast(tag: String, t: T) {
+        RealFlowEventBus.broadcast(tag, "", t)
+    }
+
+    @JvmStatic
+    inline fun <reified T> broadcast(tag: String, requestCode: String, t: T) {
+        RealFlowEventBus.broadcast(tag, requestCode, t)
     }
 
 }

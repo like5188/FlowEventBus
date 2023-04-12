@@ -12,6 +12,7 @@ import com.like.floweventbus.TAG
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus.sample.test.test1.SecondActivity
 import com.like.floweventbus.annotations.BusObserver
+import java.io.Serializable
 
 class MainActivity : BaseActivity() {
     private val mBinding by lazy {
@@ -59,6 +60,8 @@ class MainActivity : BaseActivity() {
     fun changeData2(view: View) {
         FlowEventBus.post<User?>("like222", null)
         FlowEventBus.post("like222", User("like", 18))
+        FlowEventBus.broadcast<User?>("like222", null)
+        FlowEventBus.broadcast("like222", User("like1", 189))
     }
 
     fun startActivity2(view: View) {
@@ -100,4 +103,8 @@ class MainActivity : BaseActivity() {
         Log.w(TAG, "MainActivity observer7")
     }
 
+    @BusObserver(["like222"])
+    fun observer8(user: Serializable?) {
+        Log.w(TAG, "MainActivity observer8 User $user")
+    }
 }
