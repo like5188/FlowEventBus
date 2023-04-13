@@ -61,6 +61,7 @@ object RealFlowEventBus {
             return
         }
         hostEvents.forEach { event ->
+            Log.v(TAG, "绑定事件 --> $event")
             event.bind(host, owner)
         }
         Log.i(TAG, "绑定宿主      --> $host")
