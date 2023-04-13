@@ -40,15 +40,11 @@
 ```
 在Module的gradle中加入：
 ```groovy
-    // 如果只是发送消息
     dependencies {
+        // 发送消息
         implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
         implementation 'com.github.like5188.FlowEventBus:floweventbus:版本号'
-    }
-    // 发送消息、接收消息
-    dependencies {
-        implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
-        implementation 'com.github.like5188.FlowEventBus:floweventbus:版本号'
+        // 接收消息
         implementation 'com.github.like5188.FlowEventBus:floweventbus_annotations:版本号'
         kapt 'com.github.like5188.FlowEventBus:floweventbus_compiler:版本号'
     }
