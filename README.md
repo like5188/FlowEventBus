@@ -17,6 +17,7 @@
     ③、isSticky 只是针对`@BusObserver`注解的接收消息的方法。发送消息时不区分粘性或者非粘性消息。sticky 为 true 时表示会缓存最近的一条消息，让新注册的宿主也能收到这条消息。
     ④、发送消息时，必须要由相同的 tag、requestCode，以及匹配的参数类型（注意：可空类型的参数类型可以接收非空类型的数据），才能成功发送消息。
     ⑤、此方法必须用 public 修饰，且不能被 static 修饰，且参数最多只能是1个。
+    ⑥、支持跨进程，使用了广播来实现，不支持粘性消息。
 
 3、被`@BusObserver`注解的方法所在类称为宿主类。
 
@@ -52,21 +53,35 @@
     }
 ```
 
-2、发送消息。
+2、在Application中初始化。
+```java
+    FlowEventBus.init(Application)
+```
+
+3、发送消息。
+①不跨进程
 ```java
     FlowEventBus.post(tag: String)
     FlowEventBus.post(tag: String, t: T)
     FlowEventBus.post(tag: String, requestCode: String, t: T)
 ```
-
-3、如果需要接收消息。在需要接收消息的类中调用`register`方法进行注册宿主。当在父类调用`register`方法后，在子类中无需再调用。
+②跨进程(不支持粘性消息)
 ```java
+    FlowEventBus.postAcrossProcess(tag: String)
+    FlowEventBus.postAcrossProcess(tag: String, t: T)
+    FlowEventBus.postAcrossProcess(tag: String, requestCode: String, t: T)
+```
+
+4、接收消息。
+①在需要接收消息的类中调用`register`方法进行注册宿主。当在父类调用`register`方法后，在子类中无需再调用。
+```java
+    // 在需要接收消息的类中调用`register`方法进行注册宿主。当在父类调用`register`方法后，在子类中无需再调用。
     FlowEventBus.register(host: Any, owner: LifecycleOwner?)
     // 当注册时参数 owner 不是LifecycleOwner或者View类型，或者为null时，不会自动关联生命周期，必须显示调用下面的方法取消注册；不为null时会自动关联生命周期，不用调用取消注册的方法。
     FlowEventBus.unregister(host: Any)
 ```
 
-4、如果需要接收消息。接收消息与发送消息一一对应。(注意：如果接收String类型的参数，可以使用String或者String?来接收)
+②接收消息与发送消息一一对应。(注意：如果接收String类型的参数，可以使用String或者String?来接收)
 ```java
     发送消息:(主线程)
     FlowEventBus.post(tag: String)
