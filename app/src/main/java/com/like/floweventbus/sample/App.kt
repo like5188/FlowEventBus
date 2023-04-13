@@ -9,7 +9,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "App onCreate")
-        FlowEventBus.init(this)
+//        FlowEventBus.init(this)
     }
 
     override fun onTerminate() {

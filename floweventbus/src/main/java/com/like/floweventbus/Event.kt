@@ -108,17 +108,18 @@ class Event(
         if (host != null) sb.append("host=$host") else sb.append("hostClass=$hostClass")
         sb.append(", ")
 
-        sb.append("tag=$tag")
-        sb.append(", ")
+        if (owner != null) {
+            sb.append("owner=$owner, ")
+        }
+
+        sb.append("tag=$tag, ")
 
         if (requestCode.isNotEmpty()) {
-            sb.append("requestCode=$requestCode")
-            sb.append(", ")
+            sb.append("requestCode=$requestCode, ")
         }
 
         if (isSticky) {
-            sb.append("isSticky=$isSticky")
-            sb.append(", ")
+            sb.append("isSticky=$isSticky, ")
         }
 
         if (paramType != NoArgs::class.java.name) {
