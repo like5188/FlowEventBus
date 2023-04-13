@@ -42,18 +42,7 @@ object EventManager {
     ) {
         val event = Event(hostClass, tag, requestCode, isSticky, paramType, isNullable, callback)
         mEventList.add(event)
-        Log.i(TAG, "添加事件 --> $event")
-        logEvent()
-    }
-
-    /**
-     * 打印缓存的事件
-     */
-    fun logEvent() {
-        Log.v(TAG, "事件总数：${mEventList.size}")
-        mEventList.forEach {
-            Log.v(TAG, " --> $it")
-        }
+        Log.i(TAG, "添加事件(${mEventList.size}) --> $event")
     }
 
     /**
@@ -61,15 +50,13 @@ object EventManager {
      */
     fun logHostAndOwner() {
         val hosts = mEventList.mapNotNull { it.host }.distinct()
-        Log.d(TAG, "宿主总数：${hosts.size}")
-        hosts.forEach {
-            Log.d(TAG, " --> $it")
+        hosts.forEachIndexed { index, any ->
+            Log.d(TAG, "宿主(${index + 1}) --> $any")
         }
 
         val owners = mEventList.mapNotNull { it.host }.distinct()
-        Log.d(TAG, "生命周期类总数：${owners.size}")
-        owners.forEach {
-            Log.d(TAG, " --> $it")
+        owners.forEachIndexed { index, any ->
+            Log.d(TAG, "生命周期类(${index + 1}) --> $any")
         }
     }
 

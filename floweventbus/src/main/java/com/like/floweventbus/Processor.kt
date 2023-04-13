@@ -1,10 +1,8 @@
 package com.like.floweventbus
 
-import android.os.Bundle
+import android.content.Intent
 import java.io.Serializable
 
-interface Processor : Serializable {
-    fun <T> readFromBundle(key: String, bundle: Bundle): T
-
-    fun writeToBundle(key: String, bundle: Bundle)
+fun interface Processor : Serializable {
+    fun onReceive(intent: Intent)
 }

@@ -29,7 +29,7 @@ object RealFlowEventBus {
      */
     fun init(context: Context) {
         if (initialized.compareAndSet(false, true)) {
-            Log.d(TAG, "开始初始化 ${Process.myPid()}")
+            Log.d(TAG, "开始初始化 [pid:${Process.myPid()}]")
             RealFlowEventBus.context = context
             try {
                 ServiceLoader.load(Initializer::class.java).toList().forEach {
@@ -74,22 +74,17 @@ object RealFlowEventBus {
         val logMessage =
             "tag=$tag${if (requestCode.isNotEmpty()) ", requestCode='$requestCode'" else ""}${if (paramType == NoArgs::class.java.name) "" else ", 数据=$data [$paramType, ${if (isNullable) "nullable" else "notNull"}]"}"
         if (event == null) {
-            Log.e(TAG, "发送消息失败，没有订阅事件，或者参数类型不匹配 --> $logMessage")
+            Log.e(TAG, "[pid:${Process.myPid()}] 发送消息失败，没有订阅事件，或者参数类型不匹配 --> $logMessage")
             return
         }
-        Log.v(TAG, "发送消息 --> $logMessage")
+        Log.v(TAG, "[pid:${Process.myPid()}] 发送消息 --> $logMessage")
         // 同一个 MutableSharedFlow，取任意一个即可
         event.post(data, isNullable)
     }
 
-    fun broadcast(tag: String, requestCode: String, processor: Processor) {
+    fun broadcast(processor: Processor) {
         val intent = Intent(IpcReceiver.ACTION)
         intent.setPackage(context.packageName)
-        intent.putExtra(IpcReceiver.KEY_TAG, tag)
-        intent.putExtra(IpcReceiver.KEY_REQUEST_CODE, requestCode)
-        intent.extras?.let {
-            processor.writeToBundle(IpcReceiver.KEY_VALUE, it)
-        }
         intent.putExtra(IpcReceiver.KEY_VALUE_PROCESSOR, processor)
         context.sendBroadcast(intent)
     }

@@ -66,18 +66,8 @@ object FlowEventBus {
     }
 
     @JvmStatic
-    fun broadcast(tag: String) {
-        RealFlowEventBus.broadcast(tag, "", NoArgs())
-    }
-
-    @JvmStatic
-    inline fun <reified T> broadcast(tag: String, t: T) {
-        RealFlowEventBus.broadcast(tag, "", t)
-    }
-
-    @JvmStatic
-    inline fun <reified T> broadcast(tag: String, requestCode: String, t: T) {
-        RealFlowEventBus.broadcast(tag, requestCode, t)
+    fun broadcast(processor: Processor) {
+        RealFlowEventBus.broadcast(processor)
     }
 
 }
