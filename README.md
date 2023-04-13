@@ -61,13 +61,13 @@
 
 3、发送消息。
 
-①不跨进程
+    ①不跨进程
 ```java
     FlowEventBus.post(tag: String)
     FlowEventBus.post(tag: String, t: T)
     FlowEventBus.post(tag: String, requestCode: String, t: T)
 ```
-②跨进程(不支持粘性消息)
+    ②跨进程(不支持粘性消息)
 ```java
     FlowEventBus.postAcrossProcess(tag: String)
     FlowEventBus.postAcrossProcess(tag: String, t: T)
@@ -76,7 +76,7 @@
 
 4、接收消息。
 
-①在需要接收消息的类中调用`register`方法进行注册宿主。当在父类调用`register`方法后，在子类中无需再调用。
+    ①在需要接收消息的类中调用`register`方法进行注册宿主。当在父类调用`register`方法后，在子类中无需再调用。
 ```java
     // 在需要接收消息的类中调用`register`方法进行注册宿主。当在父类调用`register`方法后，在子类中无需再调用。
     FlowEventBus.register(host: Any, owner: LifecycleOwner?)
@@ -84,7 +84,7 @@
     FlowEventBus.unregister(host: Any)
 ```
 
-②接收消息与发送消息一一对应。(注意：如果接收String类型的参数，可以使用String或者String?来接收)
+    ②接收消息与发送消息一一对应。(注意：如果接收String类型的参数，可以使用String或者String?来接收)
 ```java
     发送消息:(主线程)
     FlowEventBus.post(tag: String)
