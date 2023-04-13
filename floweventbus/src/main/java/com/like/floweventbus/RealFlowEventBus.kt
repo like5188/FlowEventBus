@@ -90,6 +90,10 @@ object RealFlowEventBus {
         context.sendBroadcast(intent)
     }
 
+    fun unregisterBroadcastReceiver() {
+        context.unregisterReceiver(receiver)
+    }
+
     fun unbind(host: Any) {
         EventManager.getEventList(host).listIterator().forEach {
             it.unbind()
