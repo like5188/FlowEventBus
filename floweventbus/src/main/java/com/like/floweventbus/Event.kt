@@ -46,7 +46,7 @@ class Event(
         val notNullParamType = paramType.toJavaDataType(false)
         FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, isSticky, notNullParamType, false)
     }
-    val hosts = mutableListOf<Any>() // 宿主
+    val hosts = mutableListOf<Any>() // 宿主，同一个hostClass的多个实例
     val owners = mutableListOf<LifecycleOwner?>() // 宿主所属的生命周期类
     private val jobs = mutableListOf<Job>()
 
