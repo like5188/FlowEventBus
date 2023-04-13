@@ -8,7 +8,6 @@ import android.os.Process
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.like.floweventbus.FlowEventBus.register
-import com.like.floweventbus.RealFlowEventBus.register
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.reflect.typeOf
@@ -49,7 +48,7 @@ object RealFlowEventBus {
         }
     }
 
-    fun register(host: Any, owner: LifecycleOwner?) {
+    fun bind(host: Any, owner: LifecycleOwner?) {
         if (EventManager.isRegistered(host)) {
             Log.e(TAG, "绑定宿主失败 --> 宿主 $host 已经绑定过")
             return
@@ -84,14 +83,14 @@ object RealFlowEventBus {
         event.post(data, isNullable)
     }
 
-    fun broadcast(receiver: Receiver) {
+    fun sendBroadcast(receiver: Receiver) {
         val intent = Intent(IpcReceiver.ACTION)
         intent.setPackage(context.packageName)
         intent.putExtra(IpcReceiver.KEY_RECEIVER, receiver)
         context.sendBroadcast(intent)
     }
 
-    fun unregister(host: Any) {
+    fun unbind(host: Any) {
         EventManager.getEventList(host).listIterator().forEach {
             it.unbind()
         }

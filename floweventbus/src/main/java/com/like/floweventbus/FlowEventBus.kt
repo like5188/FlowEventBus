@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
-import com.like.floweventbus.RealFlowEventBus.register
 
 object FlowEventBus {
 
@@ -41,7 +40,7 @@ object FlowEventBus {
             else -> null
         }
     ) {
-        RealFlowEventBus.register(host, owner)
+        RealFlowEventBus.bind(host, owner)
     }
 
     /**
@@ -49,7 +48,7 @@ object FlowEventBus {
      */
     @JvmStatic
     fun unregister(host: Any) {
-        RealFlowEventBus.unregister(host)
+        RealFlowEventBus.unbind(host)
     }
 
     @JvmStatic
@@ -69,21 +68,21 @@ object FlowEventBus {
 
     @JvmStatic
     fun postAcrossProcess(tag: String) {
-        RealFlowEventBus.broadcast {
+        RealFlowEventBus.sendBroadcast {
             RealFlowEventBus.post(tag, "", NoArgs())
         }
     }
 
     @JvmStatic
     inline fun <reified T> postAcrossProcess(tag: String, t: T) {
-        RealFlowEventBus.broadcast {
+        RealFlowEventBus.sendBroadcast {
             RealFlowEventBus.post(tag, "", t)
         }
     }
 
     @JvmStatic
     inline fun <reified T> postAcrossProcess(tag: String, requestCode: String, t: T) {
-        RealFlowEventBus.broadcast {
+        RealFlowEventBus.sendBroadcast {
             RealFlowEventBus.post(tag, requestCode, t)
         }
     }
