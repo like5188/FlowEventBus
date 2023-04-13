@@ -50,6 +50,10 @@ object EventManager {
      */
     fun logHost() {
         val hosts = mEventList.flatMap { it.hosts }.distinct()
+        if (hosts.isEmpty()) {
+            Log.d(TAG, "宿主(0)")
+            return
+        }
         hosts.forEachIndexed { index, any ->
             Log.d(TAG, "宿主(${index + 1}) --> $any")
         }

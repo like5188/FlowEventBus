@@ -55,8 +55,7 @@ class Event(
     fun bind(host: Any, owner: LifecycleOwner?) {
         hosts.add(host)
 
-        val scope = owner?.lifecycleScope ?: GlobalScope
-        scope.launch(Dispatchers.Main) {
+        (owner?.lifecycleScope ?: GlobalScope).launch(Dispatchers.Main) {
             launch {
                 flowNullable?.collect {
                     callback(host, it)
@@ -70,17 +69,18 @@ class Event(
         }.apply {
             jobs.add(this)
 
-            Log.v(TAG, "绑定事件   --> ${this@Event}")
-            Log.v(TAG, "宿主      --> $host")
-            Log.v(TAG, "生命周期类 --> $owner")
+            Log.v(TAG, "绑定事件 --> ${this@Event}")
+            Log.v(TAG, "宿主   --> $host")
+            Log.v(TAG, "生命周期--> $owner")
             EventManager.logHost()
 
             invokeOnCompletion {
-                Log.i(TAG, "解绑事件 --> ${this@Event}")
-                Log.i(TAG, "宿主      --> $host")
-                Log.i(TAG, "生命周期类 --> $owner")
                 hosts.remove(host)
                 jobs.remove(this)
+
+                Log.i(TAG, "解绑事件 --> ${this@Event}")
+                Log.i(TAG, "宿主   --> $host")
+                Log.i(TAG, "生命周期--> $owner")
                 EventManager.logHost()
             }
         }
