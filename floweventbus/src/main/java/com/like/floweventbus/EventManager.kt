@@ -54,7 +54,7 @@ object EventManager {
             Log.d(TAG, "宿主(${index + 1}) --> $any")
         }
 
-        val owners = mEventList.mapNotNull { it.host }.distinct()
+        val owners = mEventList.mapNotNull { it.owner }.distinct()
         owners.forEachIndexed { index, any ->
             Log.d(TAG, "生命周期类(${index + 1}) --> $any")
         }
