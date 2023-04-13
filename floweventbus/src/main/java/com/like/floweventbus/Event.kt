@@ -99,8 +99,7 @@ class Event(
     }
 
     fun post(data: Any?, isNullable: Boolean) {
-        val scope = owners.firstOrNull()?.lifecycleScope ?: GlobalScope
-        scope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.Main) {
             try {
                 if (isNullable) {
                     flowNullable?.emit(data)
@@ -108,6 +107,7 @@ class Event(
                     flowNotNull?.emit(data!!)
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
