@@ -11,7 +11,6 @@ import com.like.floweventbus.annotations.BusObserver
 import com.like.floweventbus.sample.R
 import com.like.floweventbus.sample.User
 import com.like.floweventbus.sample.databinding.ActivitySecondBinding
-import java.io.Serializable
 
 class SecondActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivitySecondBinding
@@ -28,9 +27,7 @@ class SecondActivity : AppCompatActivity() {
     }
 
     fun changeData1(view: View?) {
-        FlowEventBus.broadcast {
-            FlowEventBus.post<User?>("like222", null)
-        }
+        FlowEventBus.postAcrossProcess<User?>("like222", null)
     }
 
     fun unregister(view: View?) {

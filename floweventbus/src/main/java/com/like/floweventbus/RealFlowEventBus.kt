@@ -25,7 +25,9 @@ object RealFlowEventBus {
      * 初始化，添加所有事件。
      * 此方法会调用[Initializer]类的所有实现类（floweventbus_compiler中自动生成的FlowEventbusInitializer类）的 init() 方法，然后触发 [EventManager.addEvent] 方法去添加所有被注解方法对应的[Event]。
      * FlowEventbusInitializer类在每个组件中对应一个，和组件的BuildConfig类的包名一致。
-     * 必须在[register]方法之前调用，推荐在application中调用。
+     * 注意：
+     * 1、必须在[register]方法之前调用。
+     * 2、跨进程时需要重新调用，所以推荐在application中调用。这样就能自动在跨进程时多次调用初始化了。
      */
     fun init(context: Context) {
         if (initialized.compareAndSet(false, true)) {
@@ -82,10 +84,10 @@ object RealFlowEventBus {
         event.post(data, isNullable)
     }
 
-    fun broadcast(processor: Processor) {
+    fun broadcast(receiver: Receiver) {
         val intent = Intent(IpcReceiver.ACTION)
         intent.setPackage(context.packageName)
-        intent.putExtra(IpcReceiver.KEY_VALUE_PROCESSOR, processor)
+        intent.putExtra(IpcReceiver.KEY_RECEIVER, receiver)
         context.sendBroadcast(intent)
     }
 

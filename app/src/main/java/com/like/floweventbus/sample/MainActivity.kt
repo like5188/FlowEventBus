@@ -37,15 +37,11 @@ class MainActivity : BaseActivity() {
     }
 
     fun changeData1(view: View) {
-        FlowEventBus.broadcast {
-            FlowEventBus.post<User?>("like222", null)
-        }
+        FlowEventBus.postAcrossProcess<User?>("like222", null)
     }
 
     fun changeData2(view: View) {
-        FlowEventBus.broadcast {
-            FlowEventBus.post("like222", User("like1", 189))
-        }
+        FlowEventBus.postAcrossProcess("like222", User("like1", 189))
     }
 
     fun startActivity2(view: View) {

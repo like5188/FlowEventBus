@@ -10,7 +10,9 @@ object FlowEventBus {
 
     /**
      * 初始化
-     * 必须在[register]方法之前调用，推荐在application中调用。
+     * 注意：
+     * 1、必须在[register]方法之前调用。
+     * 2、跨进程时需要重新调用，所以推荐在application中调用。这样就能自动在跨进程时多次调用初始化了。
      */
     @JvmStatic
     fun init(context: Context) {
@@ -66,8 +68,24 @@ object FlowEventBus {
     }
 
     @JvmStatic
-    fun broadcast(processor: Processor) {
-        RealFlowEventBus.broadcast(processor)
+    fun postAcrossProcess(tag: String) {
+        RealFlowEventBus.broadcast {
+            RealFlowEventBus.post(tag, "", NoArgs())
+        }
+    }
+
+    @JvmStatic
+    inline fun <reified T> postAcrossProcess(tag: String, t: T) {
+        RealFlowEventBus.broadcast {
+            RealFlowEventBus.post(tag, "", t)
+        }
+    }
+
+    @JvmStatic
+    inline fun <reified T> postAcrossProcess(tag: String, requestCode: String, t: T) {
+        RealFlowEventBus.broadcast {
+            RealFlowEventBus.post(tag, requestCode, t)
+        }
     }
 
 }
