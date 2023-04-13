@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".test.test1.SecondActivity" />
+            android:name=".test.test1.SecondActivity"
+            android:process=":remote" />
     </application>
 
 </manifest>
