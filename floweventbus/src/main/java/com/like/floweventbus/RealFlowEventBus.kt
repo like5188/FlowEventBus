@@ -33,7 +33,7 @@ object RealFlowEventBus {
                     it.init()
                 }
                 // 注册广播接收器
-                IpcReceiver.register(RealFlowEventBus.context)
+                Ipc.register(RealFlowEventBus.context)
                 Log.d(TAG, "初始化成功")
             } catch (e: Exception) {
                 Log.e(TAG, "初始化失败 ${e.message}")
@@ -77,7 +77,7 @@ object RealFlowEventBus {
     }
 
     inline fun <reified T> sendBroadcast(tag: String, requestCode: String, data: T) {
-        IpcReceiver.sendBroadcast(context) {
+        Ipc.sendBroadcast(context) {
             post(tag, requestCode, data)
         }
     }

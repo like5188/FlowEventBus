@@ -15,6 +15,12 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="changeData2"
+            android:text="改变数据2" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:onClick="unregister"
             android:text="取消注册" />
 

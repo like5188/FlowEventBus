@@ -17,10 +17,10 @@ class SecondActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivitySecondBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_second)
-//        FlowEventBus.register(this)
         Log.e(TAG, "SecondActivity onCreate")
-        val b2 = B(this)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_second)
+        FlowEventBus.register(this)
+        B(this)
     }
 
     override fun onDestroy() {
@@ -31,20 +31,26 @@ class SecondActivity : AppCompatActivity() {
     fun changeData1(view: View?) {
         FlowEventBus.post("like1")
         FlowEventBus.post("like2")
-//        FlowEventBus.postAcrossProcess<User?>("like222", null)
+        FlowEventBus.post<User?>("like222", null)
+        FlowEventBus.post("like222", User("like3", 3))
+    }
+
+    fun changeData2(view: View?) {
+        FlowEventBus.postAcrossProcess<User?>("like222", null)
+        FlowEventBus.postAcrossProcess("like222", User("like4", 4))
     }
 
     fun unregister(view: View?) {
         FlowEventBus.unregister(this)
     }
 
-//    @BusObserver(["like222"], isSticky = true)
-//    fun observer1(user1: User?) {
-//        Log.w(TAG, "SecondActivity observer1 User? $user1")
-//    }
-//
-//    @BusObserver(["like222"], isSticky = true)
-//    fun observer2(user1: User) {
-//        Log.w(TAG, "SecondActivity observer2 User $user1")
-//    }
+    @BusObserver(["like222"], isSticky = true)
+    fun observer1(user: User?) {
+        Log.w(TAG, "SecondActivity observer1 User? $user")
+    }
+
+    @BusObserver(["like222"], isSticky = true)
+    fun observer2(user: User) {
+        Log.w(TAG, "SecondActivity observer2 User $user")
+    }
 }
