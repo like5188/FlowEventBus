@@ -49,12 +49,15 @@ object RealFlowEventBus {
             return
         }
 
-        val event = EventManager.getEvent(host.javaClass.name)
-        if (event == null) {
+        val hostClassEvents = EventManager.getEventList(host.javaClass.name)
+        if (hostClassEvents.isEmpty()) {
             Log.e(TAG, "绑定宿主失败 --> $host 不是宿主类，不能绑定！")
             return
         }
-        event.bind(host, owner)
+
+        hostClassEvents.forEach {
+            it.bind(host, owner)
+        }
     }
 
     inline fun <reified T> post(tag: String, requestCode: String, data: T) {
@@ -80,7 +83,9 @@ object RealFlowEventBus {
     }
 
     fun unbind(host: Any) {
-        EventManager.getEvent(host)?.unbind(host)
+        EventManager.getEventList(host).forEach {
+            it.unbind(host)
+        }
     }
 
 }

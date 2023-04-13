@@ -47,7 +47,6 @@ class Event(
         FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, isSticky, notNullParamType, false)
     }
     val hosts = mutableListOf<Any>() // 宿主，同一个hostClass的多个实例
-    val owners = mutableListOf<LifecycleOwner?>() // 宿主所属的生命周期类
     private val jobs = mutableListOf<Job>()
 
     /**
@@ -55,7 +54,6 @@ class Event(
      */
     fun bind(host: Any, owner: LifecycleOwner?) {
         hosts.add(host)
-        owners.add(owner)
 
         val scope = owner?.lifecycleScope ?: GlobalScope
         scope.launch(Dispatchers.Main) {
@@ -71,25 +69,25 @@ class Event(
             }
         }.apply {
             jobs.add(this)
+
             Log.v(TAG, "绑定事件   --> ${this@Event}")
             Log.v(TAG, "宿主      --> $host")
             Log.v(TAG, "生命周期类 --> $owner")
-            EventManager.logHostAndOwner()
+            EventManager.logHost()
 
             invokeOnCompletion {
                 Log.i(TAG, "解绑事件 --> ${this@Event}")
                 Log.i(TAG, "宿主      --> $host")
                 Log.i(TAG, "生命周期类 --> $owner")
                 hosts.remove(host)
-                owners.remove(owner)
                 jobs.remove(this)
-                EventManager.logHostAndOwner()
+                EventManager.logHost()
             }
         }
     }
 
     /**
-     * 解绑事件的宿主和生命周期类
+     * 解绑事件的宿主
      */
     fun unbind(host: Any) {
         val index = hosts.indexOf(host)
