@@ -57,13 +57,9 @@ internal class Generator {
         if (methodName.isEmpty()) return
 
         val annotation = method.getAnnotation(BusObserver::class.java)
-        val tags = annotation.value.toList()
+        val tags = annotation.value.toList().filter { it.isNotEmpty() }.distinct()
         if (tags.isEmpty()) return
-        tags.forEach {
-            if (it.isEmpty()) {
-                return
-            }
-        }
+
         val requestCode = annotation.requestCode
         val isSticky = annotation.isSticky
 
