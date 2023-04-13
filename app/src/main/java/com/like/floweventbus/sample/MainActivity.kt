@@ -22,9 +22,9 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         mBinding
         Log.w(TAG, "MainActivity onCreate")
-        FlowEventBus.register(this)
-        B(this)
-        C(this)
+//        FlowEventBus.register(this)
+        val b1 = B(this)
+//        C(this)
     }
 
     override fun onBackPressed() {
@@ -37,54 +37,56 @@ class MainActivity : BaseActivity() {
     }
 
     fun changeData1(view: View) {
-        FlowEventBus.postAcrossProcess<User?>("like222", null)
+        FlowEventBus.post("like1")
+//        FlowEventBus.postAcrossProcess<User?>("like222", null)
     }
 
     fun changeData2(view: View) {
-        FlowEventBus.postAcrossProcess("like222", User("like1", 189))
+        FlowEventBus.post("like2")
+//        FlowEventBus.postAcrossProcess("like222", User("like1", 189))
     }
 
     fun startActivity2(view: View) {
         startActivity(Intent(this, SecondActivity::class.java))
     }
 
-    @BusObserver(["like1", "like2"])
-    fun observer1(str: String?) {
-        Log.w(TAG, "MainActivity observer1 String? $str")
-    }
-
-    @BusObserver(["like1", "like2"])
-    fun observer2(str: String) {
-        Log.w(TAG, "MainActivity observer2 String $str")
-    }
-
-    @BusObserver(["like1", "like2"])
-    fun observer3(str: Int?) {
-        Log.w(TAG, "MainActivity observer3 Int? $str")
-    }
-
-    @BusObserver(["like1", "like2"])
-    fun observer4(str: Int) {
-        Log.w(TAG, "MainActivity observer4 Int $str")
-    }
-
-    @BusObserver(["like1", "like2"])
-    fun observer5(str: IntArray?) {
-        Log.w(TAG, "MainActivity observer5 IntArray? $str")
-    }
-
-    @BusObserver(["like1", "like2"])
-    fun observer6(str: IntArray) {
-        Log.w(TAG, "MainActivity observer6 IntArray $str")
-    }
-
-    @BusObserver(["like1", "like2"])
-    fun observer7() {
-        Log.w(TAG, "MainActivity observer7")
-    }
-
-    @BusObserver(["like222"])
-    fun observer8(user: User?) {
-        Log.w(TAG, "MainActivity observer8 User $user")
-    }
+//    @BusObserver(["like1", "like2"])
+//    fun observer1(str: String?) {
+//        Log.w(TAG, "MainActivity observer1 String? $str")
+//    }
+//
+//    @BusObserver(["like1", "like2"])
+//    fun observer2(str: String) {
+//        Log.w(TAG, "MainActivity observer2 String $str")
+//    }
+//
+//    @BusObserver(["like1", "like2"])
+//    fun observer3(str: Int?) {
+//        Log.w(TAG, "MainActivity observer3 Int? $str")
+//    }
+//
+//    @BusObserver(["like1", "like2"])
+//    fun observer4(str: Int) {
+//        Log.w(TAG, "MainActivity observer4 Int $str")
+//    }
+//
+//    @BusObserver(["like1", "like2"])
+//    fun observer5(str: IntArray?) {
+//        Log.w(TAG, "MainActivity observer5 IntArray? $str")
+//    }
+//
+//    @BusObserver(["like1", "like2"])
+//    fun observer6(str: IntArray) {
+//        Log.w(TAG, "MainActivity observer6 IntArray $str")
+//    }
+//
+//    @BusObserver(["like1", "like2"])
+//    fun observer7() {
+//        Log.w(TAG, "MainActivity observer7")
+//    }
+//
+//    @BusObserver(["like222"])
+//    fun observer8(user: User?) {
+//        Log.w(TAG, "MainActivity observer8 User $user")
+//    }
 }

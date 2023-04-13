@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 
 /**
+ * 一个[BusObserver]注解的方法中，每个[tag](编译时自动去重了的)对应一个事件。
  * 事件中存在两个流。分别对应事件参数类型为“可空类型”和“非空类型”。
  * 1、如果事件参数类型是“可空类型”，那么[flowNullable]、[flowNotNull]都存在，这两个流发射的消息事件都能接收到。
  * 2、如果事件参数类型是“非空类型”，那么只有[flowNotNull]存在，并且只有它发射的消息事件才能接收到。
@@ -22,11 +23,6 @@ class Event(
     val isNullable: Boolean,
     val callback: (Any, Any?) -> Unit
 ) {
-    var host: Any? = null // 宿主
-        private set
-    var owner: LifecycleOwner? = null // 宿主所属的生命周期类
-        private set
-    private var job: Job? = null
     private val flowNullable: MutableSharedFlow<Any?>? by lazy {
         if (isNullable) {
             FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, isSticky, paramType, true)
@@ -50,16 +46,19 @@ class Event(
         val notNullParamType = paramType.toJavaDataType(false)
         FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, isSticky, notNullParamType, false)
     }
+    val hosts = mutableListOf<Any>() // 宿主
+    val owners = mutableListOf<LifecycleOwner?>() // 宿主所属的生命周期类
+    private val jobs = mutableListOf<Job>()
 
     /**
      * 绑定事件到宿主和生命周期类
      */
     fun bind(host: Any, owner: LifecycleOwner?) {
-        this.host = host
-        this.owner = owner
+        hosts.add(host)
+        owners.add(owner)
 
         val scope = owner?.lifecycleScope ?: GlobalScope
-        job = scope.launch(Dispatchers.Main) {
+        scope.launch(Dispatchers.Main) {
             launch {
                 flowNullable?.collect {
                     callback(host, it)
@@ -71,11 +70,19 @@ class Event(
                 }
             }
         }.apply {
+            jobs.add(this)
+            Log.v(TAG, "绑定事件   --> ${this@Event}")
+            Log.v(TAG, "宿主      --> $host")
+            Log.v(TAG, "生命周期类 --> $owner")
+            EventManager.logHostAndOwner()
+
             invokeOnCompletion {
-                Log.w(TAG, "解绑事件 --> ${this@Event}")
-                this@Event.host = null
-                this@Event.owner = null
-                this@Event.job = null
+                Log.i(TAG, "解绑事件 --> ${this@Event}")
+                Log.i(TAG, "宿主      --> $host")
+                Log.i(TAG, "生命周期类 --> $owner")
+                hosts.remove(host)
+                owners.remove(owner)
+                jobs.remove(this)
                 EventManager.logHostAndOwner()
             }
         }
@@ -84,12 +91,15 @@ class Event(
     /**
      * 解绑事件的宿主和生命周期类
      */
-    fun unbind() {
-        this.job?.cancel()
+    fun unbind(host: Any) {
+        val index = hosts.indexOf(host)
+        if (index >= 0) {
+            jobs[index].cancel()
+        }
     }
 
     fun post(data: Any?, isNullable: Boolean) {
-        val scope = owner?.lifecycleScope ?: GlobalScope
+        val scope = owners.firstOrNull()?.lifecycleScope ?: GlobalScope
         scope.launch(Dispatchers.Main) {
             try {
                 if (isNullable) {
@@ -105,23 +115,14 @@ class Event(
     override fun toString(): String {
         val sb = StringBuilder()
         sb.append("Event(")
-        if (host != null) sb.append("host=$host") else sb.append("hostClass=$hostClass")
-        sb.append(", ")
-
-        if (owner != null) {
-            sb.append("owner=$owner, ")
-        }
-
+        sb.append("hostClass=$hostClass, ")
         sb.append("tag=$tag, ")
-
         if (requestCode.isNotEmpty()) {
             sb.append("requestCode=$requestCode, ")
         }
-
         if (isSticky) {
             sb.append("isSticky=$isSticky, ")
         }
-
         if (paramType != NoArgs::class.java.name) {
             sb.append("param=[")
                 .append(paramType)

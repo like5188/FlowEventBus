@@ -8,11 +8,11 @@ import android.util.Log
 object EventManager {
     private val mEventList = mutableListOf<Event>()
 
-    fun isRegistered(host: Any): Boolean = mEventList.any { it.host == host }
+    fun isRegistered(host: Any): Boolean = mEventList.any { it.hosts.contains(host) }
 
-    fun getEventList(hostClass: String): List<Event> = mEventList.filter { it.hostClass == hostClass }
+    fun getEvent(hostClass: String): Event? = mEventList.firstOrNull { it.hostClass == hostClass }
 
-    fun getEventList(host: Any): List<Event> = mEventList.filter { it.host == host }
+    fun getEvent(host: Any): Event? = mEventList.firstOrNull { it.hosts.contains(host) }
 
     /**
      * @param paramType     发送的数据的参数类型
@@ -49,12 +49,12 @@ object EventManager {
      * 打印缓存的宿主和生命周期类
      */
     fun logHostAndOwner() {
-        val hosts = mEventList.mapNotNull { it.host }.distinct()
+        val hosts = mEventList.flatMap { it.hosts }.distinct()
         hosts.forEachIndexed { index, any ->
             Log.d(TAG, "宿主(${index + 1}) --> $any")
         }
 
-        val owners = mEventList.mapNotNull { it.owner }.distinct()
+        val owners = mEventList.flatMap { it.owners }.filterNotNull().distinct()
         owners.forEachIndexed { index, any ->
             Log.d(TAG, "生命周期类(${index + 1}) --> $any")
         }

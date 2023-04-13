@@ -68,23 +68,17 @@ object FlowEventBus {
 
     @JvmStatic
     fun postAcrossProcess(tag: String) {
-        RealFlowEventBus.sendBroadcast {
-            RealFlowEventBus.post(tag, "", NoArgs())
-        }
+        RealFlowEventBus.sendBroadcast(tag, "", NoArgs())
     }
 
     @JvmStatic
     inline fun <reified T> postAcrossProcess(tag: String, t: T) {
-        RealFlowEventBus.sendBroadcast {
-            RealFlowEventBus.post(tag, "", t)
-        }
+        RealFlowEventBus.sendBroadcast(tag, "", t)
     }
 
     @JvmStatic
     inline fun <reified T> postAcrossProcess(tag: String, requestCode: String, t: T) {
-        RealFlowEventBus.sendBroadcast {
-            RealFlowEventBus.post(tag, requestCode, t)
-        }
+        RealFlowEventBus.sendBroadcast(tag, requestCode, t)
     }
 
 }

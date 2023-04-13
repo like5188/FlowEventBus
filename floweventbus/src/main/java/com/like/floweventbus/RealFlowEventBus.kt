@@ -2,8 +2,6 @@ package com.like.floweventbus
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Process
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
@@ -15,9 +13,6 @@ import kotlin.reflect.typeOf
 @SuppressLint("StaticFieldLeak")
 object RealFlowEventBus {
     private val initialized = AtomicBoolean(false)
-    private val receiver by lazy {
-        IpcReceiver()
-    }
     lateinit var context: Context
 
     /**
@@ -31,14 +26,14 @@ object RealFlowEventBus {
     fun init(context: Context) {
         if (initialized.compareAndSet(false, true)) {
             Log.d(TAG, "开始初始化 [pid:${Process.myPid()}]")
-            RealFlowEventBus.context = context
+            RealFlowEventBus.context = context.applicationContext
             try {
                 // 初始化 Initializer 的实现类，即添加所有事件
                 ServiceLoader.load(Initializer::class.java).toList().forEach {
                     it.init()
                 }
                 // 注册广播接收器
-                context.registerReceiver(receiver, IntentFilter(IpcReceiver.ACTION))
+                IpcReceiver.register(RealFlowEventBus.context)
                 Log.d(TAG, "初始化成功")
             } catch (e: Exception) {
                 Log.e(TAG, "初始化失败 ${e.message}")
@@ -54,19 +49,12 @@ object RealFlowEventBus {
             return
         }
 
-        // 宿主对应的所有事件
-        val hostEvents = EventManager.getEventList(host.javaClass.name)
-        if (hostEvents.isEmpty()) {
+        val event = EventManager.getEvent(host.javaClass.name)
+        if (event == null) {
             Log.e(TAG, "绑定宿主失败 --> $host 不是宿主类，不能绑定！")
             return
         }
-        hostEvents.forEach { event ->
-            Log.v(TAG, "绑定事件 --> $event")
-            event.bind(host, owner)
-        }
-        Log.i(TAG, "绑定宿主      --> $host")
-        Log.i(TAG, "绑定生命周期类 --> $owner")
-        EventManager.logHostAndOwner()
+        event.bind(host, owner)
     }
 
     inline fun <reified T> post(tag: String, requestCode: String, data: T) {
@@ -85,21 +73,14 @@ object RealFlowEventBus {
         event.post(data, isNullable)
     }
 
-    fun sendBroadcast(receiver: Receiver) {
-        val intent = Intent(IpcReceiver.ACTION)
-        intent.setPackage(context.packageName)
-        intent.putExtra(IpcReceiver.KEY_RECEIVER, receiver)
-        context.sendBroadcast(intent)
-    }
-
-    fun unregisterBroadcastReceiver() {
-        context.unregisterReceiver(receiver)
+    inline fun <reified T> sendBroadcast(tag: String, requestCode: String, data: T) {
+        IpcReceiver.sendBroadcast(context) {
+            post(tag, requestCode, data)
+        }
     }
 
     fun unbind(host: Any) {
-        EventManager.getEventList(host).listIterator().forEach {
-            it.unbind()
-        }
+        EventManager.getEvent(host)?.unbind(host)
     }
 
 }

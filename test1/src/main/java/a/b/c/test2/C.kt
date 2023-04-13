@@ -11,9 +11,9 @@ class C(owner: LifecycleOwner) {
         FlowEventBus.register(this, owner)
     }
 
-    @BusObserver(["like2"])
-    fun observer1() {
-        Log.w(TAG, "C observer1")
-    }
+//    @BusObserver(["like2"])
+//    fun observer1() {
+//        Log.w(TAG, "C observer1")
+//    }
 
 }
