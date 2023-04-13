@@ -33,12 +33,12 @@ object RealFlowEventBus {
             Log.d(TAG, "开始初始化 [pid:${Process.myPid()}]")
             RealFlowEventBus.context = context
             try {
+                // 初始化 Initializer 的实现类，即添加所有事件
                 ServiceLoader.load(Initializer::class.java).toList().forEach {
                     it.init()
                 }
-                val intentFilter = IntentFilter()
-                intentFilter.addAction(IpcReceiver.ACTION)
-                context.registerReceiver(receiver, intentFilter)
+                // 注册广播接收器
+                context.registerReceiver(receiver, IntentFilter(IpcReceiver.ACTION))
                 Log.d(TAG, "初始化成功")
             } catch (e: Exception) {
                 Log.e(TAG, "初始化失败 ${e.message}")
