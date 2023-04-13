@@ -83,10 +83,11 @@
     ②接收消息与发送消息一一对应。(注意：如果接收String类型的参数，可以使用String或者String?来接收)
 ```java
     发送消息:(主线程)
-    FlowEventBus.post(tag: String)
+    FlowEventBus.post(tag1: String)
+    FlowEventBus.post(tag2: String)
     
     接收消息:(主线程)
-    @BusObserver(["tag"])
+    @BusObserver(["tag1", "tag2"])
     fun test() {
     }
 ```
