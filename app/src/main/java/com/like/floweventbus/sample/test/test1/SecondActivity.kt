@@ -34,8 +34,8 @@ class SecondActivity : AppCompatActivity() {
         FlowEventBus.post("like2", 1)
         FlowEventBus.post<User?>("like222", null)
         FlowEventBus.post("like222", User("like3", 3))
-        FlowEventBus.post<Array<String>>("like333", arrayOf("1", "2"))
-        FlowEventBus.post<IntArray>("like444", intArrayOf(1, 2))
+        FlowEventBus.post("like333", arrayOf("1", "2"))
+        FlowEventBus.post("like444", intArrayOf(1, 2))
     }
 
     fun changeData2(view: View?) {
@@ -44,8 +44,8 @@ class SecondActivity : AppCompatActivity() {
         FlowEventBus.postAcrossProcess("like2", 1)
         FlowEventBus.postAcrossProcess<User?>("like222", null)
         FlowEventBus.postAcrossProcess("like222", User("like3", 3))
-        FlowEventBus.postAcrossProcess<Array<String>>("like333", arrayOf("1", "2"))
-        FlowEventBus.postAcrossProcess<IntArray>("like444", intArrayOf(1, 2))
+        FlowEventBus.postAcrossProcess("like333", arrayOf("1", "2"))
+        FlowEventBus.postAcrossProcess("like444", intArrayOf(1, 2))
     }
 
     fun unregister(view: View?) {
