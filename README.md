@@ -23,7 +23,7 @@
     ①、此类必须用 public 修饰。
     ②、同一个宿主不会重复注册。
 
-4、支持跨进程发送消息。使用了广播来实现，但是不支持粘性消息。
+4、支持跨进程发送消息(仅支持Intent支持的数据类型)。使用了广播来实现，但是不支持粘性消息。
 
 ## 使用方法：
 
@@ -63,7 +63,7 @@
     FlowEventBus.post(tag: String, t: T)
     FlowEventBus.post(tag: String, requestCode: String, t: T)
 ```
-    ②跨进程(不支持粘性消息)
+    ②跨进程(不支持粘性消息)(仅支持Intent支持的数据类型)
 ```java
     FlowEventBus.postAcrossProcess(tag: String)
     FlowEventBus.postAcrossProcess(tag: String, t: T)

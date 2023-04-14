@@ -57,7 +57,7 @@ private class IpcReceiver : BroadcastReceiver() {
     }
 }
 
-fun Intent.putExtra(key: String, dataType: String?, value: Any?) {
+private fun Intent.putExtra(key: String, dataType: String?, value: Any?) {
     val dataClass = dataType.toKotlinDataType()
     when {
         dataClass == null -> throw IllegalArgumentException("Intent extra $key has wrong type $dataType")
@@ -91,7 +91,7 @@ fun Intent.putExtra(key: String, dataType: String?, value: Any?) {
     }
 }
 
-fun Intent.getExtra(key: String, dataType: String?): Any? {
+private fun Intent.getExtra(key: String, dataType: String?): Any? {
     val dataClass = dataType.toKotlinDataType()
     return when {
         dataClass == null -> null
