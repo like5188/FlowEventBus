@@ -22,7 +22,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         mBinding
         Log.w(TAG, "MainActivity onCreate")
-//        FlowEventBus.register(this)
+        FlowEventBus.register(this)
 //        B(this)
 //        C(this)
     }
@@ -60,8 +60,8 @@ class MainActivity : BaseActivity() {
     }
 
     fun changeData2(view: View) {
-        FlowEventBus.postAcrossProcess<User?>("like222", null)
-        FlowEventBus.postAcrossProcess("like222", User("like2", 2))
+        FlowEventBus.postAcrossProcess<User?>("SecondActivity1", null)
+        FlowEventBus.postAcrossProcess("SecondActivity1", User("like2", 2))
     }
 
     fun startActivity2(view: View) {
