@@ -31,15 +31,21 @@ class SecondActivity : AppCompatActivity() {
     fun changeData1(view: View?) {
         FlowEventBus.post("like1")
         FlowEventBus.post("like2")
+        FlowEventBus.post("like2", 1)
         FlowEventBus.post<User?>("like222", null)
         FlowEventBus.post("like222", User("like3", 3))
+        FlowEventBus.post<Array<String>>("like333", arrayOf("1", "2"))
+        FlowEventBus.post<IntArray>("like444", intArrayOf(1, 2))
     }
 
     fun changeData2(view: View?) {
         FlowEventBus.postAcrossProcess("like1")
         FlowEventBus.postAcrossProcess("like2")
+        FlowEventBus.postAcrossProcess("like2", 1)
         FlowEventBus.postAcrossProcess<User?>("like222", null)
-        FlowEventBus.postAcrossProcess("like222", User("like4", 4))
+        FlowEventBus.postAcrossProcess("like222", User("like3", 3))
+        FlowEventBus.postAcrossProcess<Array<String>>("like333", arrayOf("1", "2"))
+        FlowEventBus.postAcrossProcess<IntArray>("like444", intArrayOf(1, 2))
     }
 
     fun unregister(view: View?) {
@@ -54,5 +60,15 @@ class SecondActivity : AppCompatActivity() {
     @BusObserver(["like222"], isSticky = true)
     fun observer2(user: User) {
         Log.w(TAG, "SecondActivity observer2 User $user")
+    }
+
+    @BusObserver(["like333"], isSticky = true)
+    fun observer3(data: Array<String>) {
+        Log.w(TAG, "SecondActivity observer3 Array<String> $data")
+    }
+
+    @BusObserver(["like444"], isSticky = true)
+    fun observer4(data: IntArray) {
+        Log.w(TAG, "SecondActivity observer4 IntArray $data")
     }
 }
