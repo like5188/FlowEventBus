@@ -18,7 +18,7 @@ object EventManager {
      * @param paramType     发送的数据的参数类型
      * @param isNullable    发送的数据的参数类型是否为可空类型
      */
-    fun getEvent(tag: String, requestCode: String, paramType: String, isNullable: Boolean): Event? =
+    fun getEvent(tag: String?, requestCode: String?, paramType: String?, isNullable: Boolean): Event? =
         mEventList.firstOrNull {
             it.tag == tag && it.requestCode == requestCode && if (isNullable) {
                 it.paramType == paramType && it.isNullable == isNullable

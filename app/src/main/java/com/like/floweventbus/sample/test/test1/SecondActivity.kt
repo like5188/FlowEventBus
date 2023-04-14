@@ -36,6 +36,8 @@ class SecondActivity : AppCompatActivity() {
     }
 
     fun changeData2(view: View?) {
+        FlowEventBus.postAcrossProcess("like1")
+        FlowEventBus.postAcrossProcess("like2")
         FlowEventBus.postAcrossProcess<User?>("like222", null)
         FlowEventBus.postAcrossProcess("like222", User("like4", 4))
     }
