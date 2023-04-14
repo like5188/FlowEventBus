@@ -67,12 +67,22 @@ class SecondActivity : AppCompatActivity() {
     }
 
     @BusObserver(["like333"], isSticky = true)
-    fun observer3(data: Array<String>) {
-        Log.w(TAG, "SecondActivity observer3 Array<String> $data")
+    fun observer3(data: Array<String>?) {
+        Log.w(TAG, "SecondActivity observer3 Array<String>? $data")
+    }
+
+    @BusObserver(["like333"], isSticky = true)
+    fun observer4(data: Array<String>) {
+        Log.w(TAG, "SecondActivity observer4 Array<String> $data")
     }
 
     @BusObserver(["like444"], isSticky = true)
-    fun observer4(data: IntArray) {
-        Log.w(TAG, "SecondActivity observer4 IntArray $data")
+    fun observer5(data: IntArray?) {
+        Log.w(TAG, "SecondActivity observer5 IntArray? $data")
+    }
+
+    @BusObserver(["like444"], isSticky = true)
+    fun observer6(data: IntArray) {
+        Log.w(TAG, "SecondActivity observer6 IntArray $data")
     }
 }
