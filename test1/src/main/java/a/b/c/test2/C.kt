@@ -7,13 +7,13 @@ import com.like.floweventbus.TAG
 import com.like.floweventbus.annotations.BusObserver
 
 class C(owner: LifecycleOwner) {
-    init {
-        FlowEventBus.register(this, owner)
-    }
+//    init {
+//        FlowEventBus.register(this, owner)
+//    }
 
-    @BusObserver(["like2"])
-    fun observer1() {
-        Log.w(TAG, "$this observer1")
-    }
+//    @BusObserver(["like2"])
+//    fun observer1() {
+//        Log.w(TAG, "$this observer1")
+//    }
 
 }

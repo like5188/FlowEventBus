@@ -62,28 +62,29 @@ object RealFlowEventBus {
 
     inline fun <reified T> sendBroadcast(tag: String, requestCode: String, data: T) {
         val isNullable = typeOf<T>().isMarkedNullable
-        val dataType = toJavaDataType<T>()
+        val dataType = T::class.java.canonicalName ?: ""
         Ipc.sendBroadcast(context, tag, requestCode, data, isNullable, dataType)
     }
 
     inline fun <reified T> post(tag: String, requestCode: String, data: T) {
         val isNullable = typeOf<T>().isMarkedNullable
-        val paramType = toJavaDataType<T>()
+        val paramType = T::class.java.canonicalName ?: ""
         doPost(tag, requestCode, data, isNullable, paramType)
     }
 
     fun doPost(tag: String?, requestCode: String?, data: Any?, isNullable: Boolean, paramType: String?) {
-        // tag、requestCode、paramType 对应的所有事件，它们用了同一个 MutableSharedFlow
-        val event = EventManager.getEvent(tag, requestCode, paramType, isNullable)
+        // 获取可以发送数据的事件。
+        val validEventList = EventManager.getEventList(tag, requestCode, paramType, isNullable)
         val logMessage =
             "tag=$tag${if (!requestCode.isNullOrEmpty()) ", requestCode='$requestCode'" else ""}${if (paramType == NoArgs::class.java.name) "" else ", 数据=$data [$paramType, ${if (isNullable) "nullable" else "notNull"}]"}"
-        if (event == null) {
-            Log.e(TAG, "[pid:${Process.myPid()}] 发送消息失败，参数有误 --> $logMessage")
+        if (validEventList.isEmpty()) {
+            Log.e(TAG, "[pid:${Process.myPid()}] 发送消息失败 --> $logMessage")
             return
         }
         Log.v(TAG, "[pid:${Process.myPid()}] 发送消息 --> $logMessage")
-        // 同一个 MutableSharedFlow，取任意一个即可
-        event.post(data, isNullable)
+        validEventList.forEach {
+            it.post(data)
+        }
     }
 
     fun unbind(host: Any) {

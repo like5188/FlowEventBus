@@ -9,9 +9,6 @@ import kotlinx.coroutines.flow.collect
 
 /**
  * 一个[BusObserver]注解的方法中，每个[tag](编译时自动去重了的)对应一个事件。
- * 事件中存在两个流。分别对应事件参数类型为“可空类型”和“非空类型”。
- * 1、如果事件参数类型是“可空类型”，那么[flowNullable]、[flowNotNull]都存在，这两个流发射的消息事件都能接收到。
- * 2、如果事件参数类型是“非空类型”，那么只有[flowNotNull]存在，并且只有它发射的消息事件才能接收到。
  */
 @OptIn(DelicateCoroutinesApi::class)
 class Event(
@@ -23,28 +20,8 @@ class Event(
     val isNullable: Boolean,
     val callback: (Any, Any?) -> Unit
 ) {
-    private val flowNullable: MutableSharedFlow<Any?>? by lazy {
-        if (isNullable) {
-            FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, isSticky, paramType, true)
-        } else {
-            null
-        }
-    }
-    private val flowNotNull: MutableSharedFlow<Any?>? by lazy {
-        // 如果参数类型是可空类型，那么需要把它的 flowNotNull 对应的参数变为java基本数据类型，
-        // 这样才能和参数类型是非空类型时一致。
-
-        // 比如：
-        // 参数类型为非空类型时：
-        // flowNotNull ： key=like1--int-false-false
-
-        // 参数类型为可空类型时，转换 paramType 后：
-        // flowNotNull ： key=like1--int-false-false
-        // 如果不转换：
-        // flowNotNull ： key=like1--java.lang.Integer-false-false
-
-        val notNullParamType = paramType.toJavaDataType(false)
-        FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, isSticky, notNullParamType, false)
+    private val flow: MutableSharedFlow<Any?> by lazy {
+        FlowManager.findFlowOrCreateIfAbsent(tag, requestCode, isSticky, paramType, isNullable)
     }
     val hosts = mutableListOf<Any>() // 宿主，同一个hostClass的多个实例
     private val jobs = mutableListOf<Job>()
@@ -57,12 +34,7 @@ class Event(
 
         (owner?.lifecycleScope ?: GlobalScope).launch(Dispatchers.Main) {
             launch {
-                flowNullable?.collect {
-                    callback(host, it)
-                }
-            }
-            launch {
-                flowNotNull?.collect {
+                flow.collect {
                     callback(host, it)
                 }
             }
@@ -96,17 +68,9 @@ class Event(
         }
     }
 
-    fun post(data: Any?, isNullable: Boolean) {
+    fun post(data: Any?) {
         GlobalScope.launch(Dispatchers.Main) {
-            try {
-                if (isNullable) {
-                    flowNullable?.emit(data)
-                } else {
-                    flowNotNull?.emit(data!!)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            flow.emit(data)
         }
     }
 

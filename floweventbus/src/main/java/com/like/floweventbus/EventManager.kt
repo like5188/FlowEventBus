@@ -15,15 +15,15 @@ object EventManager {
     fun getEventList(host: Any): List<Event> = mEventList.filter { it.hosts.contains(host) }
 
     /**
-     * @param paramType     发送的数据的参数类型
-     * @param isNullable    发送的数据的参数类型是否为可空类型
+     * @param paramType     发送的数据类型
+     * @param isNullable    发送的数据类型是否为可空类型
      */
-    fun getEvent(tag: String?, requestCode: String?, paramType: String?, isNullable: Boolean): Event? =
-        mEventList.firstOrNull {
+    fun getEventList(tag: String?, requestCode: String?, paramType: String?, isNullable: Boolean): List<Event> =
+        mEventList.filter {
             it.tag == tag && it.requestCode == requestCode && if (isNullable) {
-                it.paramType == paramType && it.isNullable == isNullable
+                it.paramType == paramType && it.isNullable// 如果发送的数据类型为可空类型，那么就只有可空类型的事件能发送它
             } else {
-                it.paramType == paramType// 可空类型和非空类型的参数类型都可以接收非空类型的数据
+                it.paramType == paramType// 如果发送的数据类型为非空类型，那么可空、非空类型的事件都能发送它
             }
         }
 
