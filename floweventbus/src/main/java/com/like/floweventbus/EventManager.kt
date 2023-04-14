@@ -25,7 +25,7 @@ object EventManager {
             } else {
                 it.paramType == paramType// 如果发送的数据类型为非空类型，那么可空、非空类型的事件都能发送它
             }
-        }
+        }.distinct()
 
     /**
      * 由自动生成的代码来调用

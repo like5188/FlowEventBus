@@ -26,6 +26,7 @@ class Event(
     val hosts = mutableListOf<Any>() // 宿主，同一个hostClass的多个实例
     private val jobs = mutableListOf<Job>()
 
+
     /**
      * 绑定事件到宿主和生命周期类
      */
@@ -97,6 +98,26 @@ class Event(
         }
         sb.append(")")
         return sb.toString()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Event) return false
+
+        if (tag != other.tag) return false
+        if (requestCode != other.requestCode) return false
+        if (paramType != other.paramType) return false
+        if (isNullable != other.isNullable) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = tag.hashCode()
+        result = 31 * result + requestCode.hashCode()
+        result = 31 * result + paramType.hashCode()
+        result = 31 * result + isNullable.hashCode()
+        return result
     }
 
 }
