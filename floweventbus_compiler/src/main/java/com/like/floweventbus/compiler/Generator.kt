@@ -72,6 +72,14 @@ internal class Generator {
             }
             1 -> {
                 val variableElement = method.parameters[0]
+                /*
+                    这里的数据类型在 java 和 kotlin 中的对应关系为：
+                        java                    kotlin
+                        int                     Int
+                        java.lang.Integer       Int?
+                        int[]                   IntArray、IntArray?
+                        java.lang.Integer[]     Array<Int>、Array<Int>?
+                 */
                 paramType = variableElement.asType().toString()
                 isNullable = variableElement.annotationMirrors.any {
                     it.annotationType.toString() == "org.jetbrains.annotations.Nullable"
