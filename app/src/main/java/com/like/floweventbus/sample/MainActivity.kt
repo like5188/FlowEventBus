@@ -102,9 +102,9 @@ class MainActivity : BaseActivity() {
 //    fun observer7() {
 //        Log.w(TAG, "MainActivity observer7")
 //    }
-//
-//    @BusObserver(["like222"])
-//    fun observer8(user: User?) {
-//        Log.w(TAG, "MainActivity observer8 User $user")
-//    }
+
+    @BusObserver(["SecondActivity1"])
+    fun observer8(user: User?) {
+        Log.w(TAG, "MainActivity observer8 User $user")
+    }
 }

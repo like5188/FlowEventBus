@@ -30,7 +30,7 @@ class SecondActivity : AppCompatActivity() {
 
     fun changeData1(view: View?) {
 //        FlowEventBus.post<Array<Int?>?>("SecondActivity1", null)
-        FlowEventBus.post<Array<Int?>?>("SecondActivity1", arrayOf(0, null, 2))
+//        FlowEventBus.post<Array<Int?>?>("SecondActivity1", arrayOf(0, null, 2))
 //        FlowEventBus.post<Array<Int?>>("SecondActivity1", arrayOf(0, null, 2))
 //
 //        FlowEventBus.post<Array<Int>?>("SecondActivity1", null)
@@ -48,71 +48,71 @@ class SecondActivity : AppCompatActivity() {
 //        FlowEventBus.post<IntArray>("like444", intArrayOf(1, 2))
 //        FlowEventBus.post<IntArray?>("like444", null)
 //        FlowEventBus.post<User?>("like222", null)
-//        FlowEventBus.post("like222", User("like3", 3))
+        FlowEventBus.post("SecondActivity1", User("like1", 1))
     }
 
     fun changeData2(view: View?) {
 //        FlowEventBus.postAcrossProcess("like1")
 //        FlowEventBus.postAcrossProcess("like2")
 //        FlowEventBus.postAcrossProcess("like2", 1)
-//        FlowEventBus.postAcrossProcess<Array<String>>("like333", arrayOf("1", "2"))
-//        FlowEventBus.postAcrossProcess<Array<String>?>("like333", null)
-//        FlowEventBus.postAcrossProcess<IntArray>("like444", intArrayOf(1, 2))
-//        FlowEventBus.postAcrossProcess<IntArray?>("like444", null)
-//        FlowEventBus.postAcrossProcess<User?>("like222", null)
-//        FlowEventBus.postAcrossProcess("like222", User("like3", 3))
+//        FlowEventBus.postAcrossProcess<Array<String>>("SecondActivity1", arrayOf("1", "2"))
+//        FlowEventBus.postAcrossProcess<Array<String>?>("SecondActivity1", null)
+//        FlowEventBus.postAcrossProcess<IntArray>("SecondActivity1", intArrayOf(1, 2))
+//        FlowEventBus.postAcrossProcess<IntArray?>("SecondActivity1", null)
+//        FlowEventBus.postAcrossProcess<User?>("SecondActivity1", null)
+        FlowEventBus.postAcrossProcess("SecondActivity1", User("like3", 3))
     }
 
     fun unregister(view: View?) {
         FlowEventBus.unregister(this)
     }
 
-    @BusObserver(["SecondActivity1"], isSticky = true)
-    fun observer1(data: Array<Int?>?) {
-        Log.w(TAG, "SecondActivity observer1 Array<Int?>? ${Arrays.toString(data)}")
-    }
+//    @BusObserver(["SecondActivity1"], isSticky = true)
+//    fun observer1(data: Array<Int?>?) {
+//        Log.w(TAG, "SecondActivity observer1 Array<Int?>? ${Arrays.toString(data)}")
+//    }
+//
+//    @BusObserver(["SecondActivity1"], isSticky = true)
+//    fun observer2(data: Array<Int?>) {
+//        Log.w(TAG, "SecondActivity observer2 Array<Int?> ${Arrays.toString(data)}")
+//    }
+//
+//    @BusObserver(["SecondActivity1"], isSticky = true)
+//    fun observer3(data: Array<Int>?) {
+//        Log.w(TAG, "SecondActivity observer3 Array<Int>? ${Arrays.toString(data)}")
+//    }
+//
+//    @BusObserver(["SecondActivity1"], isSticky = true)
+//    fun observer4(data: Array<Int>) {
+//        Log.w(TAG, "SecondActivity observer4 Array<Int> ${Arrays.toString(data)}")
+//    }
+//
+//    @BusObserver(["SecondActivity1"], isSticky = true)
+//    fun observer5(data: IntArray?) {
+//        Log.w(TAG, "SecondActivity observer5 IntArray? ${Arrays.toString(data)}")
+//    }
+//
+//    @BusObserver(["SecondActivity1"], isSticky = true)
+//    fun observer6(data: IntArray) {
+//        Log.w(TAG, "SecondActivity observer6 IntArray ${Arrays.toString(data)}")
+//    }
+//
+//    @BusObserver(["SecondActivity1"], isSticky = true)
+//    fun observer7(data: Int?) {
+//        Log.w(TAG, "SecondActivity observer7 Int? $data")
+//    }
+//
+//    @BusObserver(["SecondActivity1"], isSticky = true)
+//    fun observer8(data: Int) {
+//        Log.w(TAG, "SecondActivity observer8 Int $data")
+//    }
 
     @BusObserver(["SecondActivity1"], isSticky = true)
-    fun observer2(data: Array<Int?>) {
-        Log.w(TAG, "SecondActivity observer2 Array<Int?> ${Arrays.toString(data)}")
-    }
-
-    @BusObserver(["SecondActivity1"], isSticky = true)
-    fun observer3(data: Array<Int>?) {
-        Log.w(TAG, "SecondActivity observer3 Array<Int>? ${Arrays.toString(data)}")
-    }
-
-    @BusObserver(["SecondActivity1"], isSticky = true)
-    fun observer4(data: Array<Int>) {
-        Log.w(TAG, "SecondActivity observer4 Array<Int> ${Arrays.toString(data)}")
-    }
-
-    @BusObserver(["SecondActivity1"], isSticky = true)
-    fun observer5(data: IntArray?) {
-        Log.w(TAG, "SecondActivity observer5 IntArray? ${Arrays.toString(data)}")
-    }
-
-    @BusObserver(["SecondActivity1"], isSticky = true)
-    fun observer6(data: IntArray) {
-        Log.w(TAG, "SecondActivity observer6 IntArray ${Arrays.toString(data)}")
-    }
-
-    @BusObserver(["SecondActivity7"], isSticky = true)
-    fun observer7(data: Int?) {
-        Log.w(TAG, "SecondActivity observer7 Int? $data")
-    }
-
-    @BusObserver(["SecondActivity8"], isSticky = true)
-    fun observer8(data: Int) {
-        Log.w(TAG, "SecondActivity observer8 Int $data")
-    }
-
-    @BusObserver(["SecondActivity9"], isSticky = true)
     fun observer9(user: User?) {
         Log.w(TAG, "SecondActivity observer9 User? $user")
     }
 
-    @BusObserver(["SecondActivity10"], isSticky = true)
+    @BusObserver(["SecondActivity1"], isSticky = true)
     fun observer10(user: User) {
         Log.w(TAG, "SecondActivity observer10 User $user")
     }
