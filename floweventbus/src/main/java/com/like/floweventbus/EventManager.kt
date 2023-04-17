@@ -55,7 +55,7 @@ object EventManager {
             "double" -> "java.lang.Double"
             "char" -> "java.lang.Character"
             "boolean" -> "java.lang.Boolean"
-            else -> return
+            else -> paramType
         }
         val event = Event(hostClass, tag, requestCode, isSticky, type, isNullable, callback)
         mEventList.add(event)

@@ -36,59 +36,55 @@ class MainActivity : BaseActivity() {
     }
 
     fun changeData1(view: View) {
-        FlowEventBus.post<String?>("MainActivity", null)
-        FlowEventBus.post<String?>("MainActivity", "1")
-        FlowEventBus.post("MainActivity", "1")
-
-        FlowEventBus.post<Int?>("MainActivity", null)
-        FlowEventBus.post<Int?>("MainActivity", 2)
-        FlowEventBus.post("MainActivity", 2)
-
-        FlowEventBus.post<IntArray?>("MainActivity", null)
-        FlowEventBus.post<IntArray?>("MainActivity", intArrayOf(3))
-        FlowEventBus.post("MainActivity", intArrayOf(3))
-
-        FlowEventBus.post<Array<Int?>?>("MainActivity", null)
-        FlowEventBus.post<Array<Int?>?>("MainActivity", arrayOf(4))
-        FlowEventBus.post("MainActivity", arrayOf(4))
-
-        FlowEventBus.post<Array<Int>?>("MainActivity", null)
-        FlowEventBus.post<Array<Int>?>("MainActivity", arrayOf(5))
-        FlowEventBus.post("MainActivity", arrayOf(5))
-
-        FlowEventBus.post("MainActivity")
-
-        FlowEventBus.post<User?>("SecondActivity", null)
-        FlowEventBus.post<User?>("SecondActivity", User("MainActivity", 18))
-        FlowEventBus.post("SecondActivity", User("MainActivity", 18))
-
-        FlowEventBus.post<Byte?>("MainActivity", null)
-        FlowEventBus.post<Byte?>("MainActivity", 2)
-        FlowEventBus.post<Byte>("MainActivity", 2)
-
-        FlowEventBus.post<Short?>("MainActivity", null)
-        FlowEventBus.post<Short?>("MainActivity", 2)
-        FlowEventBus.post<Short>("MainActivity", 2)
-
-        FlowEventBus.post<Long?>("MainActivity", null)
-        FlowEventBus.post<Long?>("MainActivity", 2)
-        FlowEventBus.post("MainActivity", 2L)
-
-        FlowEventBus.post<Float?>("MainActivity", null)
-        FlowEventBus.post<Float?>("MainActivity", 2f)
-        FlowEventBus.post("MainActivity", 2f)
-
-        FlowEventBus.post<Double?>("MainActivity", null)
-        FlowEventBus.post<Double?>("MainActivity", 2.0)
-        FlowEventBus.post("MainActivity", 2.0)
-
-        FlowEventBus.post<Char?>("MainActivity", null)
-        FlowEventBus.post<Char?>("MainActivity", 2.toChar())
-        FlowEventBus.post("MainActivity", 2.toChar())
-
-        FlowEventBus.post<Boolean?>("MainActivity", null)
-        FlowEventBus.post<Boolean?>("MainActivity", true)
-        FlowEventBus.post("MainActivity", true)
+//        FlowEventBus.post<String?>("MainActivity", null)
+//        FlowEventBus.post<String?>("MainActivity", "1")
+//        FlowEventBus.post("MainActivity", "1")
+//
+//        FlowEventBus.post<Int?>("MainActivity", null)
+//        FlowEventBus.post<Int?>("MainActivity", 2)
+//        FlowEventBus.post("MainActivity", 2)
+//
+//        FlowEventBus.post<IntArray?>("MainActivity", null)
+//        FlowEventBus.post<IntArray?>("MainActivity", intArrayOf(3))
+//        FlowEventBus.post("MainActivity", intArrayOf(3))
+//
+//        FlowEventBus.post<Array<Int?>?>("MainActivity", null)
+//        FlowEventBus.post<Array<Int?>?>("MainActivity", arrayOf(4))
+//        FlowEventBus.post("MainActivity", arrayOf(4))
+//
+//        FlowEventBus.post<Array<Int>?>("MainActivity", null)
+//        FlowEventBus.post<Array<Int>?>("MainActivity", arrayOf(5))
+//        FlowEventBus.post("MainActivity", arrayOf(5))
+//
+//        FlowEventBus.post("MainActivity")
+//
+//        FlowEventBus.post<Byte?>("MainActivity", null)
+//        FlowEventBus.post<Byte?>("MainActivity", 2)
+//        FlowEventBus.post<Byte>("MainActivity", 2)
+//
+//        FlowEventBus.post<Short?>("MainActivity", null)
+//        FlowEventBus.post<Short?>("MainActivity", 2)
+//        FlowEventBus.post<Short>("MainActivity", 2)
+//
+//        FlowEventBus.post<Long?>("MainActivity", null)
+//        FlowEventBus.post<Long?>("MainActivity", 2)
+//        FlowEventBus.post("MainActivity", 2L)
+//
+//        FlowEventBus.post<Float?>("MainActivity", null)
+//        FlowEventBus.post<Float?>("MainActivity", 2f)
+//        FlowEventBus.post("MainActivity", 2f)
+//
+//        FlowEventBus.post<Double?>("MainActivity", null)
+//        FlowEventBus.post<Double?>("MainActivity", 2.0)
+//        FlowEventBus.post("MainActivity", 2.0)
+//
+//        FlowEventBus.post<Char?>("MainActivity", null)
+//        FlowEventBus.post<Char?>("MainActivity", 'A')
+//        FlowEventBus.post("MainActivity", 'A')
+//
+//        FlowEventBus.post<Boolean?>("MainActivity", null)
+//        FlowEventBus.post<Boolean?>("MainActivity", true)
+//        FlowEventBus.post("MainActivity", true)
     }
 
     fun changeData2(view: View) {
