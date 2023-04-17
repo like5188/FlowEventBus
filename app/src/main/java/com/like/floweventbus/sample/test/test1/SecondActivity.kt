@@ -19,7 +19,7 @@ class SecondActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.e(TAG, "SecondActivity onCreate")
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_second)
-        FlowEventBus.register(this)
+//        FlowEventBus.register(this)
 //        B(this)
     }
 
@@ -48,7 +48,7 @@ class SecondActivity : AppCompatActivity() {
 //        FlowEventBus.post<IntArray>("like444", intArrayOf(1, 2))
 //        FlowEventBus.post<IntArray?>("like444", null)
 //        FlowEventBus.post<User?>("like222", null)
-        FlowEventBus.post("SecondActivity1", User("like1", 1))
+//        FlowEventBus.post("SecondActivity1", User("like1", 1))
     }
 
     fun changeData2(view: View?) {
@@ -59,7 +59,7 @@ class SecondActivity : AppCompatActivity() {
 //        FlowEventBus.postAcrossProcess<Array<String>?>("SecondActivity1", null)
 //        FlowEventBus.postAcrossProcess<IntArray>("SecondActivity1", intArrayOf(1, 2))
 //        FlowEventBus.postAcrossProcess<IntArray?>("SecondActivity1", null)
-        FlowEventBus.postAcrossProcess<User?>("SecondActivity1", null)
+//        FlowEventBus.postAcrossProcess<User?>("SecondActivity1", null)
 //        FlowEventBus.postAcrossProcess("SecondActivity1", User("like3", 3))
     }
 
@@ -107,14 +107,14 @@ class SecondActivity : AppCompatActivity() {
 //        Log.w(TAG, "SecondActivity observer8 Int $data")
 //    }
 
-    @BusObserver(["SecondActivity1"], isSticky = true)
-    fun observer9(user: User?) {
-        Log.w(TAG, "SecondActivity observer9 User? $user")
-    }
-
-    @BusObserver(["SecondActivity1"], isSticky = true)
-    fun observer10(user: User) {
-        Log.w(TAG, "SecondActivity observer10 User $user")
-    }
+//    @BusObserver(["SecondActivity1"], isSticky = true)
+//    fun observer9(user: User?) {
+//        Log.w(TAG, "SecondActivity observer9 User? $user")
+//    }
+//
+//    @BusObserver(["SecondActivity1"], isSticky = true)
+//    fun observer10(user: User) {
+//        Log.w(TAG, "SecondActivity observer10 User $user")
+//    }
 
 }
