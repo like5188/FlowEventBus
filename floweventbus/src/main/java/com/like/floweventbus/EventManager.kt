@@ -40,15 +40,24 @@ object EventManager {
         isNullable: Boolean,
         callback: (Any, Any?) -> Unit
     ) {
-    /*
-    paramType 是 java 数据类型，对应的 kotlin 数据类型需要转换，例如：
-        java                    kotlin
-        int                     Int
-        java.lang.Integer       Int?
-        int[]                   IntArray、IntArray?
-        java.lang.Integer[]     Array<Int>、Array<Int>?、Array<Int?>、Array<Int?>?
-    */
-        val event = Event(hostClass, tag, requestCode, isSticky, paramType, isNullable, callback)
+        /*
+        注意：paramType 对应的基本数据类型需要做转换，因为自动生成的代码中的类型（variableElement.asType().toString()）
+        和发送消息时的数据类型（T::class.java.canonicalName）不一致，如果不转换就会找不到对应的 flow。日志如下：
+        I/FlowEventBus: 添加事件(4) --> Event(hostClass=com.like.floweventbus.sample.MainActivity, tag=MainActivity, param=[int, notNull])
+        V/FlowEventBus: [pid:27884] 发送消息 --> tag=MainActivity, 数据=2 [java.lang.Integer, notNull]
+        */
+        val type = when (paramType) {
+            "byte" -> "java.lang.Byte"
+            "short" -> "java.lang.Short"
+            "int" -> "java.lang.Integer"
+            "long" -> "java.lang.Long"
+            "float" -> "java.lang.Float"
+            "double" -> "java.lang.Double"
+            "char" -> "java.lang.Character"
+            "boolean" -> "java.lang.Boolean"
+            else -> return
+        }
+        val event = Event(hostClass, tag, requestCode, isSticky, type, isNullable, callback)
         mEventList.add(event)
         Log.i(TAG, "添加事件(${mEventList.size}) --> $event")
     }

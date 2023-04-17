@@ -61,6 +61,34 @@ class MainActivity : BaseActivity() {
         FlowEventBus.post<User?>("SecondActivity", null)
         FlowEventBus.post<User?>("SecondActivity", User("MainActivity", 18))
         FlowEventBus.post("SecondActivity", User("MainActivity", 18))
+
+        FlowEventBus.post<Byte?>("MainActivity", null)
+        FlowEventBus.post<Byte?>("MainActivity", 2)
+        FlowEventBus.post<Byte>("MainActivity", 2)
+
+        FlowEventBus.post<Short?>("MainActivity", null)
+        FlowEventBus.post<Short?>("MainActivity", 2)
+        FlowEventBus.post<Short>("MainActivity", 2)
+
+        FlowEventBus.post<Long?>("MainActivity", null)
+        FlowEventBus.post<Long?>("MainActivity", 2)
+        FlowEventBus.post("MainActivity", 2L)
+
+        FlowEventBus.post<Float?>("MainActivity", null)
+        FlowEventBus.post<Float?>("MainActivity", 2f)
+        FlowEventBus.post("MainActivity", 2f)
+
+        FlowEventBus.post<Double?>("MainActivity", null)
+        FlowEventBus.post<Double?>("MainActivity", 2.0)
+        FlowEventBus.post("MainActivity", 2.0)
+
+        FlowEventBus.post<Char?>("MainActivity", null)
+        FlowEventBus.post<Char?>("MainActivity", 2.toChar())
+        FlowEventBus.post("MainActivity", 2.toChar())
+
+        FlowEventBus.post<Boolean?>("MainActivity", null)
+        FlowEventBus.post<Boolean?>("MainActivity", true)
+        FlowEventBus.post("MainActivity", true)
     }
 
     fun changeData2(view: View) {
@@ -128,4 +156,73 @@ class MainActivity : BaseActivity() {
         Log.w(TAG, "MainActivity observer11")
     }
 
+    @BusObserver(["MainActivity"])
+    fun observer(str: Byte?) {
+        Log.w(TAG, "MainActivity observer Byte? $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Byte) {
+        Log.w(TAG, "MainActivity observer Byte $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Short?) {
+        Log.w(TAG, "MainActivity observer Short? $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Short) {
+        Log.w(TAG, "MainActivity observer Short $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Long?) {
+        Log.w(TAG, "MainActivity observer Long? $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Long) {
+        Log.w(TAG, "MainActivity observer Long $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Float?) {
+        Log.w(TAG, "MainActivity observer Float? $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Float) {
+        Log.w(TAG, "MainActivity observer Float $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Double?) {
+        Log.w(TAG, "MainActivity observer Double? $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Double) {
+        Log.w(TAG, "MainActivity observer Double $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Char?) {
+        Log.w(TAG, "MainActivity observer Char? $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Char) {
+        Log.w(TAG, "MainActivity observer Char $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Boolean?) {
+        Log.w(TAG, "MainActivity observer Boolean? $str")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer(str: Boolean) {
+        Log.w(TAG, "MainActivity observer Boolean $str")
+    }
 }
