@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Parcelable
+import android.util.Log
 import java.io.Serializable
 
 private const val ACTION = "intent.action.ACTION_IPC"
@@ -60,15 +61,17 @@ private fun Intent.putExtra(key: String, dataType: String?, value: Any?) {
     if (dataType.isNullOrEmpty()) {
         return
     }
-    val clazz = try {
-        Class.forName(dataType)
+    try {
+        // 注意：这里有些数据类型是无法转换成功的，比如：int[]、java.lang.Integer[]
+        val clazz = Class.forName(dataType)
+        when {
+//            Parcelable::class.java.isAssignableFrom(clazz) -> putExtra(key, value as? Parcelable)
+//            else -> putExtra(key, value as? Serializable)
+        }
     } catch (e: Exception) {
-        null
-    } ?: return
-    when {
-        Parcelable::class.java.isAssignableFrom(clazz) -> putExtra(key, value as? Parcelable)
-        else -> putExtra(key, value as? Serializable)
+        putExtra(key, value as? Serializable)
     }
+    Log.w(TAG, "IpcReceiver putExtra data=${extras?.get(key)}")
 }
 
 private fun Intent.getExtra(key: String): Any? {
