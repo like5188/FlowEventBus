@@ -10,6 +10,7 @@ import com.like.floweventbus.TAG
 import com.like.floweventbus.annotations.BusObserver
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus.sample.test.test1.SecondActivity
+import java.util.*
 
 class MainActivity : BaseActivity() {
     private val mBinding by lazy {
@@ -38,19 +39,34 @@ class MainActivity : BaseActivity() {
         FlowEventBus.post<String?>("MainActivity", null)
         FlowEventBus.post<String?>("MainActivity", "1")
         FlowEventBus.post("MainActivity", "1")
+
         FlowEventBus.post<Int?>("MainActivity", null)
-        FlowEventBus.post("MainActivity", 1)
+        FlowEventBus.post<Int?>("MainActivity", 2)
+        FlowEventBus.post("MainActivity", 2)
+
         FlowEventBus.post<IntArray?>("MainActivity", null)
-        FlowEventBus.post("MainActivity", intArrayOf(1))
+        FlowEventBus.post<IntArray?>("MainActivity", intArrayOf(3))
+        FlowEventBus.post("MainActivity", intArrayOf(3))
+
+        FlowEventBus.post<Array<Int?>?>("MainActivity", null)
+        FlowEventBus.post<Array<Int?>?>("MainActivity", arrayOf(4))
+        FlowEventBus.post("MainActivity", arrayOf(4))
+
+        FlowEventBus.post<Array<Int>?>("MainActivity", null)
+        FlowEventBus.post<Array<Int>?>("MainActivity", arrayOf(5))
+        FlowEventBus.post("MainActivity", arrayOf(5))
+
         FlowEventBus.post("MainActivity")
 
-//        FlowEventBus.post<User?>("like222", null)
-//        FlowEventBus.post("like222", User("MainActivity", 1))
+        FlowEventBus.post<User?>("SecondActivity", null)
+        FlowEventBus.post<User?>("SecondActivity", User("MainActivity", 18))
+        FlowEventBus.post("SecondActivity", User("MainActivity", 18))
     }
 
     fun changeData2(view: View) {
         FlowEventBus.postAcrossProcess<User?>("SecondActivity", null)
-        FlowEventBus.postAcrossProcess("SecondActivity", User("like2", 2))
+        FlowEventBus.postAcrossProcess<User?>("SecondActivity", User("MainActivity", 18))
+        FlowEventBus.postAcrossProcess("SecondActivity", User("MainActivity", 18))
     }
 
     fun startActivity2(view: View) {
@@ -88,12 +104,28 @@ class MainActivity : BaseActivity() {
     }
 
     @BusObserver(["MainActivity"])
-    fun observer7() {
-        Log.w(TAG, "MainActivity observer7")
+    fun observer7(data: Array<Int?>?) {
+        Log.w(TAG, "MainActivity observer7 Array<Int?>? ${Arrays.toString(data)}")
     }
 
-//    @BusObserver(["SecondActivity"])
-//    fun observer8(user: User?) {
-//        Log.w(TAG, "MainActivity observer8 User $user")
-//    }
+    @BusObserver(["MainActivity"])
+    fun observer8(data: Array<Int?>) {
+        Log.w(TAG, "MainActivity observer8 Array<Int?> ${Arrays.toString(data)}")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer9(data: Array<Int>?) {
+        Log.w(TAG, "MainActivity observer9 Array<Int>? ${Arrays.toString(data)}")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer10(data: Array<Int>) {
+        Log.w(TAG, "MainActivity observer10 Array<Int> ${Arrays.toString(data)}")
+    }
+
+    @BusObserver(["MainActivity"])
+    fun observer11() {
+        Log.w(TAG, "MainActivity observer11")
+    }
+
 }

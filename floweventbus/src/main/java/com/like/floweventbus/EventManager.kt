@@ -40,6 +40,14 @@ object EventManager {
         isNullable: Boolean,
         callback: (Any, Any?) -> Unit
     ) {
+    /*
+    paramType 是 java 数据类型，对应的 kotlin 数据类型需要转换，例如：
+        java                    kotlin
+        int                     Int
+        java.lang.Integer       Int?
+        int[]                   IntArray、IntArray?
+        java.lang.Integer[]     Array<Int>、Array<Int>?、Array<Int?>、Array<Int?>?
+    */
         val event = Event(hostClass, tag, requestCode, isSticky, paramType, isNullable, callback)
         mEventList.add(event)
         Log.i(TAG, "添加事件(${mEventList.size}) --> $event")
