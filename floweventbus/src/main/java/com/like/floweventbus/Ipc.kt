@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Parcelable
+import android.util.Log
 import java.io.Serializable
 
 private const val ACTION = "intent.action.ACTION_IPC"
@@ -60,9 +61,11 @@ private fun Intent.putExtra(key: String, dataType: String?, value: Any?) {
     if (dataType.isNullOrEmpty()) {
         return
     }
+    Log.e(TAG, "dataType=$dataType")
     try {
-        // 注意：这里有些数据类型是无法转换成功的，比如：int[]、java.lang.Integer[]
+        // 注意：这里Parcelable类型的数组，无法转换成功，比如：int[]、java.lang.Integer[]、User[]
         val clazz = Class.forName(dataType)
+        Log.e(TAG, "clazz=${clazz.name}")
         when {
             Parcelable::class.java.isAssignableFrom(clazz) -> putExtra(key, value as? Parcelable)
 //            else -> putExtra(key, value as? Serializable)

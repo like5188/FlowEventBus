@@ -128,4 +128,14 @@ class MainActivity : BaseActivity() {
         Log.w(TAG, "MainActivity observer13 User $user")
     }
 
+    @BusObserver(["SecondActivity"])
+    fun observer14(user: Array<User>?) {
+        Log.w(TAG, "MainActivity observer14 Array<User>? $user")
+    }
+
+    @BusObserver(["SecondActivity"])
+    fun observer15(user: Array<User>) {
+        Log.w(TAG, "MainActivity observer15 Array<User> $user")
+    }
+
 }

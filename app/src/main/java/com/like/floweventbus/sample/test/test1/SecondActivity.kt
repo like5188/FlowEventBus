@@ -55,6 +55,10 @@ class SecondActivity : AppCompatActivity() {
 //        FlowEventBus.postAcrossProcess<User?>("SecondActivity", null)
 //        FlowEventBus.postAcrossProcess<User?>("SecondActivity", User("SecondActivity", 19))
 //        FlowEventBus.postAcrossProcess("SecondActivity", User("SecondActivity", 19))
+
+//        FlowEventBus.postAcrossProcess<Array<User>?>("SecondActivity", null)
+//        FlowEventBus.postAcrossProcess<Array<User>?>("SecondActivity", arrayOf(User("SecondActivity", 19)))
+//        FlowEventBus.postAcrossProcess("SecondActivity", arrayOf(User("SecondActivity", 19)))
     }
 
     fun unregister(view: View?) {
