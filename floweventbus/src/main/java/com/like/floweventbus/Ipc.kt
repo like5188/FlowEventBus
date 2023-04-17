@@ -7,12 +7,12 @@ import android.content.IntentFilter
 import android.os.Parcelable
 import java.io.Serializable
 
-const val ACTION = "intent.action.ACTION_IPC"
-const val KEY_TAG = "tag"
-const val KEY_REQUEST_CODE = "requestCode"
-const val KEY_IS_NULLABLE = "isNullable"
-const val KEY_DATA_TYPE = "dataType"
-const val KEY_DATA = "data"
+private const val ACTION = "intent.action.ACTION_IPC"
+private const val KEY_TAG = "tag"
+private const val KEY_REQUEST_CODE = "requestCode"
+private const val KEY_IS_NULLABLE = "isNullable"
+private const val KEY_DATA_TYPE = "dataType"
+private const val KEY_DATA = "data"
 
 /**
  * 跨进程通信工具类
