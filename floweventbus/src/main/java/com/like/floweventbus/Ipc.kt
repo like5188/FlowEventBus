@@ -65,7 +65,7 @@ private fun Intent.putExtra(key: String, dataType: String?, value: Any?) {
         // 注意：这里有些数据类型是无法转换成功的，比如：int[]、java.lang.Integer[]
         val clazz = Class.forName(dataType)
         when {
-//            Parcelable::class.java.isAssignableFrom(clazz) -> putExtra(key, value as? Parcelable)
+            Parcelable::class.java.isAssignableFrom(clazz) -> putExtra(key, value as? Parcelable)
 //            else -> putExtra(key, value as? Serializable)
         }
     } catch (e: Exception) {
