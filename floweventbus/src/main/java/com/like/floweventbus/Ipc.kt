@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Parcelable
-import android.util.Log
 import java.io.Serializable
 
 private const val ACTION = "intent.action.ACTION_IPC"
@@ -71,7 +70,6 @@ private fun Intent.putExtra(key: String, dataType: String?, value: Any?) {
     } catch (e: Exception) {
         putExtra(key, value as? Serializable)
     }
-    Log.w(TAG, "IpcReceiver putExtra data=${extras?.get(key)}")
 }
 
 private fun Intent.getExtra(key: String): Any? {
