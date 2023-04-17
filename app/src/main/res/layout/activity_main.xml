@@ -9,14 +9,8 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="changeData1"
-            android:text="改变数据1" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="changeData2"
-            android:text="改变数据2" />
+            android:onClick="changeData"
+            android:text="改变数据" />
 
         <Button
             android:layout_width="match_parent"
