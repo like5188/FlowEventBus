@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Parcelable
 import java.io.Serializable
 
 const val ACTION = "intent.action.ACTION_IPC"
@@ -48,7 +49,7 @@ private class IpcReceiver : BroadcastReceiver() {
                 val requestCode = getStringExtra(KEY_REQUEST_CODE)
                 val isNullable = getBooleanExtra(KEY_IS_NULLABLE, false)
                 val dataType = getStringExtra(KEY_DATA_TYPE)
-                val data = getExtra(KEY_DATA, dataType)
+                val data = getExtra(KEY_DATA)
                 RealFlowEventBus.doPost(tag, requestCode, data, isNullable, dataType)
             }
         }
@@ -56,17 +57,20 @@ private class IpcReceiver : BroadcastReceiver() {
 }
 
 private fun Intent.putExtra(key: String, dataType: String?, value: Any?) {
-    /*
-    dataType 是 java 数据类型，对应的 kotlin 数据类型需要转换，例如：
-        java                    kotlin
-        int                     Int
-        java.lang.Integer       Int?
-        int[]                   IntArray、IntArray?
-        java.lang.Integer[]     Array<Int>、Array<Int>?、Array<Int?>、Array<Int?>?
-    */
-    putExtra(key, value as? Serializable)
+    if (dataType.isNullOrEmpty()) {
+        return
+    }
+    val clazz = try {
+        Class.forName(dataType)
+    } catch (e: Exception) {
+        null
+    } ?: return
+    when {
+        Parcelable::class.java.isAssignableFrom(clazz) -> putExtra(key, value as? Parcelable)
+        else -> putExtra(key, value as? Serializable)
+    }
 }
 
-private fun Intent.getExtra(key: String, dataType: String?): Any? {
+private fun Intent.getExtra(key: String): Any? {
     return extras?.get(key)
 }
