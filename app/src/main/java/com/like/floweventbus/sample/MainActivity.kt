@@ -63,70 +63,70 @@ class MainActivity : BaseActivity() {
         startActivity(Intent(this, SecondActivity::class.java))
     }
 
-    @BusObserver(["MainActivity"])
-    fun observer1(str: String?) {
-        Log.w(TAG, "MainActivity observer1 String? $str")
-    }
-
-    @BusObserver(["MainActivity"])
-    fun observer2(str: String) {
-        Log.w(TAG, "MainActivity observer2 String $str")
-    }
-
-    @BusObserver(["MainActivity"])
-    fun observer3(str: Int?) {
-        Log.w(TAG, "MainActivity observer3 Int? $str")
-    }
-
-    @BusObserver(["MainActivity"])
-    fun observer4(str: Int) {
-        Log.w(TAG, "MainActivity observer4 Int $str")
-    }
-
-    @BusObserver(["MainActivity"])
-    fun observer5(str: IntArray?) {
-        Log.w(TAG, "MainActivity observer5 IntArray? $str")
-    }
-
-    @BusObserver(["MainActivity"])
-    fun observer6(str: IntArray) {
-        Log.w(TAG, "MainActivity observer6 IntArray $str")
-    }
-
-    @BusObserver(["MainActivity"])
-    fun observer7(data: Array<Int?>?) {
-        Log.w(TAG, "MainActivity observer7 Array<Int?>? ${Arrays.toString(data)}")
-    }
-
-    @BusObserver(["MainActivity"])
-    fun observer8(data: Array<Int?>) {
-        Log.w(TAG, "MainActivity observer8 Array<Int?> ${Arrays.toString(data)}")
-    }
-
-    @BusObserver(["MainActivity"])
-    fun observer9(data: Array<Int>?) {
-        Log.w(TAG, "MainActivity observer9 Array<Int>? ${Arrays.toString(data)}")
-    }
-
-    @BusObserver(["MainActivity"])
-    fun observer10(data: Array<Int>) {
-        Log.w(TAG, "MainActivity observer10 Array<Int> ${Arrays.toString(data)}")
-    }
-
-    @BusObserver(["MainActivity"])
-    fun observer11() {
-        Log.w(TAG, "MainActivity observer11")
-    }
-
-    @BusObserver(["SecondActivity"])
-    fun observer12(user: User?) {
-        Log.w(TAG, "MainActivity observer12 User? $user")
-    }
-
-    @BusObserver(["SecondActivity"])
-    fun observer13(user: User) {
-        Log.w(TAG, "MainActivity observer13 User $user")
-    }
+//    @BusObserver(["MainActivity"])
+//    fun observer1(str: String?) {
+//        Log.w(TAG, "MainActivity observer1 String? $str")
+//    }
+//
+//    @BusObserver(["MainActivity"])
+//    fun observer2(str: String) {
+//        Log.w(TAG, "MainActivity observer2 String $str")
+//    }
+//
+//    @BusObserver(["MainActivity"])
+//    fun observer3(str: Int?) {
+//        Log.w(TAG, "MainActivity observer3 Int? $str")
+//    }
+//
+//    @BusObserver(["MainActivity"])
+//    fun observer4(str: Int) {
+//        Log.w(TAG, "MainActivity observer4 Int $str")
+//    }
+//
+//    @BusObserver(["MainActivity"])
+//    fun observer5(str: IntArray?) {
+//        Log.w(TAG, "MainActivity observer5 IntArray? $str")
+//    }
+//
+//    @BusObserver(["MainActivity"])
+//    fun observer6(str: IntArray) {
+//        Log.w(TAG, "MainActivity observer6 IntArray $str")
+//    }
+//
+//    @BusObserver(["MainActivity"])
+//    fun observer7(data: Array<Int?>?) {
+//        Log.w(TAG, "MainActivity observer7 Array<Int?>? ${Arrays.toString(data)}")
+//    }
+//
+//    @BusObserver(["MainActivity"])
+//    fun observer8(data: Array<Int?>) {
+//        Log.w(TAG, "MainActivity observer8 Array<Int?> ${Arrays.toString(data)}")
+//    }
+//
+//    @BusObserver(["MainActivity"])
+//    fun observer9(data: Array<Int>?) {
+//        Log.w(TAG, "MainActivity observer9 Array<Int>? ${Arrays.toString(data)}")
+//    }
+//
+//    @BusObserver(["MainActivity"])
+//    fun observer10(data: Array<Int>) {
+//        Log.w(TAG, "MainActivity observer10 Array<Int> ${Arrays.toString(data)}")
+//    }
+//
+//    @BusObserver(["MainActivity"])
+//    fun observer11() {
+//        Log.w(TAG, "MainActivity observer11")
+//    }
+//
+//    @BusObserver(["SecondActivity"])
+//    fun observer12(user: User?) {
+//        Log.w(TAG, "MainActivity observer12 User? $user")
+//    }
+//
+//    @BusObserver(["SecondActivity"])
+//    fun observer13(user: User) {
+//        Log.w(TAG, "MainActivity observer13 User $user")
+//    }
 
     @BusObserver(["SecondActivity"])
     fun observer14(user: Array<User>?) {

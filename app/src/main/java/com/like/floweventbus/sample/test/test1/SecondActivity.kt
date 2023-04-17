@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.like.floweventbus.FlowEventBus
 import com.like.floweventbus.TAG
-import com.like.floweventbus.annotations.BusObserver
 import com.like.floweventbus.sample.R
 import com.like.floweventbus.sample.User
 import com.like.floweventbus.sample.databinding.ActivitySecondBinding
@@ -18,8 +17,6 @@ class SecondActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.e(TAG, "SecondActivity onCreate")
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_second)
-        FlowEventBus.register(this)
-//        B(this)
     }
 
     override fun onDestroy() {
@@ -58,21 +55,11 @@ class SecondActivity : AppCompatActivity() {
 
 //        FlowEventBus.postAcrossProcess<Array<User>?>("SecondActivity", null)
 //        FlowEventBus.postAcrossProcess<Array<User>?>("SecondActivity", arrayOf(User("SecondActivity", 19)))
-//        FlowEventBus.postAcrossProcess("SecondActivity", arrayOf(User("SecondActivity", 19)))
+        FlowEventBus.postAcrossProcess("SecondActivity", arrayOf(User("SecondActivity", 19)))
     }
 
     fun unregister(view: View?) {
-        FlowEventBus.unregister(this)
-    }
-
-    @BusObserver(["SecondActivity"], isSticky = true)
-    fun observer1(user: User?) {
-        Log.w(TAG, "SecondActivity observer1 User? $user")
-    }
-
-    @BusObserver(["SecondActivity"], isSticky = true)
-    fun observer2(user: User) {
-        Log.w(TAG, "SecondActivity observer2 User $user")
+//        FlowEventBus.unregister(this)
     }
 
 }
