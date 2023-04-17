@@ -61,17 +61,12 @@ private fun Intent.putExtra(key: String, dataType: String?, value: Any?) {
     if (dataType.isNullOrEmpty()) {
         return
     }
-    Log.e(TAG, "dataType=$dataType")
     try {
-        // 注意：这里Parcelable类型的数组，无法转换成功，比如：int[]、java.lang.Integer[]、User[]
-        val clazz = Class.forName(dataType)
-        Log.e(TAG, "clazz=${clazz.name}")
-        when {
-            Parcelable::class.java.isAssignableFrom(clazz) -> putExtra(key, value as? Parcelable)
-//            else -> putExtra(key, value as? Serializable)
-        }
+        putExtra(key, value as Serializable?)
+        Log.i(TAG, "Intent.putExtra Serializable? dataType=$dataType value=${extras?.get(key)}")
     } catch (e: Exception) {
-        putExtra(key, value as? Serializable)
+        putExtra(key, value as Parcelable?)
+        Log.i(TAG, "Intent.putExtra Parcelable? dataType=$dataType value=${extras?.get(key)}")
     }
 }
 
