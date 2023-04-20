@@ -25,7 +25,7 @@
 
 4、支持跨进程发送消息(仅支持Intent支持的数据类型)。使用了广播来实现，不支持粘性消息。
 
-    注意：跨进程发送消息时，如果出现类型转换报错，比如：android.os.Parcelable[] cannot be cast to xxx[]，请使用Bundle来传递数据，自己解析。
+    注意：跨进程发送消息时，如果出现类型转换报错，比如：传递Parcelable数组或者集合时，报错 android.os.Parcelable[] cannot be cast to xxx[]，那么请使用Bundle来传递数据，然后自己解析。
 
 ## 使用方法：
 
