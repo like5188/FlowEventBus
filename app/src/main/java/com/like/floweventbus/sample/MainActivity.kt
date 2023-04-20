@@ -131,18 +131,29 @@ class MainActivity : BaseActivity() {
 
     @BusObserver(["SecondActivity"])
     fun observer14(bundle: Bundle?) {
-        val users: List<User>? = bundle?.getParcelableArray("users")?.map {
-            it as User
+        when {
+            bundle == null -> {
+                Log.w(TAG, "MainActivity observer14 Bundle")
+            }
+            bundle.containsKey("users") -> {
+                val users: List<User>? = bundle.getParcelableArray("users")?.map {
+                    it as User
+                }
+                Log.w(TAG, "MainActivity observer14 Bundle users=$users")
+            }
         }
-        Log.w(TAG, "MainActivity observer14 Bundle users=$users")
     }
 
     @BusObserver(["SecondActivity"])
     fun observer15(bundle: Bundle) {
-        val users: List<User>? = bundle.getParcelableArray("users")?.map {
-            it as User
+        when {
+            bundle.containsKey("users") -> {
+                val users: List<User>? = bundle.getParcelableArray("users")?.map {
+                    it as User
+                }
+                Log.w(TAG, "MainActivity observer15 Bundle users=$users")
+            }
         }
-        Log.w(TAG, "MainActivity observer15 Bundle users=$users")
     }
 
 }
