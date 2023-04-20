@@ -1,7 +1,6 @@
 package com.like.floweventbus
 
 import android.content.Context
-import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -69,17 +68,17 @@ object FlowEventBus {
 
     @JvmStatic
     fun postAcrossProcess(tag: String) {
-        RealFlowEventBus.sendBroadcast(tag, "", null)
+        RealFlowEventBus.sendBroadcast(tag, "", NoArgs())
     }
 
     @JvmStatic
-    fun postAcrossProcess(tag: String, data: Bundle) {
-        RealFlowEventBus.sendBroadcast(tag, "", data)
+    inline fun <reified T> postAcrossProcess(tag: String, t: T) {
+        RealFlowEventBus.sendBroadcast(tag, "", t)
     }
 
     @JvmStatic
-    fun postAcrossProcess(tag: String, requestCode: String, data: Bundle) {
-        RealFlowEventBus.sendBroadcast(tag, requestCode, data)
+    inline fun <reified T> postAcrossProcess(tag: String, requestCode: String, t: T) {
+        RealFlowEventBus.sendBroadcast(tag, requestCode, t)
     }
 
 }
