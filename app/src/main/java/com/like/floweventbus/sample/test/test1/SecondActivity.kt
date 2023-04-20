@@ -29,35 +29,36 @@ class SecondActivity : AppCompatActivity() {
 //        FlowEventBus.postAcrossProcess<String?>("MainActivity", null)
 //        FlowEventBus.postAcrossProcess<String?>("MainActivity", "1")
 //        FlowEventBus.postAcrossProcess("MainActivity", "1")
-//
+
 //        FlowEventBus.postAcrossProcess<Int?>("MainActivity", null)
 //        FlowEventBus.postAcrossProcess<Int?>("MainActivity", 2)
 //        FlowEventBus.postAcrossProcess("MainActivity", 2)
-//
+
 //        FlowEventBus.postAcrossProcess<IntArray?>("MainActivity", null)
 //        FlowEventBus.postAcrossProcess<IntArray?>("MainActivity", intArrayOf(3))
 //        FlowEventBus.postAcrossProcess("MainActivity", intArrayOf(3))
-//
+
 //        FlowEventBus.postAcrossProcess<Array<Int?>?>("MainActivity", null)
-//        FlowEventBus.postAcrossProcess<Array<Int?>?>("MainActivity", arrayOf(4))
-//        FlowEventBus.postAcrossProcess("MainActivity", arrayOf(4))
-//
+//        FlowEventBus.postAcrossProcess<Array<Int?>?>("MainActivity", arrayOf(4, null))
+//        FlowEventBus.postAcrossProcess("MainActivity", arrayOf(4, null))
+
 //        FlowEventBus.postAcrossProcess<Array<Int>?>("MainActivity", null)
 //        FlowEventBus.postAcrossProcess<Array<Int>?>("MainActivity", arrayOf(5))
 //        FlowEventBus.postAcrossProcess("MainActivity", arrayOf(5))
-//
+
 //        FlowEventBus.postAcrossProcess("MainActivity")
     }
 
     fun changeData2(view: View?) {
+//        val user = User("SecondActivity", 19)
 //        FlowEventBus.postAcrossProcess<User?>("SecondActivity", null)
-//        FlowEventBus.postAcrossProcess<User?>("SecondActivity", User("SecondActivity", 19))
-//        FlowEventBus.postAcrossProcess("SecondActivity", User("SecondActivity", 19))
+//        FlowEventBus.postAcrossProcess<User?>("SecondActivity", user)
+//        FlowEventBus.postAcrossProcess("SecondActivity", user)
 
-        val users = bundleOf("users" to arrayOf(User("SecondActivity", 19)))
-        FlowEventBus.postAcrossProcess<Bundle?>("SecondActivity", null)
-        FlowEventBus.postAcrossProcess<Bundle?>("SecondActivity", users)
-        FlowEventBus.postAcrossProcess("SecondActivity", users)
+//        val users = bundleOf("users" to arrayOf(user))
+//        FlowEventBus.postAcrossProcess<Bundle?>("SecondActivity", null)
+//        FlowEventBus.postAcrossProcess<Bundle?>("SecondActivity", users)
+//        FlowEventBus.postAcrossProcess("SecondActivity", users)
     }
 
     fun unregister(view: View?) {

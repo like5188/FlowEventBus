@@ -55,7 +55,7 @@
     FlowEventBus.init(Application)
 ```
 
-3、发送消息。
+3、发送消息。（注意：泛型为空时，本库没有做区分，比如Array<Int?>? 和 Array<Int>? 本库认为是一样的）
 
     ①不跨进程
 ```java
