@@ -23,7 +23,9 @@
     ①、此类必须用 public 修饰。
     ②、同一个宿主不会重复注册。
 
-4、支持跨进程发送消息(仅支持Intent支持的数据类型)。使用了广播来实现，不支持粘性消息。如果出现报错：android.os.Parcelable[] cannot be cast to xxx[]，或者出现其它无法解析的数据类型，请使用Bundle来传递数据，自己解析。
+4、支持跨进程发送消息(仅支持Intent支持的数据类型)。使用了广播来实现，不支持粘性消息。
+
+    注意：跨进程发送消息时，如果出现类型转换报错，比如：android.os.Parcelable[] cannot be cast to xxx[]，请使用Bundle来传递数据，自己解析。
 
 ## 使用方法：
 
@@ -55,7 +57,7 @@
     FlowEventBus.init(Application)
 ```
 
-3、发送消息。（注意：泛型为空时，本库没有做区分，比如Array<Int?>? 和 Array<Int>? 本库认为是一样的）
+3、发送消息。（注意：泛型为空时，本库没有做区分，比如Array<Int?>? 和 Array<Int>? 本库认为是一样的，发送其中一种数据，两种类型都能接收数据）
 
     ①不跨进程
 ```java
