@@ -10,7 +10,6 @@ import com.like.floweventbus.TAG
 import com.like.floweventbus.annotations.BusObserver
 import com.like.floweventbus.sample.databinding.ActivityMainBinding
 import com.like.floweventbus.sample.test.test1.SecondActivity
-import java.util.*
 
 class MainActivity : BaseActivity() {
     private val mBinding by lazy {
@@ -134,8 +133,24 @@ class MainActivity : BaseActivity() {
 //    }
 
     @BusObserver(["SecondActivity"])
-    fun observer15(user: Array<User>) {
-        Log.w(TAG, "MainActivity observer15 Array<User> $user")
+    fun observer15(data: Bundle) {
+        when {
+            data.containsKey("user") -> {
+                val user: User? = data.getParcelable("user")
+                Log.w(TAG, "MainActivity observer15 Bundle user=$user")
+            }
+            data.containsKey("users") -> {
+                val users: List<User>? = data.getParcelableArray("users")?.map {
+                    it as User
+                }
+                Log.w(TAG, "MainActivity observer15 Bundle users=$users")
+            }
+        }
+    }
+
+    @BusObserver(["SecondActivity"])
+    fun observer16() {
+        Log.w(TAG, "MainActivity observer16")
     }
 
 }

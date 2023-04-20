@@ -2,6 +2,7 @@ package com.like.floweventbus
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.os.Process
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
@@ -60,10 +61,8 @@ object RealFlowEventBus {
         }
     }
 
-    inline fun <reified T> sendBroadcast(tag: String, requestCode: String, data: T) {
-        val isNullable = typeOf<T>().isMarkedNullable
-        val dataType = T::class.java.canonicalName ?: ""
-        Ipc.sendBroadcast(context, tag, requestCode, data, isNullable, dataType)
+    fun sendBroadcast(tag: String, requestCode: String, data: Bundle?) {
+        Ipc.sendBroadcast(context, tag, requestCode, data)
     }
 
     inline fun <reified T> post(tag: String, requestCode: String, data: T) {

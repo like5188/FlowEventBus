@@ -23,7 +23,7 @@
     ①、此类必须用 public 修饰。
     ②、同一个宿主不会重复注册。
 
-4、支持跨进程发送消息(仅支持Intent支持的数据类型)。使用了广播来实现，但是不支持粘性消息。
+4、支持跨进程发送消息(仅支持Bundle类型的数据)。使用了广播来实现，不支持粘性消息。
 
 ## 使用方法：
 
@@ -66,8 +66,8 @@
     ②跨进程(不支持粘性消息)(仅支持Intent支持的数据类型)
 ```java
     FlowEventBus.postAcrossProcess(tag: String)
-    FlowEventBus.postAcrossProcess(tag: String, t: T)
-    FlowEventBus.postAcrossProcess(tag: String, requestCode: String, t: T)
+    FlowEventBus.postAcrossProcess(tag: String, data: Bundle)
+    FlowEventBus.postAcrossProcess(tag: String, requestCode: String, data: Bundle)
 ```
 
 4、接收消息。
@@ -80,7 +80,7 @@
     FlowEventBus.unregister(host: Any)
 ```
 
-    ②接收消息与发送消息一一对应。(注意：如果接收String类型的参数，可以使用String或者String?来接收)
+    ②不跨进程：接收消息与发送消息一一对应。(注意：如果接收String类型的参数，可以使用String或者String?来接收)
 ```java
     发送消息:(主线程)
     FlowEventBus.post(tag1: String)
@@ -107,6 +107,35 @@
     接收消息:(主线程)
     @BusObserver(["tag"], requestCode = "requestCode")
     fun test(t: T) {
+    }
+```
+    ③跨进程：
+```java
+    发送消息:(主线程)
+    FlowEventBus.postAcrossProcess(tag1: String)
+    FlowEventBus.postAcrossProcess(tag2: String)
+    
+    接收消息:(主线程)
+    @BusObserver(["tag1", "tag2"])
+    fun test() {
+    }
+```
+```java
+    发送消息:(主线程)
+        FlowEventBus.postAcrossProcess(tag: String, data: Bundle)
+
+    接收消息:(主线程)
+    @BusObserver(["tag"])
+    fun test(data: Bundle) {
+    }
+```
+```java
+    发送消息:(主线程)
+    FlowEventBus.post(tag: String, requestCode: String, data: Bundle)
+    
+    接收消息:(主线程)
+    @BusObserver(["tag"], requestCode = "requestCode")
+    fun test(data: Bundle) {
     }
 ```
 
