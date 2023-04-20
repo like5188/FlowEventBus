@@ -122,20 +122,28 @@
 ```
 ```java
     发送消息:(主线程)
-        FlowEventBus.postAcrossProcess(tag: String, data: Bundle)
+    FlowEventBus.postAcrossProcess(tag: String, data: Bundle)
 
     接收消息:(主线程)
     @BusObserver(["tag"])
     fun test(data: Bundle) {
+        when {
+            data.containsKey("key") -> {
+            }
+        }
     }
 ```
 ```java
     发送消息:(主线程)
-    FlowEventBus.post(tag: String, requestCode: String, data: Bundle)
+    FlowEventBus.postAcrossProcess(tag: String, requestCode: String, data: Bundle)
     
     接收消息:(主线程)
     @BusObserver(["tag"], requestCode = "requestCode")
     fun test(data: Bundle) {
+        when {
+            data.containsKey("key") -> {
+            }
+        }
     }
 ```
 
