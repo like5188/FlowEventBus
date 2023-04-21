@@ -90,6 +90,7 @@ object ClassGenerator {
             val hostMethodInfoList = entry.value
             hostMethodInfoList.forEach { hostMethodInfo ->
                 hostMethodInfo.tags.forEach { tag ->
+                    val methodName = hostMethodInfo.methodName
                     val requestCode = hostMethodInfo.requestCode
                     val paramType = hostMethodInfo.paramType
                     val isNullable = hostMethodInfo.isNullable
@@ -102,11 +103,11 @@ object ClassGenerator {
                         tag,
                         requestCode,
                         isSticky,
-                        hostMethodInfo.paramType,
+                        paramType,
                         isNullable
                     )
                     builder.add(
-                        "((\$T) host).${hostMethodInfo.methodName}(${if (paramType == "com.like.floweventbus.NoArgs") "" else "(${hostMethodInfo.paramType}) data"});",
+                        "((\$T) host).${methodName}(${if (paramType == "com.like.floweventbus.NoArgs") "" else "(${paramType}) data"});",
                         hostClass
                     )
                     builder.add("return null;")
